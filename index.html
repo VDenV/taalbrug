@@ -1,0 +1,1628 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Taalbrug Portaal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Sora:wght@600;700;800&display=swap">
+<style>
+/* Layout: marketing pages get a top nav; the portal is an app shell (sidebar + focused canvas). Signature: the learning path, lesson nodes on a winding route from A0 to A2. */
+:root{
+  --bg:#F3F4F9; --surface:#FFFFFF; --surface-2:#FAFAFD; --sunken:#ECEEF5;
+  --ink:#16143A; --ink-2:#5B5978; --ink-3:#8C8AA6; --line:#E3E3EE; --line-2:#D3D3E3;
+  --iris:#544FD9; --on-iris:#FFFFFF; --iris-soft:#ECEBFD; --iris-ink:#3B36B8;
+  --brand:#FF6B3D; --on-brand:#1A0C06; --brand-soft:#FFEDE5; --brand-ink:#B5390F;
+  --mint:#12A27B; --on-mint:#FFFFFF; --mint-soft:#DFF5EE; --mint-ink:#0C7258;
+  --sun:#FFC23D; --sun-soft:#FFF4D8; --sun-ink:#7A5200;
+  --bad:#D2452F; --bad-soft:#FDE8E4; --bad-ink:#A3301B;
+  --hero:#16143A; --hero-2:#25225A; --hero-3:#34307A; --hero-fg:#FFFFFF; --hero-mute:#BDBBDD;
+  --bar-muted:#C9C8DD;
+  --shadow:0 1px 2px rgba(22,20,58,.05),0 10px 30px -14px rgba(22,20,58,.20);
+  --shadow-lg:0 2px 4px rgba(22,20,58,.06),0 28px 60px -24px rgba(22,20,58,.35);
+  --f-display:'Sora','Avenir Next','Segoe UI',system-ui,sans-serif;
+  --f-body:'Plus Jakarta Sans','Segoe UI',system-ui,sans-serif;
+  --r:22px; --r-md:16px; --r-sm:12px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0D0C1D; --surface:#171630; --surface-2:#1B1A37; --sunken:#121128;
+  --ink:#F1F0FA; --ink-2:#AEACCB; --ink-3:#7E7CA3; --line:#2A2848; --line-2:#37355A;
+  --iris:#8E8AFF; --on-iris:#0D0C1D; --iris-soft:#25234D; --iris-ink:#BDBAFF;
+  --brand:#FF7F55; --on-brand:#1A0C06; --brand-soft:#3B2019; --brand-ink:#FFB79F;
+  --mint:#46D1A6; --on-mint:#06231A; --mint-soft:#10352B; --mint-ink:#7FE3C3;
+  --sun:#FFCB57; --sun-soft:#3A2F13; --sun-ink:#FFD98A;
+  --bad:#FF8A73; --bad-soft:#3C1D18; --bad-ink:#FFB3A5;
+  --hero:#1D1A45; --hero-2:#29265E; --hero-3:#383478; --hero-fg:#FFFFFF; --hero-mute:#BDBBDD;
+  --bar-muted:#3E3C63;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 30px -14px rgba(0,0,0,.6);
+  --shadow-lg:0 2px 4px rgba(0,0,0,.3),0 28px 60px -24px rgba(0,0,0,.7);
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0D0C1D; --surface:#171630; --surface-2:#1B1A37; --sunken:#121128;
+  --ink:#F1F0FA; --ink-2:#AEACCB; --ink-3:#7E7CA3; --line:#2A2848; --line-2:#37355A;
+  --iris:#8E8AFF; --on-iris:#0D0C1D; --iris-soft:#25234D; --iris-ink:#BDBAFF;
+  --brand:#FF7F55; --on-brand:#1A0C06; --brand-soft:#3B2019; --brand-ink:#FFB79F;
+  --mint:#46D1A6; --on-mint:#06231A; --mint-soft:#10352B; --mint-ink:#7FE3C3;
+  --sun:#FFCB57; --sun-soft:#3A2F13; --sun-ink:#FFD98A;
+  --bad:#FF8A73; --bad-soft:#3C1D18; --bad-ink:#FFB3A5;
+  --hero:#1D1A45; --hero-2:#29265E; --hero-3:#383478; --hero-fg:#FFFFFF; --hero-mute:#BDBBDD;
+  --bar-muted:#3E3C63;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 30px -14px rgba(0,0,0,.6);
+  --shadow-lg:0 2px 4px rgba(0,0,0,.3),0 28px 60px -24px rgba(0,0,0,.7);
+  color-scheme:dark}
+
+*{box-sizing:border-box}
+html,body{min-height:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{font-family:var(--f-display);line-height:1.12;margin:0;text-wrap:balance;letter-spacing:-0.02em;font-weight:700}
+h1{font-size:clamp(2rem,4.6vw,3.4rem);font-weight:800;letter-spacing:-0.035em}
+h2{font-size:clamp(1.35rem,2.4vw,1.75rem)}
+h3{font-size:1.1rem;letter-spacing:-0.01em}
+p{margin:0}
+a{color:var(--iris)}
+button,input,select,textarea{font:inherit;color:inherit}
+button{-webkit-tap-highlight-color:transparent}
+:focus-visible{outline:3px solid var(--iris);outline-offset:2px;border-radius:10px}
+.num{font-variant-numeric:tabular-nums}
+.muted{color:var(--ink-2)}
+.faint{color:var(--ink-3)}
+.label{font-size:.75rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3)}
+.sr{position:absolute;left:-9999px}
+
+/* ---------- buttons, chips ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:0 20px;border-radius:14px;border:1px solid transparent;font-weight:700;cursor:pointer;text-decoration:none;font-size:.97rem;transition:transform .12s ease,box-shadow .12s ease,background .12s ease;white-space:nowrap}
+.btn:active{transform:translateY(1px)}
+.btn-primary{background:var(--iris);color:var(--on-iris);box-shadow:0 4px 0 -1px color-mix(in srgb,var(--iris) 55%,#000)}
+.btn-primary:hover{background:color-mix(in srgb,var(--iris) 90%,#000)}
+.btn-brand{background:var(--brand);color:var(--on-brand);box-shadow:0 4px 0 -1px color-mix(in srgb,var(--brand) 60%,#000)}
+.btn-mint{background:var(--mint);color:var(--on-mint);box-shadow:0 4px 0 -1px color-mix(in srgb,var(--mint) 55%,#000)}
+.btn-bad{background:var(--bad);color:#fff;box-shadow:0 4px 0 -1px color-mix(in srgb,var(--bad) 55%,#000)}
+.btn-ghost{background:var(--surface);border-color:var(--line-2);color:var(--ink)}
+.btn-ghost:hover{background:var(--sunken)}
+.btn-quiet{background:transparent;color:var(--ink-2)}
+.btn-quiet:hover{background:var(--sunken);color:var(--ink)}
+.btn-sm{min-height:38px;padding:0 14px;font-size:.88rem;border-radius:11px}
+.btn-lg{min-height:56px;padding:0 26px;font-size:1.05rem;border-radius:16px}
+.btn[disabled],.btn[aria-disabled="true"]{opacity:.45;cursor:not-allowed;box-shadow:none}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:4px 11px;border-radius:999px;font-size:.8rem;font-weight:700;white-space:nowrap}
+.p-good{background:var(--mint-soft);color:var(--mint-ink)}
+.p-warn{background:var(--sun-soft);color:var(--sun-ink)}
+.p-bad{background:var(--bad-soft);color:var(--bad-ink)}
+.p-iris{background:var(--iris-soft);color:var(--iris-ink)}
+.p-brand{background:var(--brand-soft);color:var(--brand-ink)}
+.p-quiet{background:var(--sunken);color:var(--ink-2)}
+.lvl{display:inline-grid;place-items:center;min-width:36px;height:26px;padding:0 8px;border-radius:8px;font-weight:800;font-size:.8rem;background:var(--iris-soft);color:var(--iris-ink);font-family:var(--f-display)}
+.icon-btn{width:44px;height:44px;border-radius:12px;border:1px solid var(--line-2);background:var(--surface);display:inline-grid;place-items:center;cursor:pointer;color:var(--ink);flex:none}
+.icon-btn:hover{background:var(--sunken)}
+.icon-btn.sm{width:34px;height:34px;border-radius:10px}
+.icon-btn.round{border-radius:50%}
+.icon-btn.play{width:60px;height:60px;border-radius:50%;background:var(--iris);color:var(--on-iris);border-color:var(--iris)}
+.icon-btn.speak{width:52px;height:52px;border-radius:16px;background:var(--iris);color:var(--on-iris);border:0;box-shadow:0 4px 0 -1px color-mix(in srgb,var(--iris) 55%,#000)}
+.icon-btn[disabled]{opacity:.35;cursor:default}
+.seg{display:inline-flex;background:var(--sunken);border-radius:14px;padding:4px;gap:2px;flex-wrap:wrap}
+.seg button{border:0;background:none;min-height:38px;padding:0 14px;border-radius:11px;cursor:pointer;font-weight:700;color:var(--ink-2);font-size:.9rem;display:inline-flex;align-items:center;gap:6px}
+.seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(22,20,58,.12)}
+.lang{display:inline-flex;background:var(--sunken);border-radius:12px;padding:3px;gap:2px}
+.lang button{border:0;background:none;min-height:34px;min-width:44px;padding:0 10px;border-radius:9px;font-weight:800;font-size:.8rem;cursor:pointer;color:var(--ink-2)}
+.lang button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(22,20,58,.12)}
+.demo{font-size:.7rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;background:var(--sun-soft);color:var(--sun-ink);padding:5px 10px;border-radius:999px;white-space:nowrap}
+.switch{display:inline-flex;align-items:center;gap:10px;cursor:pointer;font-weight:700;font-size:.9rem;border:0;background:none;padding:6px 0;color:var(--ink)}
+.switch .tr{width:44px;height:26px;border-radius:999px;background:var(--line-2);position:relative;transition:background .15s;flex:none}
+.switch .tr::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:left .15s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.switch[aria-checked="true"] .tr{background:var(--mint)}
+.switch[aria-checked="true"] .tr::after{left:21px}
+
+/* ---------- cards & grids ---------- */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:24px;min-width:0;box-shadow:var(--shadow)}
+.card.flat{box-shadow:none}
+.card-h{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.stack{display:flex;flex-direction:column;gap:24px}
+.grid{display:grid;gap:20px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(min(100%,270px),1fr))}
+.g4{grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr))}
+.stat{display:flex;flex-direction:column;gap:6px;position:relative;overflow:hidden}
+.stat .k{font-size:.85rem;color:var(--ink-2);font-weight:700}
+.stat .v{font-family:var(--f-display);font-size:2.1rem;font-weight:800;letter-spacing:-0.03em;font-variant-numeric:tabular-nums;line-height:1.1}
+.stat .n{font-size:.84rem;color:var(--ink-3)}
+.stat .ic{position:absolute;right:18px;top:18px;width:40px;height:40px;border-radius:12px;display:grid;place-items:center}
+.tbl-wrap{overflow-x:auto;margin-inline:-8px}
+table{width:100%;border-collapse:separate;border-spacing:0;font-size:.94rem;min-width:600px}
+th{text-align:left;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);font-weight:700;padding:10px 8px;border-bottom:1px solid var(--line)}
+td{padding:12px 8px;border-bottom:1px solid var(--line);vertical-align:middle}
+tr:last-child td{border-bottom:0}
+tbody tr:hover td{background:var(--surface-2)}
+.who{display:flex;align-items:center;gap:10px}
+.av{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:.82rem;flex:none;font-family:var(--f-display)}
+.av.c0{background:var(--iris-soft);color:var(--iris-ink)}.av.c1{background:var(--brand-soft);color:var(--brand-ink)}.av.c2{background:var(--mint-soft);color:var(--mint-ink)}.av.c3{background:var(--sun-soft);color:var(--sun-ink)}
+.meter{height:10px;border-radius:999px;background:var(--sunken);overflow:hidden}
+.meter i{display:block;height:100%;border-radius:999px;background:var(--mint)}
+.meter.iris i{background:var(--iris)}
+.page-h{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.page-h h1{font-size:clamp(1.7rem,3.4vw,2.4rem)}
+.page-h p{margin-top:6px}
+.row-item{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.row-item:last-child{border-bottom:0}
+.row-item .l{display:flex;flex-direction:column;min-width:0}
+.row-item .r{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.place{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+select.sel{min-height:38px;border-radius:10px;border:1px solid var(--line-2);background:var(--surface);padding:0 10px;max-width:220px}
+
+/* ---------- marketing nav ---------- */
+.mnav{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;background:color-mix(in srgb,var(--bg) 85%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.mnav-in{max-width:1200px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;background:none;border:0;padding:0;cursor:pointer;color:var(--ink);text-decoration:none}
+.brand .mk{width:38px;height:38px;border-radius:12px;background:var(--brand);display:grid;place-items:center;color:var(--on-brand);flex:none}
+.brand b{font-family:var(--f-display);font-weight:800;font-size:1.2rem;letter-spacing:-0.03em}
+.mlinks{display:flex;gap:4px;flex:1;flex-wrap:wrap}
+.mlinks button{border:0;background:none;padding:8px 12px;border-radius:10px;font-weight:600;color:var(--ink-2);cursor:pointer;min-height:40px}
+.mlinks button:hover{background:var(--sunken);color:var(--ink)}
+.mtools{display:flex;gap:10px;align-items:center;margin-left:auto}
+.mpage{max-width:1200px;margin:0 auto;padding-inline:20px;padding-block:32px 72px;display:flex;flex-direction:column;gap:72px}
+@media (max-width:760px){.mlinks{display:none}.mpage{gap:52px}}
+
+/* hero */
+.hero{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:48px;align-items:center;padding-top:20px}
+@media (max-width:960px){.hero{grid-template-columns:minmax(0,1fr)}}
+.hero-copy{display:flex;flex-direction:column;gap:22px}
+.kicker{align-self:flex-start;display:inline-flex;gap:8px;align-items:center;background:var(--surface);border:1px solid var(--line);padding:6px 12px 6px 6px;border-radius:999px;font-weight:700;font-size:.86rem;box-shadow:var(--shadow)}
+.kicker span.flag{display:inline-flex;gap:3px;background:var(--sunken);border-radius:999px;padding:3px 8px;font-size:.75rem;font-weight:800}
+.hero h1 em{font-style:normal;position:relative;white-space:nowrap;color:var(--ink)}
+.hero h1 em::after{content:"";position:absolute;left:-2%;right:-2%;bottom:.04em;height:.32em;background:var(--brand);opacity:.35;border-radius:6px;z-index:-1}
+.hero h1{position:relative;z-index:0}
+.hero .lead{font-size:1.15rem;color:var(--ink-2);max-width:56ch}
+.ctas{display:flex;gap:12px;flex-wrap:wrap}
+.trust{display:flex;gap:18px;flex-wrap:wrap;color:var(--ink-2);font-size:.9rem;font-weight:600}
+.trust span{display:inline-flex;gap:7px;align-items:center}
+.trust svg{color:var(--mint)}
+.stage{position:relative;min-height:470px;display:grid;place-items:center}
+.stage::before{content:"";position:absolute;inset:6% 4%;border-radius:40px;background:var(--iris-soft);transform:rotate(-3deg)}
+.phone{position:relative;width:min(340px,100%);background:var(--surface);border-radius:32px;border:1px solid var(--line);box-shadow:var(--shadow-lg);padding:20px;display:flex;flex-direction:column;gap:16px}
+.phone .ptop{display:flex;align-items:center;gap:10px}
+.phone .seg-bar{flex:1;height:10px;border-radius:999px;background:var(--sunken);overflow:hidden}
+.phone .seg-bar i{display:block;height:100%;width:62%;background:var(--mint);border-radius:999px}
+.phone .q{font-family:var(--f-display);font-weight:700;font-size:1.25rem}
+.phone .q u{text-decoration:none;border-bottom:3px solid var(--iris);padding:0 10px}
+.phone .opts2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.phone .o{border:2px solid var(--line);border-radius:14px;padding:12px;font-weight:700;text-align:center}
+.phone .o.ok{border-color:var(--mint);background:var(--mint-soft);color:var(--mint-ink)}
+.phone .fbk{background:var(--mint-soft);color:var(--mint-ink);border-radius:16px;padding:12px 14px;font-weight:800;display:flex;gap:8px;align-items:center}
+.bubble{position:absolute;background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow);border-radius:18px;padding:10px 14px;font-weight:700;display:flex;flex-direction:column;line-height:1.25;z-index:2}
+.bubble small{color:var(--ink-3);font-weight:600}
+.bubble.b1{top:6%;left:0;border-bottom-left-radius:4px}
+.bubble.b2{bottom:10%;right:0;border-bottom-right-radius:4px}
+.bubble.b3{top:44%;left:-4%;background:var(--brand);color:var(--on-brand);border:0;flex-direction:row;gap:8px;align-items:center}
+.bubble.b3 small{color:var(--on-brand);opacity:.8}
+@media (max-width:520px){.bubble.b3{left:0}.bubble.b1{left:2%}}
+@media (prefers-reduced-motion: no-preference){.bubble{animation:float 6s ease-in-out infinite}.bubble.b2{animation-delay:-2s}.bubble.b3{animation-delay:-4s}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+
+.sec-h{display:flex;flex-direction:column;gap:10px;max-width:720px}
+.sec-h p{font-size:1.08rem;color:var(--ink-2)}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:20px;counter-reset:s}
+.step{display:flex;flex-direction:column;gap:10px;padding:26px;border-radius:var(--r);background:var(--surface);border:1px solid var(--line);position:relative}
+.step .n{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;font-family:var(--f-display);font-weight:800;background:var(--ink);color:var(--bg)}
+.bento{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:20px}
+.bento>*{grid-column:span 2}
+.bento .wide{grid-column:span 4}
+@media (max-width:960px){.bento{grid-template-columns:minmax(0,1fr)}.bento>*,.bento .wide{grid-column:auto}}
+.tile-f{border-radius:var(--r);padding:28px;display:flex;flex-direction:column;gap:12px;border:1px solid var(--line);background:var(--surface);min-width:0}
+.tile-f .ic{width:48px;height:48px;border-radius:14px;display:grid;place-items:center}
+.tile-f.dark{background:var(--hero);color:var(--hero-fg);border-color:var(--hero)}
+.tile-f.dark .muted{color:var(--hero-mute)}
+.typecloud{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.typecloud span{display:inline-flex;align-items:center;gap:8px;background:var(--hero-2);color:var(--hero-fg);border-radius:999px;padding:7px 12px;font-weight:700;font-size:.86rem}
+.typecloud span i{font-style:normal;display:inline-grid;place-items:center;min-width:24px;height:22px;border-radius:6px;background:var(--hero-3);font-size:.72rem;padding:0 4px}
+.courses{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:20px}
+.course{border-radius:var(--r);background:var(--surface);border:1px solid var(--line);overflow:hidden;display:flex;flex-direction:column;box-shadow:var(--shadow)}
+.course .top{height:110px;position:relative;display:flex;align-items:flex-end;padding:18px}
+.course .top .big{font-family:var(--f-display);font-weight:800;font-size:3rem;letter-spacing:-0.05em;line-height:1;opacity:.95}
+.course .body{padding:20px 22px 22px;display:flex;flex-direction:column;gap:10px;flex:1}
+.course .foot{display:flex;align-items:center;justify-content:space-between;gap:10px;border-top:1px solid var(--line);padding-top:16px;margin-top:auto}
+.course .price{font-family:var(--f-display);font-weight:800;font-size:1.25rem}
+.t0{background:var(--iris-soft);color:var(--iris-ink)}.t1{background:var(--brand-soft);color:var(--brand-ink)}.t2{background:var(--mint-soft);color:var(--mint-ink)}
+.partner{border-radius:28px;background:var(--hero);color:var(--hero-fg);padding:clamp(28px,5vw,56px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:36px;align-items:center}
+.partner .muted{color:var(--hero-mute)}
+.partner ul{margin:0;padding:0;list-style:none;display:grid;gap:12px}
+.partner li{display:flex;gap:12px;align-items:flex-start;background:var(--hero-2);padding:14px 16px;border-radius:16px;font-weight:600}
+.partner li svg{flex:none;color:var(--brand);margin-top:3px}
+.roles-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:16px}
+.rtile{display:flex;flex-direction:column;gap:8px;text-align:left;cursor:pointer;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:22px;color:var(--ink);transition:transform .15s ease,box-shadow .15s ease}
+.rtile:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg)}
+.rtile .ic{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;margin-bottom:6px}
+.rtile .go{color:var(--iris);font-weight:800;font-size:.9rem;margin-top:6px}
+.mfoot{border-top:1px solid var(--line);padding-top:22px;display:flex;gap:12px;justify-content:space-between;flex-wrap:wrap;font-size:.88rem;color:var(--ink-3)}
+
+/* forms */
+.form{display:flex;flex-direction:column;gap:24px}
+.field{display:flex;flex-direction:column;gap:7px;min-width:0}
+.field label,.legend{font-weight:700;font-size:.92rem}
+.field input,.field textarea,.field select{min-height:50px;padding:10px 14px;border:1.5px solid var(--line-2);border-radius:14px;background:var(--surface-2);font-size:1rem;width:100%;transition:border-color .12s}
+.field textarea{min-height:96px;resize:vertical;line-height:1.5}
+.field input:focus,.field textarea:focus,.field select:focus{outline:4px solid var(--iris-soft);border-color:var(--iris)}
+.err{color:var(--bad-ink);font-size:.86rem;font-weight:700}
+fieldset{border:0;margin:0;padding:0;min-width:0}
+.choices{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr));margin-top:10px}
+.choice{position:relative}
+.choice input{position:absolute;opacity:0;inset:0;width:100%;height:100%;margin:0;cursor:pointer}
+.choice span{display:flex;flex-direction:column;gap:2px;min-height:56px;padding:12px 14px;border:1.5px solid var(--line-2);border-radius:14px;background:var(--surface)}
+.choice b{font-family:var(--f-display);font-weight:800}
+.choice small{color:var(--ink-2);font-size:.84rem}
+.choice input:checked + span{border:2px solid var(--iris);background:var(--iris-soft);padding:11.5px 13.5px}
+.choice input:focus-visible + span{outline:3px solid var(--iris);outline-offset:2px}
+.check{display:flex;gap:10px;align-items:flex-start;font-size:.92rem;color:var(--ink-2)}
+.check input{width:20px;height:20px;margin-top:2px;flex:none;accent-color:var(--iris)}
+.signup{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:40px;align-items:start}
+@media (max-width:900px){.signup{grid-template-columns:minmax(0,1fr)}}
+.signup aside{position:sticky;top:100px;display:flex;flex-direction:column;gap:18px}
+.signup aside ol{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:14px}
+.signup aside li{display:flex;gap:12px;align-items:flex-start}
+.signup aside li .n{width:30px;height:30px;border-radius:10px;background:var(--iris-soft);color:var(--iris-ink);display:grid;place-items:center;font-weight:800;flex:none}
+
+/* ---------- app shell ---------- */
+.app{display:grid;grid-template-columns:264px minmax(0,1fr);min-height:100vh}
+.side{position:sticky;top:0;height:100vh;overflow:auto;background:var(--surface);border-right:1px solid var(--line);padding:20px 16px;display:flex;flex-direction:column;gap:22px}
+.side .brand{padding:4px 6px}
+.viewas{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;background:var(--sunken);border-radius:14px;padding:4px}
+.viewas button{border:0;background:none;border-radius:10px;min-height:52px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;cursor:pointer;color:var(--ink-2);font-size:.66rem;font-weight:800;letter-spacing:.02em;padding:4px 2px}
+.viewas button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(22,20,58,.14)}
+.nav{display:flex;flex-direction:column;gap:2px}
+.nav button{display:flex;align-items:center;gap:12px;border:0;background:none;border-radius:12px;min-height:46px;padding:0 12px;cursor:pointer;color:var(--ink-2);font-weight:700;text-align:left;font-size:.95rem}
+.nav button:hover{background:var(--sunken);color:var(--ink)}
+.nav button[aria-current="page"]{background:var(--iris-soft);color:var(--iris-ink)}
+.nav button .cnt{margin-left:auto}
+.side-foot{margin-top:auto;display:flex;flex-direction:column;gap:12px;font-size:.85rem}
+.side .demo{white-space:normal;text-align:center;line-height:1.3}
+.top2>.card{display:flex;align-items:center}
+.me{display:flex;align-items:center;gap:10px;padding:10px;border-radius:14px;background:var(--surface-2);border:1px solid var(--line)}
+.me b{display:block;font-size:.9rem}
+.me small{color:var(--ink-3)}
+.canvas{padding:28px clamp(16px,3vw,40px) 72px;min-width:0;display:flex;flex-direction:column;gap:24px;max-width:1280px;width:100%}
+@media (max-width:960px){
+  .app{grid-template-columns:minmax(0,1fr)}
+  .side{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;height:auto;flex-direction:row;align-items:center;gap:10px;padding:10px 16px;overflow-x:auto;border-right:0;border-bottom:1px solid var(--line);flex-wrap:nowrap}
+  .side .brand b,.side .me,.side .label,.side-foot .demo{display:none}
+  .viewas{grid-template-columns:repeat(4,auto);flex:none}
+  .viewas button{min-height:40px;padding:0 10px;flex-direction:row;font-size:.75rem}
+  .nav{flex-direction:row;flex:none}
+  .nav button{min-height:40px;white-space:nowrap}
+  .side-foot{margin:0;flex-direction:row;align-items:center;flex:none}
+}
+
+/* ---------- learner dashboard ---------- */
+.dash{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:24px;align-items:start}
+@media (max-width:1100px){.dash{grid-template-columns:minmax(0,1fr)}}
+.hello{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.hello .big-av{width:56px;height:56px;border-radius:18px;background:var(--brand);color:var(--on-brand);display:grid;place-items:center;font-family:var(--f-display);font-weight:800;font-size:1.4rem}
+.chips{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.chip{display:inline-flex;align-items:center;gap:7px;border-radius:999px;padding:7px 13px;font-weight:800;font-size:.88rem;background:var(--surface);border:1px solid var(--line)}
+.chip.fire{background:var(--sun-soft);color:var(--sun-ink);border-color:transparent}
+.chip.fire svg{color:var(--brand)}
+.top2{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:20px}
+@media (max-width:760px){.top2{grid-template-columns:minmax(0,1fr)}}
+.cont{position:relative;overflow:hidden;background:var(--hero);color:var(--hero-fg);border-radius:var(--r);padding:28px;display:flex;flex-direction:column;gap:12px;min-height:240px}
+.cont::after{content:"";position:absolute;right:-60px;top:-60px;width:220px;height:220px;border-radius:50%;border:34px solid var(--hero-2)}
+.cont::before{content:"";position:absolute;right:40px;bottom:-70px;width:140px;height:140px;border-radius:50%;background:var(--brand);opacity:.9}
+.cont>*{position:relative;z-index:1}
+.cont .label{color:var(--hero-mute)}
+.cont h2{font-size:clamp(1.5rem,2.8vw,2.1rem);max-width:18ch}
+.cont .muted{color:var(--hero-mute)}
+.cont .meta{display:flex;gap:8px;flex-wrap:wrap}
+.cont .meta span{background:var(--hero-2);border-radius:999px;padding:5px 11px;font-size:.8rem;font-weight:700}
+.goal{display:flex;gap:20px;align-items:center}
+.ring{position:relative;width:118px;height:118px;flex:none}
+.ring svg{transform:rotate(-90deg)}
+.ring .c{position:absolute;inset:0;display:grid;place-items:center;text-align:center;line-height:1.1}
+.ring .c b{font-family:var(--f-display);font-size:1.6rem;font-weight:800;font-variant-numeric:tabular-nums}
+.ring .c small{font-size:.72rem;color:var(--ink-3);font-weight:700}
+.week{display:flex;align-items:flex-end;gap:8px;height:74px;margin-top:6px}
+.week div{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;height:100%;justify-content:flex-end;min-width:0}
+.week i{display:block;width:100%;max-width:22px;border-radius:6px;background:var(--bar-muted);min-height:4px}
+.week .today i{background:var(--mint)}
+.week .hit i{background:color-mix(in srgb,var(--mint) 55%,var(--bar-muted))}
+.week span{font-size:.66rem;font-weight:800;color:var(--ink-3);text-transform:uppercase}
+
+/* learning path */
+.path-card{padding:28px 20px}
+.path{display:flex;flex-direction:column;align-items:center;gap:0}
+.unit{width:100%;border-radius:20px;padding:18px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:18px 0 26px}
+.unit:first-child{margin-top:0}
+.unit h3{font-size:1.2rem}
+.unit .l{display:flex;flex-direction:column;gap:2px}
+.unit .l small{font-weight:700;opacity:.8}
+.unit.u0{background:var(--iris);color:var(--on-iris)}
+.unit.u1{background:var(--brand);color:var(--on-brand)}
+.unit.u2{background:var(--mint);color:var(--on-mint)}
+.unit.u3{background:var(--sunken);color:var(--ink-2)}
+.unit .score{background:rgba(255,255,255,.22);border-radius:999px;padding:5px 12px;font-weight:800;font-size:.85rem}
+.unit.u1 .score{background:rgba(0,0,0,.12)}
+.node-row{display:flex;flex-direction:column;align-items:center;gap:6px;margin-bottom:22px;transform:translateX(var(--x,0))}
+.node{width:72px;height:68px;border-radius:50%;border:0;cursor:pointer;display:grid;place-items:center;position:relative;background:var(--surface);color:var(--ink-2);box-shadow:0 6px 0 var(--line-2),inset 0 0 0 3px var(--line-2);transition:transform .1s}
+.node:active{transform:translateY(3px);box-shadow:0 3px 0 var(--line-2),inset 0 0 0 3px var(--line-2)}
+.node svg{width:26px;height:26px}
+.node.done{background:var(--mint);color:var(--on-mint);box-shadow:0 6px 0 color-mix(in srgb,var(--mint) 60%,#000)}
+.node.cur{background:var(--brand);color:var(--on-brand);box-shadow:0 6px 0 color-mix(in srgb,var(--brand) 60%,#000)}
+.node.cur::before{content:"";position:absolute;inset:-10px;border-radius:50%;border:4px solid var(--brand);opacity:.35}
+@media (prefers-reduced-motion: no-preference){.node.cur::before{animation:pulse 1.8s ease-out infinite}}
+@keyframes pulse{0%{transform:scale(.9);opacity:.5}100%{transform:scale(1.25);opacity:0}}
+.node.test{border-radius:22px;width:76px}
+.node[disabled]{cursor:not-allowed;background:var(--sunken);color:var(--ink-3);box-shadow:0 6px 0 var(--line),inset 0 0 0 3px var(--line)}
+.node-cap{text-align:center;max-width:180px;font-size:.84rem;font-weight:700;line-height:1.25}
+.node-cap small{display:block;color:var(--ink-3);font-weight:600;font-size:.76rem}
+.start-tip{background:var(--surface);border:2px solid var(--brand);color:var(--brand-ink);border-radius:12px;padding:4px 12px;font-weight:800;font-size:.8rem;letter-spacing:.04em;text-transform:uppercase;position:relative;margin-bottom:6px}
+.start-tip::after{content:"";position:absolute;left:50%;bottom:-7px;width:10px;height:10px;background:var(--surface);border-right:2px solid var(--brand);border-bottom:2px solid var(--brand);transform:translateX(-50%) rotate(45deg)}
+.mini-l{display:flex;align-items:center;gap:12px;text-align:left;border:1px solid var(--line);border-radius:14px;background:var(--surface);padding:10px 12px;min-height:58px;cursor:pointer;color:var(--ink);width:100%}
+.mini-l:hover:not([disabled]){border-color:var(--iris)}
+.mini-l .ti{width:36px;height:36px;border-radius:11px;display:grid;place-items:center;background:var(--iris-soft);color:var(--iris-ink);flex:none}
+.mini-l.done .ti{background:var(--mint);color:var(--on-mint)}
+.mini-l.cur{border:2px solid var(--iris);padding:9px 11px;background:var(--iris-soft)}
+.mini-l[disabled]{opacity:.55;cursor:not-allowed}
+.mini-l b{display:block;font-size:.9rem;line-height:1.25}
+.mini-l small{color:var(--ink-3);font-size:.78rem;font-weight:600}
+.feedback-card{background:var(--sun-soft);border-color:transparent}
+
+/* ---------- lesson player ---------- */
+.player{max-width:820px;margin:0 auto;width:100%;display:flex;flex-direction:column;gap:22px}
+.ptop{display:flex;align-items:center;gap:14px}
+.pbar{flex:1;display:flex;gap:4px}
+.pbar i{flex:1;height:12px;border-radius:999px;background:var(--sunken);overflow:hidden;position:relative}
+.pbar i.done{background:var(--mint)}
+.pbar i.bad{background:var(--bad)}
+.pbar i.cur{background:color-mix(in srgb,var(--mint) 35%,var(--sunken))}
+.phead{display:flex;flex-direction:column;gap:6px}
+.phead h1{font-size:clamp(1.6rem,3.4vw,2.3rem)}
+.qcard{background:var(--surface);border:1px solid var(--line);border-radius:28px;padding:clamp(20px,4vw,36px);display:flex;flex-direction:column;gap:20px;box-shadow:var(--shadow)}
+.qcard .q{font-family:var(--f-display);font-size:clamp(1.3rem,3vw,1.75rem);font-weight:700;letter-spacing:-0.02em;line-height:1.25}
+.qtype{display:flex;align-items:center;gap:10px}
+.qtype .tag{display:inline-flex;align-items:center;gap:6px;background:var(--iris-soft);color:var(--iris-ink);border-radius:999px;padding:5px 12px;font-weight:800;font-size:.78rem}
+.opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:10px}
+.opt{min-height:60px;padding:12px 18px;border-radius:16px;border:2px solid var(--line-2);background:var(--surface);cursor:pointer;font-weight:700;color:var(--ink);text-align:left;font-size:1.02rem;box-shadow:0 4px 0 var(--line-2);transition:transform .08s}
+.opt:hover:not([disabled]){border-color:var(--iris)}
+.opt:active:not([disabled]){transform:translateY(3px);box-shadow:0 1px 0 var(--line-2)}
+.opt.sel{border-color:var(--iris);background:var(--iris-soft);box-shadow:0 4px 0 color-mix(in srgb,var(--iris) 45%,var(--line-2))}
+.opt.right{background:var(--mint-soft);border-color:var(--mint);color:var(--mint-ink);box-shadow:0 4px 0 color-mix(in srgb,var(--mint) 45%,transparent)}
+.opt.wrong{background:var(--bad-soft);border-color:var(--bad);color:var(--bad-ink);box-shadow:0 4px 0 color-mix(in srgb,var(--bad) 45%,transparent)}
+.opt[disabled]{cursor:default}
+.opts.inline{display:flex;flex-wrap:wrap}
+.opts.inline .opt{min-height:46px;padding:8px 16px;font-size:.95rem}
+.gapline{display:flex;flex-wrap:wrap;align-items:center;gap:10px;font-family:var(--f-display);font-size:clamp(1.25rem,3vw,1.6rem);font-weight:700}
+.gapline input,.dict{min-height:54px;border:2px solid var(--line-2);border-bottom-width:4px;background:var(--surface-2);border-radius:14px;padding:0 14px;font-weight:700;font-size:1.15rem;font-family:var(--f-body)}
+.gapline input{width:min(220px,100%)}
+.gapline input:focus,.dict:focus{outline:4px solid var(--iris-soft);border-color:var(--iris)}
+.dict{flex:1;min-width:200px}
+.built{min-height:64px;border-bottom:2px solid var(--line-2);padding:10px 0;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.wchip{min-height:46px;padding:0 16px;border-radius:14px;border:2px solid var(--line-2);background:var(--surface);cursor:pointer;font-weight:700;color:var(--ink);box-shadow:0 3px 0 var(--line-2);font-size:1rem}
+.built .wchip{border-color:var(--iris);background:var(--iris-soft)}
+.pool{display:flex;flex-wrap:wrap;gap:8px}
+.match{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.mcol{display:flex;flex-direction:column;gap:10px;min-width:0}
+.mitem{min-height:54px;border-radius:14px;border:2px solid var(--line-2);background:var(--surface);font-weight:700;cursor:pointer;padding:8px 14px;text-align:left;color:var(--ink);box-shadow:0 3px 0 var(--line-2)}
+.mitem.sel{border-color:var(--iris);background:var(--iris-soft)}
+.mitem.right{background:var(--mint-soft);border-color:var(--mint);color:var(--mint-ink);box-shadow:none;opacity:.75}
+.mitem.wrong{background:var(--bad-soft);border-color:var(--bad);color:var(--bad-ink)}
+.sortlist{display:flex;flex-direction:column;gap:10px}
+.srow{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:10px 14px;border-radius:14px;background:var(--surface-2);border:1px solid var(--line)}
+.sw{font-size:1.15rem;font-weight:700;font-family:var(--f-display)}
+.sw b{color:var(--iris)}
+.clockwrap{display:flex;gap:24px;align-items:center;flex-wrap:wrap}
+.clock{color:var(--ink);flex:none}
+.say-row{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.say-row .big-say{font-family:var(--f-display);font-size:clamp(1.3rem,3vw,1.7rem);font-weight:700}
+.fbar{position:sticky;bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:10;border-radius:20px;padding:16px 18px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow-lg)}
+.fbar.ok{background:var(--mint-soft);border-color:transparent}
+.fbar.bad{background:var(--bad-soft);border-color:transparent}
+.fbar .msg{display:flex;align-items:center;gap:12px;font-weight:800;min-width:0}
+.fbar .msg .bubble-ic{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;flex:none}
+.fbar.ok .msg{color:var(--mint-ink)}.fbar.ok .bubble-ic{background:var(--mint);color:var(--on-mint)}
+.fbar.bad .msg{color:var(--bad-ink)}.fbar.bad .bubble-ic{background:var(--bad);color:#fff}
+.fbar .msg small{display:block;font-weight:600;color:var(--ink-2)}
+.summary{display:flex;flex-direction:column;align-items:center;text-align:center;gap:16px;padding:20px 0}
+.summary .ring{width:150px;height:150px}
+.summary .stats3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;width:100%;max-width:520px}
+.summary .stats3 div{border-radius:16px;padding:12px;border:2px solid var(--line)}
+.summary .stats3 b{display:block;font-family:var(--f-display);font-size:1.4rem;font-variant-numeric:tabular-nums}
+.review-list{display:flex;flex-direction:column;gap:8px;width:100%;text-align:left}
+.review-list .rl{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;border-radius:14px;background:var(--surface);border:1px solid var(--line)}
+.review-list .rl .d{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;flex:none}
+.review-list .rl.ok .d{background:var(--mint);color:var(--on-mint)}
+.review-list .rl.bad .d{background:var(--bad);color:#fff}
+.player-nav{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+
+/* video-like dialogue */
+.screen{position:relative;overflow:hidden;background:var(--hero);color:var(--hero-fg);border-radius:28px;aspect-ratio:16/9;max-width:100%;display:flex;flex-direction:column;justify-content:space-between;padding:clamp(16px,3vw,30px)}
+.screen::before{content:"";position:absolute;left:-10%;bottom:-40%;width:70%;aspect-ratio:1;border-radius:50%;background:var(--hero-2)}
+.screen>*{position:relative}
+.screen .top{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}
+.screen .tag{font-size:.72rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--hero-mute)}
+.screen .scene{display:flex;align-items:flex-end;gap:clamp(10px,2vw,20px)}
+.persona{display:flex;flex-direction:column;align-items:center;gap:6px;flex:none;transition:opacity .2s,transform .2s;opacity:.45}
+.persona.on{opacity:1;transform:translateY(-4px)}
+.persona .head{width:clamp(46px,8vw,72px);height:clamp(46px,8vw,72px);border-radius:50%;display:grid;place-items:center;font-family:var(--f-display);font-weight:800;font-size:clamp(1rem,2vw,1.5rem)}
+.persona .body{width:clamp(64px,11vw,100px);height:clamp(26px,4vw,40px);border-radius:40px 40px 10px 10px;margin-top:-4px}
+.persona.p0 .head,.persona.p0 .body{background:var(--brand);color:var(--on-brand)}
+.persona.p1 .head,.persona.p1 .body{background:#8E8AFF;color:#0D0C1D}
+.persona small{font-size:.72rem;font-weight:800;color:var(--hero-mute)}
+.speech{flex:1;min-width:0;background:#FFFFFF;color:#16143A;border-radius:22px;padding:clamp(12px,2vw,20px);margin-bottom:clamp(30px,5vw,50px)}
+.speech .say{font-family:var(--f-display);font-weight:700;font-size:clamp(1rem,2.6vw,1.6rem);line-height:1.25;text-wrap:balance}
+.speech .sub{color:#5B5978;font-size:clamp(.82rem,1.6vw,1rem);margin-top:4px}
+.screen .prog{height:5px;background:var(--hero-2);border-radius:5px;overflow:hidden}
+.screen .prog i{display:block;height:100%;background:var(--brand)}
+.ctrl{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.transcript{display:flex;flex-direction:column;gap:4px}
+.transcript button{display:grid;grid-template-columns:110px minmax(0,1fr);gap:12px;text-align:left;border:0;background:none;padding:10px 12px;border-radius:12px;cursor:pointer;color:var(--ink)}
+.transcript button:hover{background:var(--sunken)}
+.transcript button.on{background:var(--iris-soft)}
+.transcript .sp{font-size:.78rem;font-weight:800;color:var(--ink-3);padding-top:3px;text-transform:uppercase;letter-spacing:.05em}
+.transcript .uk{display:block;color:var(--ink-2);font-size:.9rem}
+
+/* flashcards */
+.card-wrap{display:flex;flex-direction:column;align-items:center;gap:18px}
+.flash{width:100%;max-width:540px;min-height:300px;border-radius:28px;border:2px solid var(--line);background:var(--surface);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:30px;text-align:center;box-shadow:0 8px 0 var(--line),var(--shadow)}
+.flash.back{background:var(--iris-soft);border-color:var(--iris);box-shadow:0 8px 0 color-mix(in srgb,var(--iris) 45%,transparent)}
+.flash .w{font-family:var(--f-display);font-weight:800;font-size:clamp(2rem,5.5vw,3rem);letter-spacing:-0.03em;line-height:1.1}
+.flash .tr{font-size:1.35rem;font-weight:800;color:var(--iris-ink)}
+.flash .ex{color:var(--ink-2);font-style:italic}
+.dots{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.dots i{width:10px;height:10px;border-radius:50%;background:var(--line-2)}
+.dots i.k{background:var(--mint)}
+.dots i.c{background:var(--brand);transform:scale(1.25)}
+.wordlist{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,220px),1fr));gap:8px}
+.wordlist button{display:flex;justify-content:space-between;gap:10px;align-items:center;text-align:left;border:1px solid var(--line);border-radius:14px;background:var(--surface);padding:10px 14px;cursor:pointer;color:var(--ink);min-height:54px}
+.wordlist button:hover{border-color:var(--iris)}
+.wordlist small{color:var(--ink-3)}
+.wordlist .k{color:var(--mint)}
+.gram{min-width:0}
+.gram td:first-child{color:var(--ink-3);font-weight:700}
+.gram td{font-size:1.05rem}
+.gram td b{color:var(--iris-ink)}
+.tip{display:flex;gap:12px;align-items:flex-start;background:var(--sun-soft);color:var(--ink);border-radius:16px;padding:16px 18px}
+.tip svg{flex:none;color:var(--sun-ink);margin-top:2px}
+.letter{background:var(--surface);border:1px solid var(--line);border-radius:6px 28px 28px 28px;padding:clamp(22px,4vw,40px);font-size:1.06rem;line-height:1.7;display:flex;flex-direction:column;gap:12px;box-shadow:var(--shadow);position:relative}
+.letter::before{content:"";position:absolute;left:0;top:0;width:100%;height:8px;border-radius:6px 28px 0 0;background:repeating-linear-gradient(90deg,var(--brand) 0 18px,transparent 18px 26px,var(--iris) 26px 44px,transparent 44px 52px)}
+.write-box{width:100%;border:2px solid var(--line-2);border-radius:18px;background:var(--surface-2);padding:16px;font-size:1.05rem;resize:vertical;line-height:1.6;min-height:160px}
+.write-box:focus{outline:4px solid var(--iris-soft);border-color:var(--iris)}
+
+/* ---------- teacher: builder ---------- */
+.builder{display:grid;grid-template-columns:250px minmax(0,1fr) 360px;gap:20px;align-items:start}
+@media (max-width:1320px){.builder{grid-template-columns:240px minmax(0,1fr)}.b-prev{grid-column:1/-1;position:static!important}}
+@media (max-width:760px){.builder{grid-template-columns:minmax(0,1fr)}}
+.tree{display:flex;flex-direction:column;gap:16px;padding:16px}
+.tree-mod{display:flex;flex-direction:column;gap:2px}
+.tree-h{display:flex;gap:8px;align-items:center;margin-bottom:6px}
+.tree-h input{flex:1;min-width:0;border:1px solid transparent;background:transparent;font-family:var(--f-display);font-weight:700;font-size:.98rem;padding:5px 7px;border-radius:8px}
+.tree-h input:hover,.tree-h input:focus{border-color:var(--line-2);background:var(--surface-2)}
+.tree-l{display:flex;align-items:center;gap:9px;text-align:left;border:0;background:none;border-radius:10px;padding:6px 8px;min-height:42px;cursor:pointer;color:var(--ink);font-size:.87rem}
+.tree-l:hover{background:var(--sunken)}
+.tree-l.cur{background:var(--iris-soft);color:var(--iris-ink)}
+.tree-l .ti{color:var(--ink-3);display:grid;place-items:center;width:22px}
+.tree-l b{font-weight:600;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tree-add{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.tree-add select{min-height:38px;border-radius:10px;border:1px solid var(--line-2);background:var(--surface-2);padding:0 8px;flex:1;min-width:0}
+.b-main{display:flex;flex-direction:column;gap:20px;min-width:0}
+.b-prev{position:sticky;top:20px;display:flex;flex-direction:column;gap:12px;min-width:0;background:var(--sunken);border-radius:var(--r);padding:16px;border:1px dashed var(--line-2)}
+.b-prev .qcard{box-shadow:none;padding:20px;border-radius:20px}
+.b-prev .qcard .q{font-size:1.2rem}
+.b-item{border:1px solid var(--line);border-radius:16px;padding:10px 12px;display:flex;flex-direction:column;gap:12px;background:var(--surface)}
+.b-item.cur{border:2px solid var(--iris);padding:9px 11px}
+.b-item-h{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.b-item-t{display:flex;align-items:center;gap:10px;border:0;background:none;cursor:pointer;color:var(--ink);padding:4px 0;flex:1;text-align:left;min-height:40px}
+.b-tools{display:flex;gap:4px}
+.exi{min-width:40px;height:32px;padding:0 6px;border-radius:10px;background:var(--iris-soft);color:var(--iris-ink);display:inline-grid;place-items:center;font-size:.8rem;font-weight:800}
+.palette{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,190px),1fr));gap:8px;margin-top:10px}
+.pal{display:flex;gap:10px;align-items:flex-start;text-align:left;border:1.5px dashed var(--line-2);border-radius:14px;background:var(--surface);padding:10px;cursor:pointer;color:var(--ink);transition:border-color .12s,transform .12s}
+.pal:hover{border-color:var(--iris);border-style:solid;transform:translateY(-1px)}
+.pal b{display:block;font-size:.9rem}
+.pal small{color:var(--ink-3);font-size:.78rem;line-height:1.3;display:block}
+.gen{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;background:var(--sun-soft);border-radius:16px;padding:14px 16px}
+.gen svg{color:var(--brand)}
+.pv-lesson{display:flex;flex-direction:column;gap:14px;font-size:.92rem}
+.pv-lesson .screen{aspect-ratio:auto;min-height:230px}
+details summary{cursor:pointer;font-weight:700}
+
+/* client chart */
+.lchart{display:flex;flex-direction:column;gap:16px}
+.lrow{display:grid;grid-template-columns:48px minmax(0,1fr);gap:14px;align-items:center}
+.bars{display:flex;flex-direction:column;gap:6px}
+.bar-l{display:flex;align-items:center;gap:8px;font-size:.82rem;font-variant-numeric:tabular-nums;color:var(--ink-3)}
+.bar-l i{display:block;height:16px;border-radius:0 8px 8px 0;min-width:4px}
+.bar-l i.a{background:var(--bar-muted)}
+.bar-l i.b{background:var(--iris)}
+.legend-row{display:flex;gap:18px;flex-wrap:wrap;font-size:.85rem;color:var(--ink-2)}
+.legend-row span{display:inline-flex;align-items:center;gap:6px}
+.legend-row i{width:12px;height:12px;border-radius:4px;display:inline-block}
+
+.att{min-width:120px;min-height:38px;border-radius:999px;font-weight:800;font-size:.84rem;cursor:pointer;border:0}
+.att.in{background:var(--mint-soft);color:var(--mint-ink)}
+.att.out{background:var(--bad-soft);color:var(--bad-ink)}
+.gtabs{display:flex;gap:10px;flex-wrap:wrap}
+.gtabs button{display:flex;flex-direction:column;align-items:flex-start;gap:2px;text-align:left;min-height:62px;padding:10px 16px;border-radius:16px;border:1px solid var(--line);background:var(--surface);cursor:pointer;color:var(--ink)}
+.gtabs button small{color:var(--ink-3);font-size:.8rem;font-weight:600}
+.gtabs button[aria-selected="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.gtabs button[aria-selected="true"] small{color:var(--bg);opacity:.7}
+
+.overlay{position:fixed;inset:0;background:rgba(10,9,26,.55);display:grid;place-items:center;padding:20px;z-index:50}
+.sheet{background:var(--surface);border-radius:26px;max-width:620px;width:100%;max-height:85vh;overflow:auto;padding:30px;display:flex;flex-direction:column;gap:16px;border:1px solid var(--line);box-shadow:var(--shadow-lg)}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:12px 18px;border-radius:14px;font-weight:700;z-index:60;box-shadow:var(--shadow-lg);max-width:calc(100% - 32px)}
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+@media (max-width:640px){.card{padding:18px}.demo{display:none}.qcard{border-radius:22px}}
+</style>
+
+<div id="app"></div>
+
+<script>
+
+(function(){
+const KEY='taalbrug-demo-v4';
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const eur=n=>'€'+Math.round(n).toLocaleString('nl-NL');
+
+/* ---------- copy ---------- */
+const T={
+nl:{
+ roles:{home:'Website',signup:'Aanmelden',learner:'Cursist',teacher:'Docent',client:'Opdrachtgever',admin:'Beheer'},
+ demo:'Prototype · voorbeeldgegevens',
+ kicker:'Taalschool voor nieuwkomers',
+ heroTitle:'Nederlands voor werk en het dagelijks leven',
+ heroLead:'Kleine groepen met een gecertificeerde NT2-docent. Op beginnersniveau ook uitleg in het Oekraïens, praktische lessen voor op het werk en een toets aan het begin en het eind.',
+ ctaSignup:'Aanmelden voor een cursus', ctaPartner:'Voor gemeenten en werkgevers',
+ lineTitle:'De taallijn · van eerste woord tot werkvloer',
+ levels:['Eerste woorden','Gesprekken in winkel en bij de huisarts','Collega’s, instanties, brieven','Zelfstandig op het werk'],
+ feats:[['Kleine groepen','Maximaal 12 cursisten, twee keer per week 2 uur. Overdag, ’s avonds of online.'],['Uitleg in je eigen taal','Op A0–A1 leggen we grammatica ook uit in het Oekraïens. Vanaf A2 alleen in het Nederlands.'],['Meetbaar resultaat','Intake- en eindtoets op de schaal A1–B1, en een maandrapport voor wie de cursus betaalt.']],
+ coursesTitle:'Cursussen',
+ courses:[['A0–A1','Start','Jezelf voorstellen, afspraken maken, boodschappen, de huisarts.','12 weken · 2 × 2 uur','€165 / maand'],['A2','Werk en dagelijks leven','Gesprekken met collega’s en instanties, brieven begrijpen, solliciteren.','12 weken · 2 × 2 uur','€165 / maand'],['A2–B1','Nederlands op de werkvloer','Veiligheidsinstructies, overleg met je leidinggevende, vakwoorden per sector.','In-company · op maat','Op aanvraag']],
+ choose:'Aanmelden',
+ bandTitle:'Voor gemeenten en werkgevers',
+ bandLead:'Een pilotgroep start binnen 4 weken. U ziet elke maand wat het oplevert.',
+ bandList:['Aanwezigheid per groep, elke week bijgewerkt','Niveau bij intake en bij de eindtoets','Wie werk of een stage vond','Verwerkersovereenkomst en AVG-proof portaal'],
+ bandCta:'Bekijk het portaal voor opdrachtgevers',
+ portalTitle:'Het portaal', portalLead:'Kies een rol om het prototype te bekijken.',
+ tiles:{learner:['Cursist','Lessen, huiswerk en je voortgang'],teacher:['Docent','Aanwezigheid en toetsresultaten'],client:['Gemeente of werkgever','Groepen, resultaten en rapporten'],admin:['Beheer','Groepen, wachtlijst en facturen']},
+ open:'Openen →', footer:'Taalbrug (werknaam) · KvK [nummer] · CRKBO [aangevraagd]', reset:'Voorbeeldgegevens herstellen', resetDone:'Voorbeeldgegevens hersteld',
+ // signup
+ suTitle:'Aanmelden voor een cursus', suLead:'Binnen 2 werkdagen bellen we je voor een korte intake en een niveautoets.',
+ fName:'Naam', fNamePh:'Voor- en achternaam', fPhone:'Telefoon', fEmail:'E-mail (optioneel)', fCity:'Woonplaats', fCityPh:'Bijvoorbeeld Utrecht',
+ fLevel:'Hoe goed spreek je al Nederlands?', lvSay:['Nog helemaal niet','Een paar woorden','Eenvoudige gesprekken','Redelijk vloeiend'],
+ fTime:'Wanneer wil je les?', times:['Overdag','’s Avonds','Online'], fPay:'Wie betaalt de cursus?', payers:['Ikzelf','Mijn werkgever','De gemeente'],
+ fGoal:'Waarvoor wil je Nederlands leren?', fGoalPh:'Bijvoorbeeld: werk in een magazijn, gesprekken met de school van mijn kinderen',
+ fConsent:'Ik ga akkoord dat Taalbrug mijn gegevens gebruikt voor de intake en de cursus.',
+ fSubmit:'Aanmelding versturen', errName:'Vul je naam in.', errPhone:'Vul een telefoonnummer in.', errConsent:'Geef toestemming om verder te gaan.',
+ doneTitle:'Bedankt, je aanmelding is binnen', doneLead:'We bellen je binnen 2 werkdagen om de intake te plannen. In dit prototype staat je aanmelding nu op de wachtlijst in Beheer.',
+ toAdmin:'Bekijk de wachtlijst', another:'Nog iemand aanmelden',
+ // learner
+ hello:'Hallo, Olena', lGroup:'Start A1 · avond · docent [naam docent]',
+ nextT:'Volgende les', nextWhen:'Dinsdag 19:00–21:00', nextWhere:'Bibliotheek centrum, zaal 2 · of online via de link in je e-mail', nextTopic:'Onderwerp: bij de huisarts',
+ absent:'Ik ben er niet bij', absentOn:'Afwezigheid doorgegeven · ongedaan maken',
+ myLine:'Jouw taallijn', lineNote:'Les 14 van 24 · eindtoets in week 12', intake:'Intake', att:'Aanwezig',
+ hwT:'Huiswerk', hwDone:'klaar', hw:[['Luisteren: gesprek bij de huisarts','Voor maandag'],['Woorden: het lichaam (20)','Voor dinsdag'],['Formulier van de huisarts invullen','Voor dinsdag'],['5 zinnen over je dag schrijven','Voor donderdag']],
+ schedT:'Rooster', sched:[['di','14','Bij de huisarts'],['do','16','Apotheek en medicijnen'],['di','21','Werk: de eerste dag'],['do','23','Herhaling en minitoets']],
+ msgT:'Bericht van je docent', msgFrom:'Docent · gisteren', msg:'Goed gedaan vorige week! Oefen voor dinsdag de woorden over het lichaam en neem één vraag mee die je de huisarts zou willen stellen.',
+ // teacher
+ tTitle:'Mijn groepen', tLead:'Dinsdag · 2 lessen vandaag', attToday:'Aanwezigheid vandaag', present:'aanwezig', here:'Aanwezig', away:'Afwezig',
+ cName:'Cursist', cIntake:'Intake', cNow:'Laatste toets', cAtt:'Aanwezigheid', cToday:'Vandaag', save:'Opslaan', saved:'Aanwezigheid opgeslagen',
+ note:'Lesnotitie', notePh:'Wat ging goed, wat herhalen we volgende les?', kLearners:'Cursisten', kAvg:'Gem. aanwezigheid', kLesson:'Les', kSeats:'Vrije plekken',
+ // client
+ cTitle:'Gemeente [naam]', cLead:'Taaltraject Werk en participatie · contactpersoon [naam]', pMonth:'Deze maand', pAll:'Hele traject',
+ kActive:'Cursisten actief', kAttAvg:'Gem. aanwezigheid', kUp:'Minstens één niveau omhoog', kWork:'Werk of stage gevonden',
+ lvlT:'Niveau bij intake en nu', lvlLead:'Aantal cursisten per niveau, alle groepen samen', lgIntake:'Bij intake', lgNow:'Laatste toets',
+ grpT:'Groepen', cGroup:'Groep', cPeriod:'Periode', cLearn:'Cursisten', cUp:'Niveau omhoog', cStatus:'Status', running:'Loopt', finished:'Afgerond',
+ repT:'Rapporten', view:'Bekijken', invT:'Facturen', paid:'Betaald', openInv:'Open', close:'Sluiten',
+ privacy:'Persoonsgegevens worden alleen gedeeld zoals afgesproken in de verwerkersovereenkomst. Dit overzicht toont totalen per groep.',
+ repBody:'Samenvatting voor de opdrachtgever', repLines:['24 cursisten in 2 groepen, gemiddeld 89% aanwezig','3 cursisten vonden deze maand werk of een stage','Eindtoets groep A1 · ochtend: 9 van 12 een niveau omhoog','Volgende stap: 1 extra groep vanaf januari (wachtlijst: 9)'],
+ // admin
+ aTitle:'Overzicht', aLead:'Planmodel · voorbeeldmaand', kGroups:'Groepen actief', kStudents:'Cursisten', kRev:'Omzet per maand', kOpen:'Openstaand',
+ gT:'Groepen', cClient:'Opdrachtgever', cTeacher:'Docent', cSeatsC:'Bezetting', cRev:'Omzet / maand',
+ wT:'Wachtlijst', waiting:'wachtend', placeIn:'Plaatsen', chooseGroup:'Kies een groep', noSeat:'Geen vrije plekken', placed:'geplaatst in', wEmpty:'De wachtlijst is leeg. Nieuwe aanmeldingen verschijnen hier.',
+ iT:'Facturen', markPaid:'Markeer als betaald', types:{private:'Particulier',employer:'Werkgever',gemeente:'Gemeente'}
+},
+uk:{
+ roles:{home:'Сайт',signup:'Запис',learner:'Учень',teacher:'Викладач',client:'Замовник',admin:'Адмін'},
+ demo:'Прототип · приклад даних',
+ kicker:'Мовна школа для новоприбулих',
+ heroTitle:'Нідерландська для роботи та щоденного життя',
+ heroLead:'Невеликі групи з сертифікованим викладачем NT2. На початкових рівнях пояснення також українською, практичні уроки для роботи та тест на початку й наприкінці.',
+ ctaSignup:'Записатися на курс', ctaPartner:'Для громад і роботодавців',
+ lineTitle:'Мовна лінія · від першого слова до роботи',
+ levels:['Перші слова','Розмови в магазині та в лікаря','Колеги, установи, листи','Самостійно на роботі'],
+ feats:[['Невеликі групи','До 12 учнів, двічі на тиждень по 2 години. Вдень, увечері або онлайн.'],['Пояснення рідною мовою','На рівнях A0–A1 граматику пояснюємо також українською. З A2 — лише нідерландською.'],['Вимірюваний результат','Вхідний і підсумковий тест за шкалою A1–B1 та щомісячний звіт для того, хто оплачує курс.']],
+ coursesTitle:'Курси',
+ courses:[['A0–A1','Старт','Розповісти про себе, домовитися про зустріч, покупки, лікар.','12 тижнів · 2 × 2 години','€165 / місяць'],['A2','Робота і щоденне життя','Розмови з колегами та установами, листи, пошук роботи.','12 тижнів · 2 × 2 години','€165 / місяць'],['A2–B1','Нідерландська на роботі','Інструкції з безпеки, розмова з керівником, фахова лексика.','На підприємстві','За запитом']],
+ choose:'Записатися',
+ bandTitle:'Для громад і роботодавців',
+ bandLead:'Пілотна група стартує протягом 4 тижнів. Щомісяця ви бачите результат.',
+ bandList:['Відвідуваність кожної групи, оновлюється щотижня','Рівень на вході та на підсумковому тесті','Хто знайшов роботу або стажування','Договір про обробку даних і портал відповідно до AVG'],
+ bandCta:'Переглянути портал для замовників',
+ portalTitle:'Портал', portalLead:'Оберіть роль, щоб переглянути прототип.',
+ tiles:{learner:['Учень','Уроки, домашні завдання, прогрес'],teacher:['Викладач','Відвідуваність і результати тестів'],client:['Громада або роботодавець','Групи, результати, звіти'],admin:['Адміністратор','Групи, список очікування, рахунки']},
+ open:'Відкрити →', footer:'Taalbrug (робоча назва) · KvK [номер] · CRKBO [подано]', reset:'Відновити приклад даних', resetDone:'Приклад даних відновлено',
+ suTitle:'Запис на курс', suLead:'Протягом 2 робочих днів ми зателефонуємо для короткої співбесіди та тесту рівня.',
+ fName:'Ім’я', fNamePh:'Ім’я та прізвище', fPhone:'Телефон', fEmail:'E-mail (необов’язково)', fCity:'Місто', fCityPh:'Наприклад, Утрехт',
+ fLevel:'Наскільки добре ви вже говорите нідерландською?', lvSay:['Зовсім не знаю','Кілька слів','Прості розмови','Досить вільно'],
+ fTime:'Коли вам зручно навчатися?', times:['Вдень','Увечері','Онлайн'], fPay:'Хто оплачує курс?', payers:['Я сам(а)','Мій роботодавець','Громада (гемеенте)'],
+ fGoal:'Для чого вам нідерландська?', fGoalPh:'Наприклад: робота на складі, розмови зі школою дітей',
+ fConsent:'Я погоджуюся, що Taalbrug використовує мої дані для співбесіди та курсу.',
+ fSubmit:'Надіслати заявку', errName:'Вкажіть ім’я.', errPhone:'Вкажіть номер телефону.', errConsent:'Дайте згоду, щоб продовжити.',
+ doneTitle:'Дякуємо, заявку отримано', doneLead:'Ми зателефонуємо протягом 2 робочих днів. У цьому прототипі ваша заявка тепер у списку очікування в розділі «Адмін».',
+ toAdmin:'Переглянути список очікування', another:'Записати ще когось',
+ hello:'Привіт, Олено', lGroup:'Старт A1 · вечір · викладач [ім’я]',
+ nextT:'Наступний урок', nextWhen:'Вівторок 19:00–21:00', nextWhere:'Бібліотека в центрі, зал 2 · або онлайн за посиланням з e-mail', nextTopic:'Тема: у сімейного лікаря',
+ absent:'Мене не буде', absentOn:'Відсутність повідомлено · скасувати',
+ myLine:'Ваша мовна лінія', lineNote:'Урок 14 з 24 · підсумковий тест на 12-му тижні', intake:'Вхідний', att:'Відвідуваність',
+ hwT:'Домашнє завдання', hwDone:'виконано', hw:[['Аудіо: діалог у лікаря','До понеділка'],['Слова: тіло (20)','До вівторка'],['Заповнити анкету в лікаря','До вівторка'],['Написати 5 речень про свій день','До четверга']],
+ schedT:'Розклад', sched:[['вт','14','У сімейного лікаря'],['чт','16','Аптека та ліки'],['вт','21','Робота: перший день'],['чт','23','Повторення і міні-тест']],
+ msgT:'Повідомлення від викладача', msgFrom:'Викладач · вчора', msg:'Гарна робота минулого тижня! До вівторка повторіть слова про тіло і підготуйте одне питання до лікаря.',
+ tTitle:'Мої групи', tLead:'Вівторок · 2 уроки сьогодні', attToday:'Відвідуваність сьогодні', present:'присутні', here:'Присутній', away:'Відсутній',
+ cName:'Учень', cIntake:'Вхідний', cNow:'Останній тест', cAtt:'Відвідуваність', cToday:'Сьогодні', save:'Зберегти', saved:'Відвідуваність збережено',
+ note:'Нотатка до уроку', notePh:'Що вдалося, що повторимо наступного разу?', kLearners:'Учні', kAvg:'Середня відвідуваність', kLesson:'Урок', kSeats:'Вільні місця',
+ cTitle:'Громада [назва]', cLead:'Мовна програма «Робота та участь» · контакт [ім’я]', pMonth:'Цей місяць', pAll:'Уся програма',
+ kActive:'Активні учні', kAttAvg:'Середня відвідуваність', kUp:'Щонайменше на рівень вище', kWork:'Знайшли роботу чи стажування',
+ lvlT:'Рівень на вході та зараз', lvlLead:'Кількість учнів за рівнем, усі групи разом', lgIntake:'На вході', lgNow:'Останній тест',
+ grpT:'Групи', cGroup:'Група', cPeriod:'Період', cLearn:'Учні', cUp:'Рівень вище', cStatus:'Статус', running:'Триває', finished:'Завершено',
+ repT:'Звіти', view:'Переглянути', invT:'Рахунки', paid:'Оплачено', openInv:'Відкрито', close:'Закрити',
+ privacy:'Персональні дані передаються лише згідно з договором про обробку даних. Тут показано підсумки за групами.',
+ repBody:'Підсумок для замовника', repLines:['24 учні у 2 групах, середня відвідуваність 89%','3 учні цього місяця знайшли роботу або стажування','Підсумковий тест групи A1 · ранок: 9 з 12 на рівень вище','Наступний крок: ще 1 група з січня (у списку очікування: 9)'],
+ aTitle:'Огляд', aLead:'Планова модель · приклад місяця', kGroups:'Активні групи', kStudents:'Учні', kRev:'Виручка на місяць', kOpen:'Неоплачено',
+ gT:'Групи', cClient:'Замовник', cTeacher:'Викладач', cSeatsC:'Заповненість', cRev:'Виручка / міс.',
+ wT:'Список очікування', waiting:'очікують', placeIn:'Додати', chooseGroup:'Оберіть групу', noSeat:'Немає вільних місць', placed:'додано до', wEmpty:'Список порожній. Нові заявки з’являться тут.',
+ iT:'Рахунки', markPaid:'Позначити оплаченим', types:{private:'Приватна',employer:'Роботодавець',gemeente:'Громада'}
+}};
+
+/* ---------- data ---------- */
+const NAMES=['Olena K.','Andrii M.','Iryna S.','Tomasz W.','Mariia P.','Serhii D.','Ana R.','Kateryna L.','Oksana T.','Vasyl H.','Marta N.','Yurii B.'];
+const mk=(n,shift)=>Array.from({length:n},(_,i)=>{const k=(i+shift)%NAMES.length;const intake=['A0','A0','A1','A0','A1','A0','A0','A1'][(i+shift)%8];
+  const now={A0:['A1','A0','A1'][i%3],A1:['A2','A1','A2'][i%3]}[intake];return {id:'m'+shift+'-'+i,name:NAMES[k],intake,now,att:[96,92,100,83,92,75,88,96][(i+shift)%8],online:[9,7,11,4,8,2,6,10][(i+shift)%8],hrs:[3.5,2.8,4.6,1.2,3.1,0.6,2.2,4.0][(i+shift)%8],test:[88,74,95,62,81,45,70,90][(i+shift)%8],in:true};});
+function seed(){return {
+  lang:'nl', view:'home', clientPeriod:0, teacherGroup:'g1',
+  groups:[
+    {id:'g1',name:'Start A1 · avond',type:'private',client:null,teacher:'[Docent 1]',cap:12,lesson:14,members:mk(11,0),note:''},
+    {id:'g2',name:'Werk A2 · online',type:'private',client:null,teacher:'[Docent 2]',cap:12,lesson:9,members:mk(9,3),note:''},
+    {id:'g3',name:'Werkvloer A2',type:'employer',client:'[Werkgever 1]',teacher:'[Docent 1]',cap:8,lesson:9,members:mk(8,5),note:''},
+    {id:'g4',name:'Gemeente A1 · ochtend',type:'gemeente',client:'[Gemeente 1]',teacher:'[Docent 2]',cap:12,lesson:5,members:mk(12,2),note:''}
+  ],
+  waitlist:[
+    {id:'w1',name:'Yulia B.',level:'A1',time:1,pay:0},
+    {id:'w2',name:'Dmytro H.',level:'A0',time:2,pay:1},
+    {id:'w3',name:'Natalia O.',level:'A2',time:0,pay:2}
+  ],
+  invoices:[
+    {id:'i1',client:'[Gemeente 1]',desc:{nl:'1 groep · 12 cursisten · oktober',uk:'1 група · 12 учнів · жовтень'},amount:3000,paid:false},
+    {id:'i2',client:'[Werkgever 1]',desc:{nl:'1 groep in-company · oktober',uk:'1 група на підприємстві · жовтень'},amount:2300,paid:false},
+    {id:'i3',client:'[Gemeente 1]',desc:{nl:'1 groep · 12 cursisten · september',uk:'1 група · 12 учнів · вересень'},amount:3000,paid:true},
+    {id:'i4',client:{nl:'Particulieren',uk:'Приватні учні'},desc:{nl:'20 cursisten · oktober',uk:'20 учнів · жовтень'},amount:3300,paid:true}
+  ],
+  hw:[true,false,false,false], absent:false, signup:null,
+  done:{'1.1':1,'1.2':1,'1.3':1,'1.4':1,'1.5':1,'1.6':1,'2.1':1,'2.2':1}, scores:{'1.4':80,'1.6':83},
+  known:{'hallo':1,'dag / doei':1,'ik heet':1,'ik kom uit':1,'ik woon in':1,'de huisarts':1,'de afspraak':1},
+  week:[35,20,45,0,30,50,25], streak:5, support:true, cur:'2.3', ex:{}, fc:{}, line:{}
+};}
+let S;
+try{S=JSON.parse(localStorage.getItem(KEY)||'null');}catch(e){S=null}
+if(!S||!S.groups)S=seed();
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+const t=k=>T[S.lang][k];
+const L=v=>v&&typeof v==='object'?v[S.lang]:v;
+const rev=g=>g.type==='private'?165*g.members.length:g.type==='employer'?2300:250*g.members.length;
+
+
+/* ---------- learning platform: copy ---------- */
+Object.assign(T.nl,{
+  feat4:['Online leeromgeving','Tussen de lessen oefen je online: dialogen met audio, woordkaarten, oefeningen en toetsen.'],
+  types2:{video:'Dialoog',words:'Woorden',grammar:'Grammatica',practice:'Oefenen',test:'Toets'},
+  course:'Cursus Start A1 · avond', cont:'Ga verder waar je was', startLesson:'Start les', ofLessons:'van 18 lessen klaar',
+  weekT:'Leertijd deze week', goal:'Doel: 4 uur per week', days:['ma','di','wo','do','vr','za','zo'], streak:'dagen op rij',
+  mapT:'Mijn cursus', support:'Uitleg in het Oekraïens', locked:'Open na de toets van de vorige module (70% of meer)', soon:'Binnenkort',
+  reviewT:'Woorden herhalen', reviewN:'woorden om te herhalen', reviewGo:'Herhalen', reviewDone:'Je kent alle woorden. Goed bezig!',
+  liveT:'Volgende les met de docent', liveWhen:'Dinsdag 19:00 · Bibliotheek centrum', todayT:'Voor vandaag',
+  min:'min', back:'Mijn cursus', prev:'Vorige', finish:'Afronden en verder', finished:'Les afgerond', nextMod:'Naar de volgende les',
+  vidNote:'Dialoog met audio · video-opname met docent in productie', play:'Afspelen', pause:'Pauze', prevLine:'Vorige zin', nextLine:'Volgende zin', transcript:'Hele tekst', listen:'Luister',
+  noAudio:'Audio is niet beschikbaar in deze browser. Lees de tekst mee.',
+  flip:'Draai om', again:'Nog oefenen', know:'Ken ik', cardOf:'kaart', allWords:'Alle woorden', deckDone:'Klaar met deze woorden', deckRestart:'Opnieuw', knownN:'gekend',
+  check:'Controleer', correct:'Goed!', answerIs:'Het goede antwoord:', submit:'Toets inleveren', retry:'Opnieuw proberen', pass:'Geslaagd', fail:'Nog niet geslaagd · 70% nodig', score:'score',
+  hints:{mc:'Kies het goede antwoord',gap:'Vul het woord in',order:'Zet de woorden in de goede volgorde',listen:'Luister en kies de vertaling'},
+  practiceOk:'goed', answerAll:'Beantwoord alle vragen om in te leveren.', unanswered:'nog niet beantwoord',
+  cOnline:'Online', cHrs:'u/wk', kOnline:'Online leertijd', kOnlineN:'gemiddeld per cursist per week'
+});
+Object.assign(T.uk,{
+  feat4:['Онлайн-платформа','Між уроками ви тренуєтеся онлайн: діалоги з аудіо, картки слів, вправи і тести.'],
+  types2:{video:'Діалог',words:'Слова',grammar:'Граматика',practice:'Вправи',test:'Тест'},
+  course:'Курс Старт A1 · вечір', cont:'Продовжіть з того місця, де зупинилися', startLesson:'Почати урок', ofLessons:'з 18 уроків пройдено',
+  weekT:'Час навчання цього тижня', goal:'Мета: 4 години на тиждень', days:['пн','вт','ср','чт','пт','сб','нд'], streak:'днів поспіль',
+  mapT:'Мій курс', support:'Пояснення українською', locked:'Відкриється після тесту попереднього модуля (70% і більше)', soon:'Незабаром',
+  reviewT:'Повторення слів', reviewN:'слів для повторення', reviewGo:'Повторити', reviewDone:'Ви знаєте всі слова. Чудово!',
+  liveT:'Наступний урок з викладачем', liveWhen:'Вівторок 19:00 · Бібліотека в центрі', todayT:'На сьогодні',
+  min:'хв', back:'Мій курс', prev:'Назад', finish:'Завершити і далі', finished:'Урок завершено', nextMod:'До наступного уроку',
+  vidNote:'Діалог з аудіо · відео з викладачем готується', play:'Відтворити', pause:'Пауза', prevLine:'Попереднє речення', nextLine:'Наступне речення', transcript:'Весь текст', listen:'Слухати',
+  noAudio:'Аудіо недоступне в цьому браузері. Читайте текст.',
+  flip:'Перевернути', again:'Ще потренувати', know:'Знаю', cardOf:'картка', allWords:'Усі слова', deckDone:'Слова пройдено', deckRestart:'Знову', knownN:'знаю',
+  check:'Перевірити', correct:'Правильно!', answerIs:'Правильна відповідь:', submit:'Здати тест', retry:'Спробувати ще', pass:'Складено', fail:'Ще не складено · потрібно 70%', score:'результат',
+  hints:{mc:'Оберіть правильну відповідь',gap:'Впишіть слово',order:'Поставте слова в правильному порядку',listen:'Послухайте й оберіть переклад'},
+  practiceOk:'правильно', answerAll:'Дайте відповідь на всі питання, щоб здати тест.', unanswered:'без відповіді',
+  cOnline:'Онлайн', cHrs:'год/тиж', kOnline:'Час онлайн', kOnlineN:'в середньому на учня на тиждень'
+});
+
+/* ---------- learning platform: more copy ---------- */
+Object.assign(T.nl,{
+  ofLessons:'lessen klaar',
+  types2:{video:'Dialoog',words:'Woorden',grammar:'Grammatica',practice:'Oefenen',reading:'Lezen',speaking:'Spreken',writing:'Schrijven',test:'Toets'},
+  hints:{mc:'Kies het goede antwoord',listen:'Luister en kies de vertaling',tf:'Waar of niet waar?',gap:'Vul het woord in',order:'Zet de woorden in de goede volgorde',match:'Koppel elk woord aan de vertaling',dictation:'Luister en schrijf wat je hoort',sort:'De of het? Kies het lidwoord',clock:'Hoe laat is het?',speak:'Luister en zeg het hardop na',write:'Schrijf je antwoord'},
+  exName:{mc:'Meerkeuze',listen:'Luisteren',tf:'Waar / niet waar',gap:'Invullen',order:'Zinsbouw',match:'Koppelen',dictation:'Dictee',sort:'De of het',clock:'Klokkijken',speak:'Nazeggen',write:'Schrijven'},
+  exDesc:{mc:'Eén goed antwoord uit 3 of 4',listen:'Audio afspelen, vertaling kiezen',tf:'Klopt de zin? Goed bij een leestekst',gap:'Ontbrekend woord in een zin',order:'Losse woorden tot een zin',match:'Nederlands koppelen aan de vertaling',dictation:'Luisteren en uitschrijven',sort:'Woorden in groepen, zoals de/het',clock:'Tijd lezen: kwart over, half…',speak:'Hardop nazeggen met voorbeeldaudio',write:'Korte tekst, de docent beoordeelt'},
+  tfOpts:['Waar','Niet waar'], speakGood:'Ging goed', speakHard:'Nog lastig', speakNote:'In de app neem je jezelf op met de microfoon. In dit prototype beoordeel je jezelf.',
+  writeSend:'Inleveren bij docent', wordsN:'woorden', writeSent:'Ingeleverd. Je docent geeft feedback.', modelA:'Voorbeeldantwoord', teacherFb:'Feedback van je docent', minWords:'Minimaal', errors:'fout',
+  tSub:['Mijn groepen','Lesbouwer','Beoordelen'], bTitle:'Lesbouwer', bLead:'Maak en wijzig lessen. Cursisten zien alleen gepubliceerde lessen.',
+  addLesson:'Les toevoegen', addModule:'Module toevoegen', newLesson:'Nieuwe les', newModule:'Nieuwe module', draft:'Concept', live:'Gepubliceerd', publish:'Publiceren', unpublish:'Terug naar concept',
+  previewT:'Voorbeeld voor de cursist', viewAsLearner:'Bekijk als cursist', del:'Les verwijderen', delSure:'Klik nog eens om te verwijderen',
+  fTitleNl:'Titel (Nederlands)', fTitleUk:'Titel (Oekraïens)', fType:'Soort les', fMin:'Minuten', addEx:'Oefening toevoegen', itemsT:'Oefeningen', noItems:'Nog geen oefeningen. Kies hieronder een soort.',
+  gen:'Maak oefeningen uit een woordenlijst', genBtn:'Maken', genDone:'oefeningen toegevoegd', moveUp:'Omhoog', moveDown:'Omlaag', remove:'Verwijderen', selectToPreview:'Kies een oefening om het voorbeeld te zien.', contentT:'Inhoud',
+  fq:'Vraag of zin', fopts:'Antwoorden (één per regel)', fa:'Nummer van het goede antwoord', fsay:'Tekst die wordt voorgelezen', fbefore:'Tekst vóór het gat', fanswers:'Goede antwoorden (met komma)', fafter:'Tekst na het gat',
+  fsentence:'De juiste zin', fpairs:'Paren (Nederlands = vertaling, één per regel)', fcats:'Groepen (met komma)', fswords:'Woorden (woord = groep, één per regel)', fh:'Uur (0–23)', fm:'Minuten',
+  ftext:'Zin om na te zeggen', fuk:'Vertaling', fpromptNl:'Opdracht (Nederlands)', fpromptUk:'Opdracht (Oekraïens)', fmodel:'Voorbeeldantwoord', fminw:'Minimaal aantal woorden', ftf:'Klopt de zin?',
+  fwordsL:'Woorden (Nederlands | vertaling | voorbeeldzin, één per regel)', flines:'Zinnen (spreker | Nederlands | vertaling, één per regel)', fscene:'Situatie', fintroNl:'Uitleg (Nederlands)', fintroUk:'Uitleg (Oekraïens)',
+  frows:'Tabel (kolommen met |, eerste regel = koppen)', ftips:'Tips (Nederlands | Oekraïens, één per regel)', ftextP:'Tekst (Nederlands | vertaling, één alinea per regel)', ftextT:'Titel van de tekst',
+  rTitle:'Beoordelen', rLead:'Schrijfopdrachten van cursisten', rNew:'Nieuw', rDone:'Beoordeeld', grades:['Goed','Voldoende','Nog oefenen'], fbPh:'Schrijf korte, concrete feedback', rEmpty:'Alles is beoordeeld.', send:'Feedback versturen', sent:'Feedback verstuurd'
+});
+Object.assign(T.uk,{
+  ofLessons:'уроків пройдено',
+  types2:{video:'Діалог',words:'Слова',grammar:'Граматика',practice:'Вправи',reading:'Читання',speaking:'Говоріння',writing:'Письмо',test:'Тест'},
+  hints:{mc:'Оберіть правильну відповідь',listen:'Послухайте й оберіть переклад',tf:'Правда чи неправда?',gap:'Впишіть слово',order:'Поставте слова в правильному порядку',match:'З’єднайте слово з перекладом',dictation:'Послухайте й запишіть почуте',sort:'De чи het? Оберіть артикль',clock:'Котра година?',speak:'Послухайте й повторіть уголос',write:'Напишіть відповідь'},
+  exName:{mc:'Вибір відповіді',listen:'Аудіювання',tf:'Правда / неправда',gap:'Пропуск',order:'Порядок слів',match:'Пари',dictation:'Диктант',sort:'De чи het',clock:'Котра година',speak:'Повторення вголос',write:'Письмо'},
+  exDesc:{mc:'Одна правильна відповідь із 3–4',listen:'Прослухати аудіо, обрати переклад',tf:'Чи правильне твердження? Для текстів',gap:'Пропущене слово в реченні',order:'Скласти речення зі слів',match:'Нідерландське слово і переклад',dictation:'Прослухати й записати',sort:'Слова за групами, напр. de/het',clock:'Час: kwart over, half…',speak:'Повторити вголос за зразком',write:'Короткий текст, перевіряє викладач'},
+  tfOpts:['Правда','Неправда'], speakGood:'Вийшло добре', speakHard:'Ще складно', speakNote:'У застосунку ви записуєте себе на мікрофон. У цьому прототипі оцініть себе самі.',
+  writeSend:'Здати викладачу', wordsN:'слів', writeSent:'Здано. Викладач дасть відгук.', modelA:'Зразок відповіді', teacherFb:'Відгук викладача', minWords:'Мінімум', errors:'помилок',
+  tSub:['Мої групи','Конструктор уроків','Перевірка'], bTitle:'Конструктор уроків', bLead:'Створюйте та змінюйте уроки. Учні бачать лише опубліковані уроки.',
+  addLesson:'Додати урок', addModule:'Додати модуль', newLesson:'Новий урок', newModule:'Новий модуль', draft:'Чернетка', live:'Опубліковано', publish:'Опублікувати', unpublish:'Повернути в чернетку',
+  previewT:'Так це бачить учень', viewAsLearner:'Переглянути як учень', del:'Видалити урок', delSure:'Натисніть ще раз, щоб видалити',
+  fTitleNl:'Назва (нідерландською)', fTitleUk:'Назва (українською)', fType:'Тип уроку', fMin:'Хвилин', addEx:'Додати вправу', itemsT:'Вправи', noItems:'Ще немає вправ. Оберіть тип нижче.',
+  gen:'Створити вправи зі списку слів', genBtn:'Створити', genDone:'вправ додано', moveUp:'Вгору', moveDown:'Вниз', remove:'Видалити', selectToPreview:'Оберіть вправу, щоб побачити попередній перегляд.', contentT:'Зміст',
+  fq:'Питання або речення', fopts:'Відповіді (по одній у рядку)', fa:'Номер правильної відповіді', fsay:'Текст для озвучення', fbefore:'Текст перед пропуском', fanswers:'Правильні відповіді (через кому)', fafter:'Текст після пропуску',
+  fsentence:'Правильне речення', fpairs:'Пари (нідерландською = переклад, по одній у рядку)', fcats:'Групи (через кому)', fswords:'Слова (слово = група, по одному в рядку)', fh:'Година (0–23)', fm:'Хвилини',
+  ftext:'Речення для повторення', fuk:'Переклад', fpromptNl:'Завдання (нідерландською)', fpromptUk:'Завдання (українською)', fmodel:'Зразок відповіді', fminw:'Мінімум слів', ftf:'Твердження правильне?',
+  fwordsL:'Слова (нідерландською | переклад | приклад, по одному в рядку)', flines:'Репліки (хто | нідерландською | переклад, по одній у рядку)', fscene:'Ситуація', fintroNl:'Пояснення (нідерландською)', fintroUk:'Пояснення (українською)',
+  frows:'Таблиця (стовпці через |, перший рядок — заголовки)', ftips:'Поради (нідерландською | українською, по одній у рядку)', ftextP:'Текст (нідерландською | переклад, абзац у рядку)', ftextT:'Назва тексту',
+  rTitle:'Перевірка', rLead:'Письмові завдання учнів', rNew:'Нове', rDone:'Перевірено', grades:['Добре','Задовільно','Ще потренуватися'], fbPh:'Напишіть короткий конкретний відгук', rEmpty:'Усе перевірено.', send:'Надіслати відгук', sent:'Відгук надіслано'
+});
+
+/* ---------- course content (Dutch, with Ukrainian support) ---------- */
+const DEFAULT_COURSE=[
+ {id:'m1',lvl:'A0',title:{nl:'Kennismaken',uk:'Знайомство'},lessons:[
+  {id:'1.1',type:'video',min:6,title:{nl:'Hallo, ik ben Olena',uk:'Привіт, я Олена'},scene:{nl:'Op het werk, eerste dag',uk:'На роботі, перший день'},lines:[
+   ['Olena','Hallo! Ik ben Olena.','Привіт! Я Олена.'],['Mark','Hoi Olena, ik ben Mark. Hoe gaat het?','Привіт, Олено, я Марк. Як справи?'],['Olena','Goed, dank je. En met jou?','Добре, дякую. А в тебе?'],['Mark','Ook goed. Waar kom je vandaan?','Теж добре. Звідки ти?'],['Olena','Ik kom uit Oekraïne. Ik woon nu in Utrecht.','Я з України. Зараз я живу в Утрехті.'],['Mark','Leuk! Wat voor werk doe je?','Чудово! Ким ти працюєш?'],['Olena','Ik werk in het magazijn.','Я працюю на складі.']]},
+  {id:'1.2',type:'words',min:8,title:{nl:'Woorden: jezelf voorstellen',uk:'Слова: розповісти про себе'},words:[
+   ['hallo','привіт','Hallo, ik ben Olena.'],['dag / doei','до побачення','Doei, tot morgen!'],['ik heet','мене звати','Ik heet Andrii.'],['ik kom uit','я з','Ik kom uit Kyiv.'],['ik woon in','я живу в','Ik woon in Utrecht.'],['ik werk als','я працюю (ким)','Ik werk als kok.'],['Hoe gaat het?','Як справи?','Hoi! Hoe gaat het?'],['Wat is je naam?','Як тебе звати?','Hallo, wat is je naam?']]},
+  {id:'1.3',type:'grammar',min:7,title:{nl:'Grammatica: zijn en hebben',uk:'Граматика: zijn і hebben'},
+   intro:{nl:'Zijn en hebben gebruik je de hele dag. Leer de vormen uit je hoofd.',uk:'Zijn (бути) і hebben (мати) потрібні постійно. Вивчіть ці форми напам’ять.'},
+   head:['','zijn','hebben'],rows:[['ik','ben','heb'],['jij / je','bent','hebt'],['u','bent','hebt'],['hij / zij / het','is','heeft'],['wij / we','zijn','hebben'],['jullie','zijn','hebben'],['zij / ze','zijn','hebben']],
+   tips:[{nl:'In een vraag staat het werkwoord vooraan: Ben jij Olena? Heb je kinderen?',uk:'У питанні дієслово стоїть на першому місці: Ben jij Olena? Heb je kinderen?'},{nl:'Let op: jij hebt → Heb jij…? In de vraag valt de -t weg.',uk:'Увага: jij hebt → Heb jij…? У питанні -t зникає.'}]},
+  {id:'1.4',type:'practice',min:12,title:{nl:'Oefenen: kennismaken',uk:'Вправи: знайомство'},items:[
+   {type:'mc',q:'Ik ___ Olena.',opts:['ben','bent','is'],a:0},
+   {type:'match',pairs:[['hallo','привіт'],['doei','бувай'],['ik woon in','я живу в'],['ik werk als','я працюю (ким)'],['ik kom uit','я з']]},
+   {type:'mc',q:'Hij ___ twee kinderen.',opts:['heb','hebt','heeft'],a:2},
+   {type:'listen',say:'Hoe gaat het?',opts:['Як справи?','Як тебе звати?','Звідки ти?'],a:0},
+   {type:'gap',before:'Ik kom',after:'Oekraïne.',a:['uit']},
+   {type:'order',words:['in','woon','Utrecht','Ik'],a:'Ik woon in Utrecht'},
+   {type:'dictation',say:'Ik woon in Utrecht.'},
+   {type:'speak',text:'Ik kom uit Oekraïne.',uk:'Я з України.'}]},
+  {id:'1.5',type:'writing',min:10,title:{nl:'Schrijven: stel jezelf voor',uk:'Письмо: розкажіть про себе'},items:[
+   {type:'write',prompt:{nl:'Schrijf 4 tot 6 zinnen over jezelf: je naam, waar je vandaan komt, waar je woont en wat voor werk je doet.',uk:'Напишіть 4–6 речень про себе: ім’я, звідки ви, де живете і ким працюєте.'},model:'Ik heet Olena. Ik kom uit Oekraïne. Ik woon nu in Utrecht. Ik werk in een magazijn. Ik heb twee kinderen.',min:15}]},
+  {id:'1.6',type:'test',min:12,title:{nl:'Toets module 1',uk:'Тест модуля 1'},items:[
+   {type:'mc',q:'Iemand vraagt: „Hoe gaat het?” Wat zeg je?',opts:['Goed, dank je.','Ik kom uit Oekraïne.','Ik heet Mark.'],a:0},{type:'mc',q:'Wij ___ in Utrecht.',opts:['woon','wonen','woont'],a:1},{type:'gap',before:'Ik',after:'Andrii.',a:['heet','ben']},{type:'match',pairs:[['ik heet','мене звати'],['ik woon','я живу'],['ik werk','я працюю']]},{type:'mc',q:'Jij ___ een kind.',opts:['heb','hebt','heeft'],a:1},{type:'order',words:['kom','Ik','Oekraïne','uit'],a:'Ik kom uit Oekraïne'},{type:'listen',say:'Wat is je naam?',opts:['Як тебе звати?','Де ти живеш?','Як справи?'],a:0},{type:'dictation',say:'Hoe gaat het?'}]}
+ ]},
+ {id:'m2',lvl:'A1',title:{nl:'Bij de huisarts',uk:'У сімейного лікаря'},lessons:[
+  {id:'2.1',type:'video',min:7,title:{nl:'Een afspraak maken',uk:'Записатися на прийом'},scene:{nl:'Aan de telefoon met de assistente',uk:'Телефонна розмова з асистенткою'},lines:[
+   ['Assistente','Huisartsenpraktijk De Linde, goedemorgen.','Сімейна практика «Де Лінде», доброго ранку.'],['Olena','Goedemorgen. Ik wil graag een afspraak maken.','Доброго ранку. Я хотіла б записатися на прийом.'],['Assistente','Wat is uw naam en geboortedatum?','Ваше ім’я та дата народження?'],['Olena','Olena Koval, twaalf maart negentienhonderdnegentig.','Олена Коваль, 12 березня 1990 року.'],['Assistente','Wat zijn de klachten?','Що вас турбує?'],['Olena','Ik heb al drie dagen koorts en pijn in mijn keel.','У мене вже три дні температура і болить горло.'],['Assistente','Kunt u vanmiddag om half drie komen?','Можете прийти сьогодні о 14:30?'],['Olena','Ja, dat is goed. Dank u wel.','Так, добре. Дуже дякую.']]},
+  {id:'2.2',type:'words',min:9,title:{nl:'Woorden: het lichaam en klachten',uk:'Слова: тіло і симптоми'},words:[
+   ['de huisarts','сімейний лікар','Ik bel de huisarts.'],['de afspraak','запис на прийом','Ik heb een afspraak om 10 uur.'],['de klacht','скарга, симптом','Wat zijn de klachten?'],['de koorts','температура','Ik heb koorts.'],['de pijn','біль','Ik heb pijn in mijn rug.'],['het hoofd','голова','Mijn hoofd doet pijn.'],['de keel','горло','Ik heb keelpijn.'],['de buik','живіт','Mijn buik doet pijn.'],['de rug','спина','Ik heb pijn in mijn rug.'],['het recept','рецепт','De dokter geeft een recept.'],['de apotheek','аптека','Haal je medicijnen bij de apotheek.'],['ziek','хворий','Ik ben ziek.']]},
+  {id:'2.3',type:'grammar',min:8,title:{nl:'Zeggen wat pijn doet',uk:'Як сказати, що болить'},
+   intro:{nl:'Er zijn drie vaste zinnen om te zeggen wat er pijn doet. Bij de huisarts zeg je „u”, niet „jij”.',uk:'Є три сталі вирази, щоб сказати, що болить. До лікаря звертаються на «u» (ви), а не «jij».'},
+   head:['Zo zeg je het','Voorbeeld','Українською'],rows:[['… doet pijn','Mijn hoofd doet pijn.','У мене болить голова.'],['Ik heb pijn in …','Ik heb pijn in mijn rug.','У мене болить спина.'],['Ik heb …pijn','Ik heb keelpijn / buikpijn.','У мене болить горло / живіт.'],['Ik ben …','Ik ben ziek / misselijk.','Я хворий / мене нудить.'],['al … dagen','Ik heb al drie dagen koorts.','У мене вже три дні температура.']],
+   tips:[{nl:'„Half drie” betekent 14:30, een half uur vóór drie uur.',uk:'«Half drie» означає 14:30 — пів години до третьої, а не пів на четверту.'},{nl:'Neem je verzekeringspas en een lijst van je medicijnen mee.',uk:'Візьміть із собою картку медичного страхування та список ліків.'}]},
+  {id:'2.4',type:'practice',min:14,title:{nl:'Oefenen: bij de huisarts',uk:'Вправи: у лікаря'},items:[
+   {type:'mc',q:'Mijn hoofd ___ pijn.',opts:['doet','heeft','is'],a:0},
+   {type:'match',pairs:[['het hoofd','голова'],['de keel','горло'],['de buik','живіт'],['de rug','спина'],['de koorts','температура']]},
+   {type:'sort',cats:['de','het'],words:[['huisarts','de'],['recept','het'],['hoofd','het'],['keel','de'],['apotheek','de'],['lichaam','het']]},
+   {type:'clock',h:14,m:30,q:'Hoe laat is uw afspraak?'},
+   {type:'gap',before:'Ik heb',after:'in mijn keel.',a:['pijn']},
+   {type:'listen',say:'de apotheek',opts:['аптека','рецепт','лікарня'],a:0},
+   {type:'order',words:['een','maken','Ik','afspraak','wil'],a:'Ik wil een afspraak maken'},
+   {type:'dictation',say:'Ik heb pijn in mijn rug.'},
+   {type:'mc',q:'U belt de praktijk. Wat zegt u?',opts:['Hoi, alles goed?','Goedemorgen, ik wil graag een afspraak maken.','Doei!'],a:1}]},
+  {id:'2.5',type:'reading',min:10,title:{nl:'Lezen: een brief van de huisarts',uk:'Читання: лист від лікаря'},
+   text:{title:'Herinnering: uw afspraak',paras:[['Beste mevrouw Koval,','Шановна пані Коваль,'],['U heeft een afspraak bij dokter Visser op donderdag 14 november om kwart over tien.','У вас запис до лікаря Віссера в четвер, 14 листопада, о 10:15.'],['Neem uw verzekeringspas en uw medicijnen mee.','Візьміть із собою картку страхування та свої ліки.'],['Kunt u niet komen? Bel dan uiterlijk 24 uur van tevoren naar 030 123 45 67. Anders moet u € 25 betalen.','Не можете прийти? Зателефонуйте не пізніше ніж за 24 години за номером 030 123 45 67. Інакше доведеться заплатити € 25.'],['Met vriendelijke groet,\nHuisartsenpraktijk De Linde','З повагою,\nСімейна практика «Де Лінде»']]},
+   items:[{type:'tf',q:'De afspraak is op donderdag.',a:true},{type:'mc',q:'Hoe laat is de afspraak?',opts:['10:15','10:45','9:45'],a:0},{type:'tf',q:'U hoeft niets mee te nemen.',a:false},{type:'mc',q:'Wat doet u als u niet kunt komen?',opts:['Uiterlijk 24 uur van tevoren bellen','Na de afspraak een e-mail sturen','Niets'],a:0},{type:'mc',q:'Wat betekent „uiterlijk”?',opts:['не пізніше ніж','приблизно','після'],a:0}]},
+  {id:'2.6',type:'speaking',min:8,title:{nl:'Spreken: de huisarts bellen',uk:'Говоріння: дзвінок лікарю'},items:[
+   {type:'speak',text:'Goedemorgen, met Olena Koval.',uk:'Доброго ранку, це Олена Коваль.'},{type:'speak',text:'Ik wil graag een afspraak maken.',uk:'Я хотіла б записатися на прийом.'},{type:'speak',text:'Ik heb al drie dagen koorts.',uk:'У мене вже три дні температура.'},{type:'speak',text:'Kan het ook morgen?',uk:'А можна завтра?'},{type:'speak',text:'Dank u wel, tot donderdag.',uk:'Дуже дякую, до четверга.'}]},
+  {id:'2.7',type:'test',min:14,title:{nl:'Toets module 2',uk:'Тест модуля 2'},items:[
+   {type:'mc',q:'Wat betekent „de keel”?',opts:['горло','живіт','спина'],a:0},{type:'gap',before:'Mijn buik',after:'pijn.',a:['doet']},{type:'clock',h:10,m:15,q:'Hoe laat is het?'},{type:'listen',say:'het recept',opts:['рецепт','аптека','запис на прийом'],a:0},{type:'sort',cats:['de','het'],words:[['afspraak','de'],['recept','het'],['rug','de'],['hoofd','het']]},{type:'order',words:['heb','Ik','koorts','al','twee dagen'],a:'Ik heb al twee dagen koorts'},{type:'tf',q:'Bij de huisarts zeg je „u”.',a:true},{type:'dictation',say:'Ik ben ziek.'},{type:'mc',q:'Waar haal je je medicijnen?',opts:['bij de apotheek','bij de bakker','op het werk'],a:0}]}
+ ]},
+ {id:'m3',lvl:'A1',title:{nl:'Werk: de eerste dag',uk:'Робота: перший день'},lessons:[
+  {id:'3.1',type:'video',min:6,title:{nl:'Welkom in het team',uk:'Ласкаво просимо в команду'},scene:{nl:'In het magazijn met de leidinggevende',uk:'На складі з керівницею'},lines:[
+   ['Sanne','Welkom! Ik ben Sanne, je leidinggevende.','Ласкаво просимо! Я Санне, твоя керівниця.'],['Andrii','Dank je. Ik ben Andrii.','Дякую. Я Андрій.'],['Sanne','Je werkt van acht tot half vijf. De pauze is om twaalf uur.','Ти працюєш з 8:00 до 16:30. Перерва о 12:00.'],['Andrii','Moet ik veiligheidsschoenen dragen?','Чи треба носити захисне взуття?'],['Sanne','Ja, altijd. En hier is je helm.','Так, завжди. А ось твоя каска.'],['Andrii','Wat doe ik als ik ziek ben?','Що робити, якщо я захворію?'],['Sanne','Bel mij voor acht uur. Dan meld je je ziek.','Зателефонуй мені до восьмої. Так ти повідомиш про хворобу.']]},
+  {id:'3.2',type:'words',min:8,title:{nl:'Woorden: op de werkvloer',uk:'Слова: на робочому місці'},words:[
+   ['de leidinggevende','керівник','Sanne is mijn leidinggevende.'],['de collega','колега','Mijn collega helpt mij.'],['de pauze','перерва','De pauze is om twaalf uur.'],['het rooster','графік роботи','Kijk op het rooster.'],['de veiligheidsschoenen','захисне взуття','Draag altijd veiligheidsschoenen.'],['de helm','каска','Zet je helm op.'],['op tijd','вчасно','Kom op tijd!'],['zich ziek melden','повідомити про хворобу','Ik meld me ziek.']]},
+  {id:'3.3',type:'reading',min:9,title:{nl:'Lezen: veilig werken',uk:'Читання: безпечна робота'},
+   text:{title:'Werkinstructie magazijn',paras:[['Draag altijd veiligheidsschoenen en een hesje.','Завжди носіть захисне взуття і світловідбивний жилет.'],['Rij nooit met de heftruck zonder certificaat.','Ніколи не керуйте навантажувачем без сертифіката.'],['Ziet u iets gevaarlijks? Meld het direct bij uw leidinggevende.','Бачите щось небезпечне? Одразу повідомте керівника.'],['Pauzes: 10:00–10:15, 12:00–12:30 en 15:00–15:15.','Перерви: 10:00–10:15, 12:00–12:30 і 15:00–15:15.']]},
+   items:[{type:'tf',q:'Je mag zonder certificaat met de heftruck rijden.',a:false},{type:'mc',q:'Hoe lang is de lunchpauze?',opts:['30 minuten','15 minuten','60 minuten'],a:0},{type:'tf',q:'Gevaar meld je direct bij je leidinggevende.',a:true},{type:'mc',q:'Wat draag je altijd?',opts:['veiligheidsschoenen en een hesje','een helm en handschoenen','een pak'],a:0}]},
+  {id:'3.4',type:'practice',min:12,title:{nl:'Oefenen: afspraken op het werk',uk:'Вправи: правила на роботі'},items:[
+   {type:'mc',q:'De pauze is ___ twaalf uur.',opts:['om','op','in'],a:0},{type:'clock',h:16,m:30,q:'Hoe laat ben je klaar met werken?'},{type:'listen',say:'de leidinggevende',opts:['керівник','колега','графік роботи'],a:0},{type:'match',pairs:[['de collega','колега'],['de pauze','перерва'],['het rooster','графік роботи'],['de helm','каска']]},{type:'gap',before:'Kom op',after:'!',a:['tijd']},{type:'order',words:['ik','Moet','dragen','een helm'],a:'Moet ik een helm dragen'},{type:'dictation',say:'De pauze is om twaalf uur.'},{type:'mc',q:'Je bent ziek. Wat doe je?',opts:['Ik bel mijn leidinggevende voor acht uur.','Ik kom gewoon later.','Ik stuur niemand een bericht.'],a:0}]},
+  {id:'3.5',type:'test',min:12,title:{nl:'Toets module 3',uk:'Тест модуля 3'},items:[
+   {type:'clock',h:8,m:0,q:'Hoe laat begint je werk?'},{type:'gap',before:'Draag altijd',after:'.',a:['veiligheidsschoenen']},{type:'listen',say:'het rooster',opts:['графік роботи','перерва','каска'],a:0},{type:'sort',cats:['de','het'],words:[['collega','de'],['rooster','het'],['pauze','de'],['magazijn','het']]},{type:'order',words:['me','Ik','ziek','meld'],a:'Ik meld me ziek'},{type:'tf',q:'Je leidinggevende is de persoon die jouw werk regelt.',a:true},{type:'mc',q:'Zet je ___ op.',opts:['helm','rooster','pauze'],a:0}]}
+ ]},
+ {id:'m4',lvl:'A2',title:{nl:'Instanties en brieven',uk:'Установи та листи'},soon:true,lessons:[
+  {id:'4.1',type:'video',min:7,title:{nl:'Een brief van de gemeente',uk:'Лист від громади'},scene:{nl:'',uk:''},lines:[]},{id:'4.2',type:'words',min:8,title:{nl:'Woorden: instanties',uk:'Слова: установи'},words:[]},{id:'4.3',type:'practice',min:10,title:{nl:'Een formulier invullen',uk:'Заповнити анкету'},items:[]},{id:'4.4',type:'test',min:12,title:{nl:'Toets module 4',uk:'Тест модуля 4'},items:[]}]}
+];
+function ensureLearn(){
+if(!S.course)S.course=JSON.parse(JSON.stringify(DEFAULT_COURSE));
+if(!S.subs)S.subs=[
+  {id:'s1',lid:'1.5',who:'Olena K.',text:'Ik heet Olena. Ik kom uit Oekraïne. Ik woon nu in Utrecht. Ik werk in magazijn. Ik heb twee kinderen.',status:'done',grade:0,fb:'Goed geschreven! Let op: „Ik werk in een magazijn” – met „een”.'},
+  {id:'s2',lid:'1.5',who:'Andrii M.',text:'Ik heet Andrii. Ik kom uit Charkiv. Ik woon in Amersfoort sinds 2023. Ik werk als chauffeur bij een bakkerij.',status:'new'},
+  {id:'s3',lid:'1.5',who:'Tomasz W.',text:'Ik ben Tomasz. Ik kom uit Polen. Ik wonen in Utrecht met mijn vrouw. Ik werk in de bouw.',status:'new'}];
+if(!S.ex['1.5'])S.ex['1.5']={items:{0:{v:{text:S.subs[0].text,sent:true,sub:'s1'}}},submitted:false};
+if(!S.b)S.b={lid:'2.4',item:3,delArm:false};
+}
+ensureLearn();
+
+const C=()=>S.course;
+const isLive=l=>l.status!=='draft';
+const allL=()=>C().flatMap((m,mi)=>m.lessons.map((l,li)=>({l,mi,li,m})));
+const ALLV=()=>allL().filter(x=>isLive(x.l));
+const num=(mi,li)=>`${mi+1}.${li+1}`;
+function findL(id){const x=allL().find(x=>x.l.id===id);if(!x)return null;const def=v=>({value:v,writable:true,configurable:true,enumerable:false});Object.defineProperties(x.l,{mi:def(x.mi),mod:def(x.m),num:def(num(x.mi,x.li))});return x.l;}
+const liveLessons=m=>m.lessons.filter(isLive);
+const testOf=m=>liveLessons(m).filter(l=>l.type==='test').pop();
+const unlocked=mi=>{const m=C()[mi];if(!m||m.soon)return false;if(mi===0)return true;const tst=testOf(C()[mi-1]);return !tst||(S.scores[tst.id]||0)>=70;};
+const nextOpen=()=>{const x=ALLV().find(x=>!S.done[x.l.id]&&unlocked(x.mi));return x?findL(x.l.id):null;};
+const totalLive=()=>ALLV().length;
+const norm=s=>String(s||'').toLowerCase().replace(/[.,!?„”"’']/g,'').replace(/\s+/g,' ').trim();
+const exS=id=>(S.ex[id]=S.ex[id]||{items:{},submitted:false});
+
+/* Dutch clock words */
+const HW=['twaalf','een','twee','drie','vier','vijf','zes','zeven','acht','negen','tien','elf'];
+function dutchTime(h,m){const H=k=>HW[((k%12)+12)%12];
+  const map={0:`${H(h)} uur`,5:`vijf over ${H(h)}`,10:`tien over ${H(h)}`,15:`kwart over ${H(h)}`,20:`tien voor half ${H(h+1)}`,25:`vijf voor half ${H(h+1)}`,30:`half ${H(h+1)}`,35:`vijf over half ${H(h+1)}`,40:`tien over half ${H(h+1)}`,45:`kwart voor ${H(h+1)}`,50:`tien voor ${H(h+1)}`,55:`vijf voor ${H(h+1)}`};
+  return map[m]||`${H(h)} uur ${m}`;}
+function clockOpts(it){const right=dutchTime(it.h,it.m);
+  const wrongs=it.m===30?[`half ${HW[it.h%12]}`,`kwart over ${HW[it.h%12]}`]:it.m===15?[`kwart voor ${HW[it.h%12]}`,`half ${HW[(it.h+1)%12]}`]:it.m===0?[dutchTime(it.h+1,0),`half ${HW[it.h%12]}`]:[dutchTime(it.h,(it.m+30)%60),dutchTime(it.h+1,it.m)];
+  const all=[right,...wrongs.filter(w=>w!==right)].slice(0,3);const rot=(it.h+it.m)%all.length;const opts=all.slice(rot).concat(all.slice(0,rot));return {opts,a:opts.indexOf(right)};}
+function clockSvg(h,m){const ha=((h%12)+m/60)*30,ma=m*6;const hand=(a,len,w)=>{const r=a*Math.PI/180;return `<line x1="60" y1="60" x2="${(60+len*Math.sin(r)).toFixed(1)}" y2="${(60-len*Math.cos(r)).toFixed(1)}" stroke="currentColor" stroke-width="${w}" stroke-linecap="round"/>`;};
+  let ticks='';for(let i=0;i<12;i++){const r=i*30*Math.PI/180;const a=i%3===0?44:48;ticks+=`<line x1="${(60+a*Math.sin(r)).toFixed(1)}" y1="${(60-a*Math.cos(r)).toFixed(1)}" x2="${(60+53*Math.sin(r)).toFixed(1)}" y2="${(60-53*Math.cos(r)).toFixed(1)}" stroke="currentColor" stroke-width="${i%3===0?3:1.6}"/>`;}
+  return `<svg class="clock" viewBox="0 0 120 120" width="132" height="132" role="img" aria-label="${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}"><circle cx="60" cy="60" r="57" fill="var(--surface)" stroke="currentColor" stroke-width="3"/>${ticks}${hand(ha,28,5)}${hand(ma,42,3)}<circle cx="60" cy="60" r="4" fill="var(--sun)"/></svg>`;}
+
+/* exercise logic for every type */
+const perm=n=>Array.from({length:n},(_,i)=>i).sort((a,b)=>((a*5+3)%7)-((b*5+3)%7)||a-b);
+function answered(it,v){switch(it.type){
+  case 'gap':case 'dictation':return !!norm(v);
+  case 'order':return Array.isArray(v)&&v.length===it.words.length;
+  case 'match':return !!v&&Object.keys(v.m||{}).length===it.pairs.length;
+  case 'sort':return !!v&&Object.keys(v).length===it.words.length;
+  case 'write':return !!v&&!!v.sent;
+  default:return v!=null;}}
+function isOk(it,v){switch(it.type){
+  case 'gap':return it.a.some(x=>norm(x)===norm(v));
+  case 'dictation':return norm(v)===norm(it.say);
+  case 'order':return Array.isArray(v)&&norm(v.map(k=>it.words[k]).join(' '))===norm(it.a);
+  case 'tf':return v===(it.a?0:1);
+  case 'clock':return v===clockOpts(it).a;
+  case 'match':return answered(it,v)&&(v.err||0)<=1;
+  case 'sort':return !!v&&it.words.every((w,i)=>v[i]===w[1]);
+  case 'speak':case 'write':return answered(it,v);
+  default:return v===it.a;}}
+function answerText(it){switch(it.type){
+  case 'gap':return it.a[0];case 'order':return it.a;case 'dictation':return it.say;case 'tf':return t('tfOpts')[it.a?0:1];
+  case 'clock':return dutchTime(it.h,it.m);case 'sort':return it.words.map(w=>`${w[1]} ${w[0]}`).join(', ');case 'match':return it.pairs.map(p=>`${p[0]} = ${p[1]}`).join(', ');
+  case 'speak':return it.text;case 'write':return it.model||'';default:return it.opts[it.a];}}
+const immediate=it=>['mc','listen','tf','clock','speak','match'].includes(it.type);
+
+const TI={
+ video:'<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>',
+ words:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="13" height="14" rx="2"/><path d="M8 3h11a2 2 0 0 1 2 2v12"/></svg>',
+ grammar:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 5h7a3 3 0 0 1 3 3v12a2 2 0 0 0-2-2H4zM20 5h-4M20 9h-4M20 13h-4"/></svg>',
+ practice:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20l4-1 11-11-3-3L5 16z"/></svg>',
+ reading:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h9l4 4v14H6z"/><path d="M9 11h7M9 15h7M9 7h3"/></svg>',
+ speaking:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>',
+ writing:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h16M6 16l9.5-9.5 3 3L9 19H6z"/></svg>',
+ test:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 21V4M5 4h11l-2 4 2 4H5"/></svg>',
+ lock:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>',
+ sound:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></svg>',
+ play:'<svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>',
+ pause:'<svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg>',
+ prev:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg>',
+ next:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>',
+ up:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6-6 6 6"/></svg>',
+ down:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>',
+ x:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>',
+ plus:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>',
+ bolt:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" aria-hidden="true"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></svg>',
+ bulb:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2V16h5v-.1c0-.8.4-1.5 1-2A6 6 0 0 0 12 3z"/></svg>'
+};
+const EXI={mc:'≡',listen:'♪',tf:'✓✗',gap:'_',order:'⇄',match:'⟷',dictation:'✎',sort:'de/het',clock:'◷',speak:'◉',write:'¶'};
+const EXTYPES=Object.keys(EXI);
+
+/* audio: Dutch text-to-speech where the browser has it */
+const canSpeak='speechSynthesis' in window;
+function speak(text,onend){
+  if(!canSpeak){toast(t('noAudio'));if(onend)setTimeout(onend,2200);return;}
+  try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang='nl-NL';u.rate=.88;
+    const v=speechSynthesis.getVoices().find(v=>/^nl/i.test(v.lang));if(v)u.voice=v;
+    u.onend=()=>{if(onend)onend();};u.onerror=()=>{if(onend)onend();};speechSynthesis.speak(u);}
+  catch(e){toast(t('noAudio'));}
+}
+
+
+/* ---------- extra copy for the redesign ---------- */
+Object.assign(T.nl,{
+  mlinks:['Zo werkt het','Cursussen','Voor gemeenten'], toPortal:'Naar het portaal', heroA:'Nederlands', heroB:'voor werk en het dagelijks leven',
+  trust:['NT2-gecertificeerde docenten','Van A0 tot B1','Uitleg in het Oekraïens'],
+  howT:'Zo werkt het', howL:'Van eerste telefoontje tot eindtoets in 12 weken.',
+  how:[['Intake en niveautoets','We bellen je, testen je niveau en plaatsen je in een groep die past.'],['Les én online oefenen','Twee keer per week les in een kleine groep. Tussendoor oefen je online met audio, woordkaarten en oefeningen.'],['Eindtoets en rapport','Na 12 weken doe je de eindtoets. Wie betaalt, krijgt een rapport met de resultaten.']],
+  bentoT:'Alles om Nederlands te leren, op één plek', platformD:'Dialogen met audio, een woordtrainer die onthoudt wat je al kent, en 11 soorten oefeningen.',
+  phoneQ:'Mijn hoofd', phoneQ2:'pijn.', phoneOk:'Goed zo!',
+  navToday:'Vandaag', navReview:'Woorden herhalen', navGroups:'Groepen', navBuilder:'Lesbouwer', navReviewT:'Beoordelen', navOverview:'Overzicht', viewAs:'Bekijk als',
+  vaShort:{learner:'Cursist',teacher:'Docent',client:'Klant',admin:'Beheer'},
+  pathT:'Jouw leerpad', goalT:'Doel van vandaag', goalOf:'van 20 min', start:'Start', streakT:'dagen op rij',
+  checkB:'Controleer', cont2:'Doorgaan', nextQ:'Volgende', great:['Goed zo!','Top!','Helemaal goed!'], notQ:'Bijna!', rightIs:'Juiste antwoord:', skipB:'Overslaan',
+  sumT:'Les klaar!', sumTest:'Toets ingeleverd', correctN:'goed', minN:'minuten', scoreN:'score', againB:'Opnieuw oefenen', yourAns:'Je antwoorden', closeL:'Sluiten',
+  fbFrom:'Feedback van je docent', marketingPortal:'Bekijk het portaal'
+});
+Object.assign(T.uk,{
+  mlinks:['Як це працює','Курси','Для громад'], toPortal:'До порталу', heroA:'Нідерландська', heroB:'для роботи та щоденного життя',
+  trust:['Сертифіковані викладачі NT2','Від A0 до B1','Пояснення українською'],
+  howT:'Як це працює', howL:'Від першого дзвінка до підсумкового тесту за 12 тижнів.',
+  how:[['Співбесіда і тест рівня','Ми телефонуємо, перевіряємо рівень і додаємо вас до відповідної групи.'],['Уроки та онлайн-практика','Двічі на тиждень урок у невеликій групі. Між уроками — онлайн-тренування з аудіо, картками слів і вправами.'],['Підсумковий тест і звіт','Через 12 тижнів — підсумковий тест. Той, хто оплачує, отримує звіт із результатами.']],
+  bentoT:'Усе для вивчення нідерландської в одному місці', platformD:'Діалоги з аудіо, тренажер слів, що пам’ятає вивчене, і 11 типів вправ.',
+  phoneQ:'Mijn hoofd', phoneQ2:'pijn.', phoneOk:'Правильно!',
+  navToday:'Сьогодні', navReview:'Повторення слів', navGroups:'Групи', navBuilder:'Конструктор', navReviewT:'Перевірка', navOverview:'Огляд', viewAs:'Переглянути як',
+  vaShort:{learner:'Учень',teacher:'Викладач',client:'Клієнт',admin:'Адмін'},
+  pathT:'Ваш навчальний шлях', goalT:'Мета на сьогодні', goalOf:'з 20 хв', start:'Почати', streakT:'днів поспіль',
+  checkB:'Перевірити', cont2:'Далі', nextQ:'Наступне', great:['Правильно!','Чудово!','Саме так!'], notQ:'Майже!', rightIs:'Правильна відповідь:', skipB:'Пропустити',
+  sumT:'Урок завершено!', sumTest:'Тест здано', correctN:'правильно', minN:'хвилин', scoreN:'результат', againB:'Потренуватися ще', yourAns:'Ваші відповіді', closeL:'Закрити',
+  fbFrom:'Відгук викладача', marketingPortal:'Переглянути портал'
+});
+
+/* ---------- icons ---------- */
+const sv=(p,w)=>`<svg width="${w||20}" height="${w||20}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${p}</svg>`;
+const ICO={
+  check:sv('<path d="M5 12.5l4.5 4.5L19 7.5"/>'),
+  x:sv('<path d="M6 6l12 12M18 6L6 18"/>'),
+  home:sv('<path d="M4 11l8-7 8 7v9a1 1 0 0 1-1 1h-4v-6H9v6H5a1 1 0 0 1-1-1z"/>'),
+  cards:sv('<rect x="3" y="7" width="13" height="14" rx="2.5"/><path d="M8 3h11a2 2 0 0 1 2 2v12"/>'),
+  users:sv('<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.5 3.4-5.5 6.5-5.5s5.7 2 6.5 5.5"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 14.8c1.9.7 3.1 2.5 3.5 5.2"/>'),
+  build:sv('<rect x="3" y="3" width="8" height="8" rx="2"/><rect x="13" y="3" width="8" height="8" rx="2"/><rect x="3" y="13" width="8" height="8" rx="2"/><path d="M17 14v6M14 17h6"/>'),
+  inbox:sv('<path d="M4 13l2.5-8h11L20 13v6H4z"/><path d="M4 13h5l1 2h4l1-2h5"/>'),
+  chart:sv('<path d="M4 20h16"/><path d="M7 20v-7M12 20V8M17 20v-11"/>'),
+  grid:sv('<rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/>'),
+  learner:sv('<path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11v5c2 2 10 2 12 0v-5"/>'),
+  teacher:sv('<circle cx="8" cy="7" r="3"/><path d="M3 20c.6-3.4 2.6-5.5 5-5.5"/><rect x="12" y="10" width="9" height="7" rx="1.5"/><path d="M14 20h5"/>'),
+  client:sv('<path d="M4 21V8l8-5 8 5v13"/><path d="M9 21v-6h6v6M8 10h.01M12 10h.01M16 10h.01"/>'),
+  admin:sv('<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-1.8-.3 1.6 1.6 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.6 1.6 0 0 0-1-1.5 1.6 1.6 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.6 1.6 0 0 0 .3-1.8 1.6 1.6 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.6 1.6 0 0 0 1.5-1 1.6 1.6 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.6 1.6 0 0 0 1.8.3H9a1.6 1.6 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.6 1.6 0 0 0 1 1.5 1.6 1.6 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.6 1.6 0 0 0-.3 1.8V9a1.6 1.6 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.6 1.6 0 0 0-1.5 1z"/>'),
+  fire:'<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2c1 3.5 5 5.8 5 11a5 5 0 0 1-10 0c0-2.3 1-3.9 2.2-5.2.2 1.9 1 3.1 2.3 3.6C11 9 10.7 5.3 12 2z"/></svg>',
+  arrow:sv('<path d="M5 12h14M13 6l6 6-6 6"/>'),
+  back:sv('<path d="M19 12H5M11 18l-6-6 6-6"/>'),
+  speech:sv('<path d="M4 5h11a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H9l-4 3v-3H4a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2z"/><path d="M19 9h1a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-1v3l-3.5-3"/>'),
+  gauge:sv('<path d="M3 20h18"/><path d="M6 20V13M11 20V9M16 20V5"/>'),
+  globe:sv('<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/>'),
+  logo:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 7.5A3.5 3.5 0 0 1 7.5 4h6A3.5 3.5 0 0 1 17 7.5v3A3.5 3.5 0 0 1 13.5 14H10l-4 3.5V14a3.5 3.5 0 0 1-2-3.2z" fill="currentColor"/><path d="M13 16.5h3.5L20 19.5v-3a3 3 0 0 0 0-5.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+};
+const avc=s=>'c'+([...String(s)].reduce((a,c)=>a+c.charCodeAt(0),0)%4);
+const ini=s=>String(s).split(/\s+/).map(w=>w[0]).join('').slice(0,2).toUpperCase();
+function ring(pct,size,stroke,color,label,sub){const r=(size-stroke)/2,c=2*Math.PI*r,o=c*(1-Math.max(0,Math.min(1,pct)));
+  return `<div class="ring" style="width:${size}px;height:${size}px"><svg width="${size}" height="${size}" aria-hidden="true"><circle cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke="var(--sunken)" stroke-width="${stroke}"/><circle cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke="${color}" stroke-width="${stroke}" stroke-linecap="round" stroke-dasharray="${c.toFixed(1)}" stroke-dashoffset="${o.toFixed(1)}"/></svg><div class="c"><div><b>${label}</b>${sub?`<br><small>${sub}</small>`:''}</div></div></div>`;}
+function stat(k,v,n,icon,tone){return `<div class="card stat"><span class="k">${esc(k)}</span><span class="v">${esc(v)}</span>${n?`<span class="n">${esc(n)}</span>`:''}${icon?`<span class="ic ${tone||'t0'}">${icon}</span>`:''}</div>`}
+const langToggle=()=>`<div class="lang" role="group" aria-label="Taal / Мова"><button data-lang="nl" aria-pressed="${S.lang==='nl'}">NL</button><button data-lang="uk" aria-pressed="${S.lang==='uk'}">УКР</button></div>`;
+
+/* ---------- marketing ---------- */
+function mShell(inner){
+  const ml=t('mlinks');
+  return `<header class="mnav"><div class="mnav-in"><button class="brand" data-go="home" aria-label="Taalbrug"><span class="mk">${ICO.logo}</span><b>Taalbrug</b></button>
+   <nav class="mlinks" aria-label="Menu"><button data-scroll="how">${esc(ml[0])}</button><button data-scroll="courses">${esc(ml[1])}</button><button data-scroll="partner">${esc(ml[2])}</button></nav>
+   <div class="mtools"><span class="demo">${esc(t('demo'))}</span>${langToggle()}<button class="btn btn-ghost btn-sm" data-go="learner">${esc(t('toPortal'))}</button></div></div></header>
+   <main class="mpage">${inner}<div class="mfoot"><span>${esc(t('footer'))}</span><button class="btn btn-quiet btn-sm" data-act="reset">${esc(t('reset'))}</button></div></main>`;
+}
+function vHome(){
+  const tiles=[['learner',ICO.learner,'t0'],['teacher',ICO.teacher,'t1'],['client',ICO.client,'t2'],['admin',ICO.admin,'t0']];
+  const exn=t('exName');
+  return mShell(`
+  <section class="hero">
+    <div class="hero-copy">
+      <span class="kicker"><span class="flag">NL · УКР</span>${esc(t('kicker'))}</span>
+      <h1><em>${esc(t('heroA'))}</em> ${esc(t('heroB'))}</h1>
+      <p class="lead">${esc(t('heroLead'))}</p>
+      <div class="ctas"><button class="btn btn-primary btn-lg" data-go="signup">${esc(t('ctaSignup'))} ${ICO.arrow}</button><button class="btn btn-ghost btn-lg" data-scroll="partner">${esc(t('ctaPartner'))}</button></div>
+      <div class="trust">${t('trust').map(x=>`<span>${ICO.check}${esc(x)}</span>`).join('')}</div>
+    </div>
+    <div class="stage" aria-hidden="true">
+      <div class="bubble b1">Hallo! <small>Привіт!</small></div>
+      <div class="bubble b3">${ICO.fire}<span>5 <small>${esc(t('streakT'))}</small></span></div>
+      <div class="phone">
+        <div class="ptop"><span class="icon-btn sm">${ICO.x}</span><div class="seg-bar"><i></i></div></div>
+        <span class="label">${esc(exn.mc)}</span>
+        <div class="q">${esc(t('phoneQ'))} <u>doet</u> ${esc(t('phoneQ2'))}</div>
+        <div class="opts2"><div class="o ok">doet</div><div class="o">heeft</div><div class="o">is</div><div class="o">gaat</div></div>
+        <div class="fbk">${ICO.check} ${esc(t('phoneOk'))}</div>
+      </div>
+      <div class="bubble b2">de huisarts <small>сімейний лікар</small></div>
+    </div>
+  </section>
+  <section class="stack" id="how"><div class="sec-h"><span class="label">${esc(t('howT'))}</span><h2>${esc(t('howL'))}</h2></div>
+    <div class="steps">${t('how').map((s,i)=>`<div class="step"><span class="n">${i+1}</span><h3>${esc(s[0])}</h3><p class="muted">${esc(s[1])}</p></div>`).join('')}</div></section>
+  <section class="stack"><div class="sec-h"><h2>${esc(t('bentoT'))}</h2></div>
+    <div class="bento">
+      <div class="tile-f dark wide"><span class="ic" style="background:var(--hero-2);color:var(--brand)">${ICO.cards}</span><h3 style="font-size:1.4rem">${esc(t('feat4')[0])}</h3><p class="muted">${esc(t('platformD'))}</p>
+        <div class="typecloud">${EXTYPES.map(k=>`<span><i>${esc(EXI[k])}</i>${esc(exn[k])}</span>`).join('')}</div></div>
+      <div class="tile-f"><span class="ic t1">${ICO.speech}</span><h3>${esc(t('feats')[1][0])}</h3><p class="muted">${esc(t('feats')[1][1])}</p></div>
+      <div class="tile-f"><span class="ic t2">${ICO.users}</span><h3>${esc(t('feats')[0][0])}</h3><p class="muted">${esc(t('feats')[0][1])}</p></div>
+      <div class="tile-f wide"><span class="ic t0">${ICO.gauge}</span><h3>${esc(t('feats')[2][0])}</h3><p class="muted">${esc(t('feats')[2][1])}</p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:4px">${LV.map((l,i)=>`<span class="pill ${i<2?'p-good':'p-quiet'}">${l} · ${esc(t('levels')[i])}</span>`).join('')}</div></div>
+    </div></section>
+  <section class="stack" id="courses"><div class="sec-h"><span class="label">${esc(t('coursesTitle'))}</span><h2>${esc(t('coursesTitle'))}</h2></div>
+    <div class="courses">${t('courses').map((c,i)=>`<article class="course"><div class="top t${i}"><span class="big">${esc(c[0])}</span></div><div class="body"><h3 style="font-size:1.25rem">${esc(c[1])}</h3><p class="muted">${esc(c[2])}</p><span class="faint" style="font-size:.88rem;font-weight:600">${esc(c[3])}</span>
+      <div class="foot"><span class="price">${esc(c[4])}</span><button class="btn btn-primary btn-sm" data-go="signup">${esc(t('choose'))}</button></div></div></article>`).join('')}</div></section>
+  <section class="partner" id="partner"><div class="stack" style="gap:14px"><span class="label" style="color:var(--hero-mute)">${esc(t('mlinks')[2])}</span><h2 style="font-size:clamp(1.6rem,3vw,2.3rem)">${esc(t('bandTitle'))}</h2><p class="muted" style="font-size:1.05rem">${esc(t('bandLead'))}</p><div><button class="btn btn-brand btn-lg" data-go="client">${esc(t('bandCta'))} ${ICO.arrow}</button></div></div>
+    <ul>${t('bandList').map(x=>`<li>${ICO.check}<span>${esc(x)}</span></li>`).join('')}</ul></section>
+  <section class="stack"><div class="sec-h"><h2>${esc(t('portalTitle'))}</h2><p>${esc(t('portalLead'))}</p></div>
+    <div class="roles-grid">${tiles.map(([r,ic,tone])=>`<button class="rtile" data-go="${r}"><span class="ic ${tone}">${ic}</span><h3>${esc(t('tiles')[r][0])}</h3><span class="muted" style="font-size:.92rem">${esc(t('tiles')[r][1])}</span><span class="go">${esc(t('open'))}</span></button>`).join('')}</div></section>`);
+}
+function vSignup(){
+  let inner;
+  if(S.signup&&S.signup.done){
+    inner=`<div class="card" style="max-width:640px;margin:0 auto;padding:40px;text-align:center;display:flex;flex-direction:column;gap:16px;align-items:center">
+      <span style="width:72px;height:72px;border-radius:50%;background:var(--mint);color:var(--on-mint);display:grid;place-items:center">${sv('<path d="M5 12.5l4.5 4.5L19 7.5"/>',34)}</span>
+      <h2>${esc(t('doneTitle'))}</h2><p class="muted">${esc(t('doneLead'))}</p>
+      <div class="ctas" style="justify-content:center"><button class="btn btn-primary" data-go="admin">${esc(t('toAdmin'))}</button><button class="btn btn-ghost" data-act="signup-again">${esc(t('another'))}</button></div></div>`;
+  }else{
+  const e=(S.signup&&S.signup.errors)||{};
+  const radios=(name,items,sub)=>items.map((x,i)=>`<label class="choice"><input type="radio" name="${name}" value="${i}"><span>${sub?`<b>${LV[i]}</b><small>${esc(x)}</small>`:`<strong>${esc(x)}</strong>`}</span></label>`).join('');
+  inner=`<div class="signup">
+   <aside><span class="label">${esc(t('roles').signup)}</span><h1 style="font-size:clamp(2rem,4vw,2.8rem)">${esc(t('suTitle'))}</h1><p class="muted" style="font-size:1.05rem">${esc(t('suLead'))}</p>
+     <ol>${t('how').map((s,i)=>`<li><span class="n">${i+1}</span><div><strong>${esc(s[0])}</strong><p class="muted" style="font-size:.92rem">${esc(s[1])}</p></div></li>`).join('')}</ol></aside>
+   <form class="card form" id="signup" novalidate style="padding:32px">
+    <div class="grid g2" style="gap:16px">
+      <div class="field"><label for="f-name">${esc(t('fName'))}</label><input id="f-name" name="name" autocomplete="name" placeholder="${esc(t('fNamePh'))}">${e.name?`<span class="err">${esc(t('errName'))}</span>`:''}</div>
+      <div class="field"><label for="f-phone">${esc(t('fPhone'))}</label><input id="f-phone" name="phone" type="tel" autocomplete="tel" placeholder="06 12 34 56 78">${e.phone?`<span class="err">${esc(t('errPhone'))}</span>`:''}</div>
+      <div class="field"><label for="f-email">${esc(t('fEmail'))}</label><input id="f-email" name="email" type="email" autocomplete="email" placeholder="naam@voorbeeld.nl"></div>
+      <div class="field"><label for="f-city">${esc(t('fCity'))}</label><input id="f-city" name="city" placeholder="${esc(t('fCityPh'))}"></div>
+    </div>
+    <fieldset><legend class="legend">${esc(t('fLevel'))}</legend><div class="choices">${radios('level',t('lvSay'),true)}</div></fieldset>
+    <fieldset><legend class="legend">${esc(t('fTime'))}</legend><div class="choices">${radios('time',t('times'))}</div></fieldset>
+    <fieldset><legend class="legend">${esc(t('fPay'))}</legend><div class="choices">${radios('pay',t('payers'))}</div></fieldset>
+    <div class="field"><label for="f-goal">${esc(t('fGoal'))}</label><textarea id="f-goal" name="goal" placeholder="${esc(t('fGoalPh'))}"></textarea></div>
+    <label class="check" for="f-consent"><input id="f-consent" name="consent" type="checkbox"><span>${esc(t('fConsent'))}</span></label>${e.consent?`<span class="err">${esc(t('errConsent'))}</span>`:''}
+    <button class="btn btn-primary btn-lg" type="submit">${esc(t('fSubmit'))} ${ICO.arrow}</button>
+   </form></div>`;}
+  return mShell(inner);
+}
+
+/* ---------- app shell ---------- */
+const ROLE_OF={learner:'learner',lesson:'learner',teacher:'teacher',builder:'teacher',review:'teacher',client:'client',admin:'admin'};
+const ROLE_HOME={learner:'learner',teacher:'teacher',client:'client',admin:'admin'};
+function appShell(inner){
+  const role=ROLE_OF[S.view]||'learner';const nNew=S.subs.filter(s=>s.status==='new').length;const rv=reviewDeck().length;
+  const items={
+    learner:[['learner',ICO.home,t('navToday')],['lesson:review',ICO.cards,t('navReview'),rv]],
+    teacher:[['teacher',ICO.users,t('navGroups')],['builder',ICO.build,t('navBuilder')],['review',ICO.inbox,t('navReviewT'),nNew]],
+    client:[['client',ICO.chart,t('navOverview')]],
+    admin:[['admin',ICO.grid,t('navOverview')]]}[role];
+  const cur=S.view==='lesson'&&S.cur==='review'?'lesson:review':S.view==='lesson'?'learner':S.view;
+  const who={learner:['Olena Koval',t('course')],teacher:['[Docent 1]','NT2'],client:['[Gemeente 1]',t('cLead').split('·')[0]],admin:['Taalbrug',t('aLead')]}[role];
+  return `<div class="app">
+   <aside class="side">
+    <button class="brand" data-go="home" aria-label="Taalbrug website"><span class="mk">${ICO.logo}</span><b>Taalbrug</b></button>
+    <div><span class="label" style="display:block;margin:0 6px 8px">${esc(t('viewAs'))}</span>
+     <div class="viewas" role="group" aria-label="${esc(t('viewAs'))}">${['learner','teacher','client','admin'].map(r=>`<button data-go="${ROLE_HOME[r]}" aria-pressed="${role===r}">${ICO[r]}<span>${esc(t('vaShort')[r])}</span></button>`).join('')}</div></div>
+    <nav class="nav" aria-label="Menu">${items.map(([k,ic,lab,cnt])=>`<button ${k.startsWith('lesson:')?`data-act="open" data-id="${k.split(':')[1]}"`:`data-go="${k}"`} ${cur===k?'aria-current="page"':''}>${ic}<span>${esc(lab)}</span>${cnt?`<span class="pill p-brand cnt num">${cnt}</span>`:''}</button>`).join('')}</nav>
+    <div class="side-foot">
+      <div class="me"><span class="av ${avc(who[0])}">${esc(ini(who[0]))}</span><div style="min-width:0"><b>${esc(who[0])}</b><small>${esc(who[1])}</small></div></div>
+      <div style="display:flex;gap:8px;align-items:center;justify-content:space-between;flex-wrap:wrap">${langToggle()}<span class="demo">${esc(t('demo'))}</span></div>
+      <button class="btn btn-quiet btn-sm" data-act="reset" style="justify-content:flex-start">${esc(t('reset'))}</button>
+    </div>
+   </aside>
+   <main class="canvas">${inner}</main></div>`;
+}
+
+/* ---------- teacher: groups ---------- */
+function vTeacher(){
+  const g=S.groups.find(x=>x.id===S.teacherGroup)||S.groups[0];
+  const pres=g.members.filter(m=>m.in).length;
+  const avg=Math.round(g.members.reduce((a,m)=>a+m.att,0)/Math.max(1,g.members.length));
+  const onl=(g.members.reduce((a,m)=>a+(m.hrs||0),0)/Math.max(1,g.members.length)).toLocaleString('nl-NL',{maximumFractionDigits:1});
+  return `<div class="page-h"><div><span class="label">${esc(t('roles').teacher)}</span><h1>${esc(t('tTitle'))}</h1><p class="muted">${esc(t('tLead'))}</p></div></div>
+  <div class="gtabs" role="tablist">${S.groups.map(x=>`<button role="tab" aria-selected="${x.id===g.id}" data-act="tgroup" data-id="${x.id}"><strong>${esc(x.name)}</strong><small>${esc(t('types')[x.type])}${x.client?' · '+esc(x.client):''} · ${x.members.length}</small></button>`).join('')}</div>
+  <div class="grid g4">${stat(t('kLearners'),g.members.length,null,ICO.users,'t0')}${stat(t('kAvg'),avg+'%',null,ICO.check,'t2')}${stat(t('kOnline'),onl+' u',t('kOnlineN'),ICO.cards,'t1')}${stat(t('kLesson'),g.lesson+'/24',null,ICO.gauge,'t0')}</div>
+  <div class="card"><div class="card-h"><h2 style="font-size:1.25rem">${esc(t('attToday'))}</h2><span class="pill p-good num">${pres}/${g.members.length} ${esc(t('present'))}</span></div>
+    <div class="tbl-wrap"><table><thead><tr><th>${esc(t('cName'))}</th><th>${esc(t('cIntake'))}</th><th>${esc(t('cNow'))}</th><th>${esc(t('cAtt'))}</th><th>${esc(t('cOnline'))}</th><th>${esc(t('cToday'))}</th></tr></thead>
+    <tbody>${g.members.map(m=>`<tr><td><span class="who"><span class="av ${avc(m.name)}">${esc(ini(m.name))}</span><strong>${esc(m.name)}</strong></span></td><td><span class="lvl">${m.intake}</span></td><td><span class="lvl">${m.now}</span></td><td class="num">${m.att}%</td>
+      <td><div style="display:flex;flex-direction:column;gap:5px;min-width:120px"><span class="num" style="font-size:.84rem;font-weight:700">${m.online||0}/${totalLive()} · ${(m.hrs||0).toLocaleString('nl-NL')} ${esc(t('cHrs'))}</span><div class="meter iris" style="height:6px"><i style="width:${Math.round((m.online||0)/Math.max(1,totalLive())*100)}%"></i></div></div></td>
+      <td><button class="att ${m.in?'in':'out'}" data-act="att" data-id="${m.id}" aria-pressed="${m.in}">${esc(m.in?t('here'):t('away'))}</button></td></tr>`).join('')}</tbody></table></div>
+    <div style="margin-top:18px"><button class="btn btn-primary" data-act="save-att">${esc(t('save'))}</button></div></div>
+  <div class="card field"><label for="t-note" style="font-family:var(--f-display);font-size:1.1rem">${esc(t('note'))}</label><textarea id="t-note" data-note="${g.id}" placeholder="${esc(t('notePh'))}">${esc(g.note||'')}</textarea></div>`;
+}
+
+/* ---------- client ---------- */
+function vClient(){
+  const gem=S.groups.filter(g=>g.type==='gemeente');
+  const active=gem.reduce((a,g)=>a+g.members.length,0);
+  const all=S.clientPeriod===1;
+  const lv=[['A0',14,3],['A1',8,13],['A2',2,7],['B1',0,1]];
+  const max=Math.max(...lv.map(r=>Math.max(r[1],r[2])));
+  const rows=[...gem.map(g=>({name:g.name,period:{nl:'sep–nov',uk:'вер–лис'},n:g.members.length,att:Math.round(g.members.reduce((a,m)=>a+m.att,0)/g.members.length)+'%',up:'–',st:'run'})),
+    {name:'Gemeente A1 · voorjaar',period:{nl:'feb–apr',uk:'лют–кві'},n:12,att:'86%',up:'9/12',st:'done'}];
+  const inv=S.invoices.filter(i=>L(i.client)==='[Gemeente 1]');
+  const uk=S.lang==='uk';
+  return `<div class="page-h"><div><span class="label">${esc(t('roles').client)}</span><h1>${esc(t('cTitle'))}</h1><p class="muted">${esc(t('cLead'))}</p></div>
+    <div class="seg" role="group"><button data-act="period" data-p="0" aria-pressed="${!all}">${esc(t('pMonth'))}</button><button data-act="period" data-p="1" aria-pressed="${all}">${esc(t('pAll'))}</button></div></div>
+  <div class="grid g4">${all
+    ?stat(t('kActive'),active+12,uk?'3 групи з лютого':'3 groepen sinds februari',ICO.users,'t0')+stat(t('kAttAvg'),'88%',null,ICO.check,'t2')+stat(t('kUp'),'75%',uk?'9 з 12 у першій групі':'9 van 12 in de eerste groep',ICO.gauge,'t1')+stat(t('kWork'),'7',null,ICO.client,'t0')
+    :stat(t('kActive'),active,gem.length+' '+(uk?'група':'groep'),ICO.users,'t0')+stat(t('kAttAvg'),'89%',null,ICO.check,'t2')+stat(t('kOnline'),'2,9 u',t('kOnlineN'),ICO.cards,'t1')+stat(t('kWork'),'3',null,ICO.client,'t0')}</div>
+  <div class="grid g2">
+   <div class="card"><div class="card-h"><div><h2 style="font-size:1.2rem">${esc(t('lvlT'))}</h2><p class="muted" style="font-size:.9rem;margin-top:4px">${esc(t('lvlLead'))}</p></div>
+    <div class="legend-row"><span><i style="background:var(--bar-muted)"></i>${esc(t('lgIntake'))}</span><span><i style="background:var(--iris)"></i>${esc(t('lgNow'))}</span></div></div>
+    <div class="lchart">${lv.map(r=>`<div class="lrow"><span class="lvl">${r[0]}</span><div class="bars"><div class="bar-l"><i class="a" style="width:${r[1]/max*85}%"></i>${r[1]}</div><div class="bar-l"><i class="b" style="width:${r[2]/max*85}%"></i><strong style="color:var(--ink)">${r[2]}</strong></div></div></div>`).join('')}</div></div>
+   <div class="card"><div class="card-h"><h2 style="font-size:1.2rem">${esc(t('repT'))}</h2></div>${[uk?'Місячний звіт · жовтень':'Maandrapport · oktober',uk?'Місячний звіт · вересень':'Maandrapport · september',uk?'Підсумковий звіт · група A1 · весна':'Eindrapport · groep A1 · voorjaar'].map(r=>`<div class="row-item"><span class="who"><span class="av c0">${ICO.inbox}</span><strong>${esc(r)}</strong></span><button class="btn btn-ghost btn-sm" data-act="report" data-name="${esc(r)}">${esc(t('view'))}</button></div>`).join('')}</div>
+  </div>
+  <div class="card"><div class="card-h"><h2 style="font-size:1.2rem">${esc(t('grpT'))}</h2></div><div class="tbl-wrap"><table><thead><tr><th>${esc(t('cGroup'))}</th><th>${esc(t('cPeriod'))}</th><th>${esc(t('cLearn'))}</th><th>${esc(t('cAtt'))}</th><th>${esc(t('cUp'))}</th><th>${esc(t('cStatus'))}</th></tr></thead>
+    <tbody>${rows.map(r=>`<tr><td><strong>${esc(r.name)}</strong></td><td>${esc(L(r.period))}</td><td class="num">${r.n}</td><td class="num">${r.att}</td><td class="num">${r.up}</td><td><span class="pill ${r.st==='run'?'p-iris':'p-good'}">${esc(r.st==='run'?t('running'):t('finished'))}</span></td></tr>`).join('')}</tbody></table></div></div>
+  <div class="card"><div class="card-h"><h2 style="font-size:1.2rem">${esc(t('invT'))}</h2></div>${inv.map(i=>`<div class="row-item"><span class="l"><strong>${esc(i.id.toUpperCase())}</strong><span class="muted" style="font-size:.88rem">${esc(L(i.desc))}</span></span><span class="r"><strong class="num">${eur(i.amount)}</strong><span class="pill ${i.paid?'p-good':'p-warn'}">${esc(i.paid?t('paid'):t('openInv'))}</span></span></div>`).join('')}</div>
+  <p class="faint" style="font-size:.86rem">${esc(t('privacy'))}</p>`;
+}
+
+/* ---------- admin ---------- */
+function vAdmin(){
+  const learners=S.groups.reduce((a,g)=>a+g.members.length,0);
+  const revenue=S.groups.reduce((a,g)=>a+rev(g),0);
+  const open=S.invoices.filter(i=>!i.paid).reduce((a,i)=>a+i.amount,0);
+  const free=S.groups.filter(g=>g.members.length<g.cap);
+  return `<div class="page-h"><div><span class="label">${esc(t('roles').admin)}</span><h1>${esc(t('aTitle'))}</h1><p class="muted">${esc(t('aLead'))}</p></div></div>
+  <div class="grid g4">${stat(t('kGroups'),S.groups.length,null,ICO.grid,'t0')}${stat(t('kStudents'),learners,null,ICO.users,'t2')}${stat(t('kRev'),eur(revenue),null,ICO.chart,'t1')}${stat(t('kOpen'),eur(open),null,ICO.inbox,'t0')}</div>
+  <div class="card"><div class="card-h"><h2 style="font-size:1.2rem">${esc(t('gT'))}</h2></div><div class="tbl-wrap"><table><thead><tr><th>${esc(t('cGroup'))}</th><th>${esc(t('cClient'))}</th><th>${esc(t('cTeacher'))}</th><th>${esc(t('cSeatsC'))}</th><th style="text-align:right">${esc(t('cRev'))}</th></tr></thead>
+    <tbody>${S.groups.map(g=>{const full=g.members.length>=g.cap;return `<tr><td><strong>${esc(g.name)}</strong></td><td>${esc(g.client||t('types').private)}</td><td>${esc(g.teacher)}</td><td><div style="display:flex;align-items:center;gap:10px;min-width:150px"><div class="meter" style="flex:1;height:8px"><i style="width:${g.members.length/g.cap*100}%;background:${full?'var(--mint)':'var(--sun)'}"></i></div><span class="num" style="font-weight:700;font-size:.85rem">${g.members.length}/${g.cap}</span></div></td><td class="num" style="text-align:right;font-weight:700">${eur(rev(g))}</td></tr>`}).join('')}</tbody></table></div></div>
+  <div class="grid g2">
+    <div class="card"><div class="card-h"><h2 style="font-size:1.2rem">${esc(t('wT'))}</h2><span class="pill p-brand num">${S.waitlist.length} ${esc(t('waiting'))}</span></div>
+      ${S.waitlist.length?S.waitlist.map(w=>`<div class="row-item"><span class="who"><span class="av ${avc(w.name)}">${esc(ini(w.name))}</span><span class="l"><strong>${esc(w.name)}</strong><span class="faint" style="font-size:.84rem"><span class="lvl" style="height:20px;font-size:.72rem">${esc(w.level)}</span> ${esc(t('times')[w.time]||'')} · ${esc(t('payers')[w.pay]||'')}</span></span></span>
+        <span class="place">${free.length?`<label class="sr" for="sel-${w.id}">${esc(t('chooseGroup'))}</label><select class="sel" id="sel-${w.id}">${free.map(g=>`<option value="${g.id}">${esc(g.name)} (${g.cap-g.members.length})</option>`).join('')}</select><button class="btn btn-primary btn-sm" data-act="place" data-id="${w.id}">${esc(t('placeIn'))}</button>`:`<span class="pill p-warn">${esc(t('noSeat'))}</span>`}</span></div>`).join(''):`<p class="muted">${esc(t('wEmpty'))}</p>`}</div>
+    <div class="card"><div class="card-h"><h2 style="font-size:1.2rem">${esc(t('iT'))}</h2></div>
+      ${S.invoices.map(i=>`<div class="row-item"><span class="l"><strong>${esc(L(i.client))}</strong><span class="faint" style="font-size:.86rem">${esc(L(i.desc))}</span></span><span class="r"><strong class="num">${eur(i.amount)}</strong>${i.paid?`<span class="pill p-good">${esc(t('paid'))}</span>`:`<button class="btn btn-ghost btn-sm" data-act="pay" data-id="${i.id}">${esc(t('markPaid'))}</button>`}</span></div>`).join('')}</div>
+  </div>`;
+}
+
+const LV=['A0','A1','A2','B1'];
+const NODE_X=[0,52,84,52,0,-52,-84,-52];
+const say=(txt,label,big)=>`<button class="icon-btn ${big?'speak':''}" data-act="speak" data-say="${esc(txt)}" aria-label="${esc(t('listen'))}: ${esc(label||txt)}" title="${esc(t('listen'))}">${TI.sound}</button>`;
+
+/* ---------- learner: dashboard with the learning path ---------- */
+function miniL(l,cls){
+  const open=unlocked(l.mi);const done=!!S.done[l.id];const sc=S.scores[l.id];
+  return `<button class="mini-l ${done?'done':''} ${cls||''}" ${open?`data-act="open" data-id="${l.id}"`:'disabled'}><span class="ti">${open?(done?ICO.check:TI[l.type]):TI.lock}</span><span style="min-width:0"><b>${esc(L(l.title))}</b><small>${esc(t('types2')[l.type])} · ${l.min} ${esc(t('min'))}${sc!=null&&l.type==='test'?` · ${sc}%`:''}</small></span></button>`;
+}
+function vLearn(){
+  const tot=totalLive();const doneN=ALLV().filter(x=>S.done[x.l.id]).length, nx=nextOpen();
+  const wk=S.week, max=Math.max(30,...wk), today=wk[6];
+  const unknown=reviewDeck().length;const pct=tot?Math.round(doneN/tot*100):0;
+  const fbNew=S.subs.find(s=>s.who==='Olena K.'&&s.status==='done');
+  let k=0;
+  const path=C().map((m,mi)=>{const open=unlocked(mi);const ls=liveLessons(m);const tst=testOf(m);const sc=tst?S.scores[tst.id]:null;const dn=ls.filter(l=>S.done[l.id]).length;
+    return `<div class="unit u${open?Math.min(mi,2):3}"><div class="l"><small>${esc(m.lvl)} · ${mi+1}</small><h3>${esc(L(m.title))}</h3></div>${open?`<span class="score num">${dn}/${ls.length}${sc!=null?` · ${sc}%`:''}</span>`:`<span class="score">${TI.lock} ${esc(m.soon?t('soon'):'70%')}</span>`}</div>
+    ${ls.map(x=>{const l=findL(x.id);const done=!!S.done[l.id];const isCur=nx&&l.id===nx.id;const x0=NODE_X[k++%NODE_X.length];
+      return `<div class="node-row" style="--x:${x0}px">${isCur?`<span class="start-tip">${esc(t('start'))}</span>`:''}<button class="node ${done?'done':''} ${isCur?'cur':''} ${l.type==='test'?'test':''}" ${open?`data-act="open" data-id="${l.id}"`:'disabled'} aria-label="${esc(l.num)} ${esc(L(l.title))}">${open?(done?sv('<path d="M5 12.5l4.5 4.5L19 7.5"/>',28):TI[l.type].replace(/width="1[68]" height="1[68]"/,'width="26" height="26"')):TI.lock}</button>
+        <span class="node-cap">${esc(L(l.title))}<small>${esc(t('types2')[l.type])} · ${l.min} ${esc(t('min'))}</small></span></div>`}).join('')}`}).join('');
+  return `<div class="page-h"><div class="hello"><span class="big-av">O</span><div><span class="label">${esc(t('course'))}</span><h1>${esc(t('hello'))}</h1></div></div>
+    <div class="chips"><span class="chip fire">${ICO.fire} <span class="num">${S.streak}</span> ${esc(t('streakT'))}</span><button class="switch" role="switch" aria-checked="${S.support}" data-act="support"><span class="tr"></span>${esc(t('support'))}</button></div></div>
+  <div class="top2">
+    <div class="cont"><span class="label">${esc(t('cont'))}</span>
+      ${nx?`<div class="meta"><span>${esc(nx.mod.lvl)} · ${esc(L(nx.mod.title))}</span><span>${esc(t('types2')[nx.type])}</span><span>${nx.min} ${esc(t('min'))}</span></div><h2>${esc(L(nx.title))}</h2>
+      <div style="margin-top:auto;display:flex;gap:16px;align-items:center;flex-wrap:wrap"><button class="btn btn-brand btn-lg" data-act="open" data-id="${nx.id}">${TI.play} ${esc(t('startLesson'))}</button><span class="muted num" style="font-weight:700">${doneN}/${tot} ${esc(t('ofLessons'))} · ${pct}%</span></div>`:`<h2>${esc(t('finished'))}</h2>`}
+    </div>
+    <div class="card"><div class="goal">${ring(today/20,118,12,'var(--mint)',`${today}`,esc(t('goalOf')))}<div style="flex:1;min-width:0"><h3>${esc(t('goalT'))}</h3><p class="muted" style="font-size:.88rem;margin-top:4px">${esc(t('goal'))}</p>
+      <div class="week" aria-label="${esc(t('weekT'))}">${wk.map((m,i)=>`<div class="${i===6?'today':m>=20?'hit':''}" title="${m} ${esc(t('min'))}"><i style="height:${Math.max(6,Math.round(m/max*100))}%"></i><span>${esc(t('days')[i])}</span></div>`).join('')}</div></div></div></div>
+  </div>
+  <div class="dash">
+    <section class="card path-card"><div class="card-h"><h2 style="font-size:1.35rem">${esc(t('pathT'))}</h2><span class="pill p-iris">A0 → A2</span></div><div class="path">${path}</div></section>
+    <aside class="stack" style="gap:20px">
+      ${fbNew?`<div class="card feedback-card"><span class="label" style="color:var(--sun-ink)">${esc(t('fbFrom'))}</span><p style="margin:8px 0 12px;font-weight:600">${esc(fbNew.fb||'')}</p><button class="btn btn-ghost btn-sm" data-act="open" data-id="${fbNew.lid}">${esc(L(findL(fbNew.lid).title))} →</button></div>`:''}
+      <div class="card"><div class="card-h" style="margin-bottom:10px"><h3>${esc(t('reviewT'))}</h3><span class="pill p-brand num">${unknown}</span></div>${unknown?`<p class="muted" style="margin-bottom:14px">${esc(t('reviewN'))}</p><button class="btn btn-primary" style="width:100%" data-act="open" data-id="review">${ICO.cards} ${esc(t('reviewGo'))}</button>`:`<p class="muted">${esc(t('reviewDone'))}</p>`}</div>
+      <div class="card"><div class="card-h" style="margin-bottom:10px"><h3>${esc(t('liveT'))}</h3></div><div class="row-item" style="padding-top:0"><span class="who"><span class="av c2">di</span><span class="l"><strong>${esc(t('liveWhen'))}</strong><span class="faint" style="font-size:.86rem">${esc(t('nextTopic'))}</span></span></span></div>
+        <button class="btn ${S.absent?'btn-brand':'btn-ghost'} btn-sm" style="margin-top:8px" data-act="absent" aria-pressed="${S.absent}">${esc(S.absent?t('absentOn'):t('absent'))}</button></div>
+      <div class="card"><div class="msg" style="display:flex;gap:12px"><span class="av c1">D</span><div><strong>${esc(t('msgFrom'))}</strong><p class="muted" style="margin-top:4px;font-size:.94rem">${esc(t('msg'))}</p></div></div></div>
+    </aside>
+  </div>`;
+}
+function reviewDeck(){return ALLV().map(x=>findL(x.l.id)).filter(l=>l.type==='words'&&unlocked(l.mi)&&S.done[l.id]).flatMap(l=>l.words).filter(w=>!S.known[w[0]]);}
+
+/* ---------- dialogue player ---------- */
+function vVideo(l){
+  if(!l.lines||!l.lines.length)return `<div class="card"><p class="muted">${esc(t('noItems'))}</p></div>`;
+  const st=S.line[l.id]||{i:0,playing:false};const i=Math.min(st.i,l.lines.length-1);const ln=l.lines[i];const speakers=[...new Set(l.lines.map(x=>x[0]))].slice(0,2);
+  return `<div class="screen" aria-live="polite"><div class="top"><span class="tag">${esc(L(l.scene)||'')}</span><span class="tag num">${i+1} / ${l.lines.length}</span></div>
+    <div class="scene">${speakers.map((sp,k)=>`<div class="persona p${k} ${sp===ln[0]?'on':''}"><span class="head">${esc(sp[0])}</span><span class="body"></span><small>${esc(sp)}</small></div>`).join('')}
+      <div class="speech"><div class="say">${esc(ln[1])}</div>${S.support?`<div class="sub">${esc(ln[2]||'')}</div>`:''}</div></div>
+    <div class="prog"><i style="width:${(i+1)/l.lines.length*100}%"></i></div></div>
+  <div class="ctrl"><button class="icon-btn round" data-act="line" data-d="-1" aria-label="${esc(t('prevLine'))}">${TI.prev}</button>
+    <button class="icon-btn play" data-act="playline" aria-label="${esc(st.playing?t('pause'):t('play'))}">${st.playing?TI.pause:TI.play}</button>
+    <button class="icon-btn round" data-act="line" data-d="1" aria-label="${esc(t('nextLine'))}">${TI.next}</button>
+    <span class="faint" style="font-size:.86rem;margin-left:6px">${esc(t('vidNote'))}</span></div>
+  <div class="card"><div class="card-h"><h3>${esc(t('transcript'))}</h3></div><div class="transcript">${l.lines.map((x,kk)=>`<button class="${kk===i?'on':''}" data-act="goline" data-i="${kk}"><span class="sp">${esc(x[0])}</span><span><strong>${esc(x[1])}</strong>${S.support?`<span class="uk">${esc(x[2]||'')}</span>`:''}</span></button>`).join('')}</div></div>`;
+}
+
+/* ---------- flashcards ---------- */
+function vCards(deckId,words){
+  const fc=S.fc[deckId]||(S.fc[deckId]={i:0,flip:false});
+  if(!words.length)return `<div class="card"><p class="muted">${esc(deckId==='review'?t('reviewDone'):t('noItems'))}</p></div>`;
+  const dots=`<div class="dots" aria-hidden="true">${words.map((w,i)=>`<i class="${S.known[w[0]]?'k':''} ${i===fc.i?'c':''}"></i>`).join('')}</div>`;
+  const knownN=words.filter(w=>S.known[w[0]]).length;
+  if(fc.i>=words.length)return `<div class="card-wrap"><div class="flash back">${ring(knownN/words.length,130,12,'var(--mint)',`${knownN}/${words.length}`,esc(t('knownN')))}<h3>${esc(t('deckDone'))}</h3><button class="btn btn-ghost" data-act="fc-restart" data-deck="${deckId}">${esc(t('deckRestart'))}</button></div>${dots}</div>`;
+  const w=words[fc.i];
+  return `<div class="card-wrap">
+   <span class="label num">${esc(t('cardOf'))} ${fc.i+1} / ${words.length}</span>
+   ${fc.flip?`<div class="flash back"><span class="w">${esc(w[0])}</span><span class="tr">${esc(w[1])}</span><span class="ex">${esc(w[2]||'')}</span>${w[2]?say(w[2]):''}</div>`
+     :`<div class="flash">${say(w[0],null,true)}<span class="w">${esc(w[0])}</span><button class="btn btn-ghost" data-act="fc-flip" data-deck="${deckId}">${esc(t('flip'))}</button></div>`}
+   <div class="ctas" style="justify-content:center"><button class="btn btn-ghost btn-lg" data-act="fc-next" data-deck="${deckId}" data-k="0">${esc(t('again'))}</button><button class="btn btn-mint btn-lg" data-act="fc-next" data-deck="${deckId}" data-k="1" data-w="${esc(w[0])}">${ICO.check} ${esc(t('know'))}</button></div>
+   ${dots}</div>`;
+}
+
+/* ---------- one exercise (question card) ---------- */
+function exBody(lid,it,i,fbOn){
+  const st=exS(lid).items[i]||{};const v=st.v;const dis=fbOn?'disabled':'';
+  const choice=(opts,correct,inline)=>`<div class="opts ${inline?'inline':''}">${opts.map((o,k)=>{let c=v===k?'sel':'';if(fbOn){if(k===correct)c='right';else if(v===k)c='wrong';}return `<button class="opt ${c}" data-act="ans" data-l="${lid}" data-i="${i}" data-o="${k}" ${dis} aria-pressed="${v===k}">${esc(o)}</button>`}).join('')}</div>`;
+  switch(it.type){
+   case 'mc':return `<p class="q">${esc(it.q)}</p>`+choice(it.opts,it.a);
+   case 'listen':return `<div class="say-row">${say(it.say,'?',true)}${!canSpeak?`<em class="muted">„${esc(it.say)}”</em>`:`<span class="muted">${esc(t('hints').listen)}</span>`}</div>`+choice(it.opts,it.a);
+   case 'tf':return `<p class="q">${esc(it.q)}</p>`+choice(t('tfOpts'),it.a?0:1);
+   case 'clock':{const co=clockOpts(it);return `${it.q?`<p class="q">${esc(it.q)}</p>`:''}<div class="clockwrap"><span class="clock">${clockSvg(it.h,it.m)}</span><div style="flex:1;min-width:220px">${choice(co.opts,co.a)}</div></div>`;}
+   case 'gap':return `<div class="gapline"><span>${esc(it.before)}</span><input id="gap-${lid}-${i}" aria-label="${esc(t('hints').gap)}" data-val="${lid}|${i}" value="${esc(v||'')}" autocomplete="off" autocapitalize="off" ${dis}><span>${esc(it.after)}</span></div>`;
+   case 'dictation':return `<div class="say-row">${say(it.say,'?',true)}${!canSpeak?`<em class="muted">„${esc(it.say)}”</em>`:''}<input class="dict" id="dict-${lid}-${i}" aria-label="${esc(t('hints').dictation)}" data-val="${lid}|${i}" value="${esc(v||'')}" autocomplete="off" ${dis}></div>`;
+   case 'order':{const vv=v||[];return `<div class="built" aria-label="${esc(t('hints').order)}">${vv.map((kk,p)=>`<button class="wchip" data-act="ob" data-l="${lid}" data-i="${i}" data-p="${p}" ${dis}>${esc(it.words[kk])}</button>`).join('')}</div>
+    <div class="pool">${it.words.map((w,kk)=>vv.includes(kk)?'':`<button class="wchip" data-act="ow" data-l="${lid}" data-i="${i}" data-k="${kk}" ${dis}>${esc(w)}</button>`).join('')}</div>`;}
+   case 'match':{const mv=v||{m:{},sel:null,err:0};const order=perm(it.pairs.length);const done=Object.keys(mv.m);
+    return `<div class="match"><div class="mcol">${it.pairs.map((p,kk)=>`<button class="mitem ${done.includes(String(kk))?'right':''} ${mv.sel===kk?'sel':''}" data-act="mL" data-l="${lid}" data-i="${i}" data-k="${kk}" ${done.includes(String(kk))?'disabled':''}>${esc(p[0])}</button>`).join('')}</div>
+      <div class="mcol">${order.map(kk=>{const used=Object.values(mv.m).includes(kk);return `<button class="mitem ${used?'right':''} ${mv.bad===kk?'wrong':''}" data-act="mR" data-l="${lid}" data-i="${i}" data-k="${kk}" ${used?'disabled':''}>${esc(it.pairs[kk][1])}</button>`}).join('')}</div></div>
+      ${mv.err?`<span class="faint num" style="font-size:.86rem">${mv.err} ${esc(t('errors'))}</span>`:''}`;}
+   case 'sort':{const svv=v||{};return `<div class="sortlist">${it.words.map((w,kk)=>{const pick=svv[kk];return `<div class="srow"><span class="sw">${pick?`<b>${esc(pick)}</b> `:'<span class="faint">… </span>'}${esc(w[0])}</span><span class="opts inline">${it.cats.map(c=>{let cl=pick===c?'sel':'';if(fbOn){if(c===w[1])cl=pick===c?'right':'';else if(pick===c)cl='wrong';}return `<button class="opt ${cl}" data-act="srt" data-l="${lid}" data-i="${i}" data-k="${kk}" data-c="${esc(c)}" ${dis}>${esc(c)}</button>`}).join('')}</span></div>`}).join('')}</div>`;}
+   case 'speak':return `<div class="say-row">${say(it.text,null,true)}<div><div class="big-say">${esc(it.text)}</div>${S.support&&it.uk?`<span class="muted">${esc(it.uk)}</span>`:''}</div></div>
+     <div class="opts"><button class="opt ${v===1?'right':''}" data-act="ans" data-l="${lid}" data-i="${i}" data-o="1" aria-pressed="${v===1}">${esc(t('speakGood'))}</button><button class="opt ${v===0?'sel':''}" data-act="ans" data-l="${lid}" data-i="${i}" data-o="0" aria-pressed="${v===0}">${esc(t('speakHard'))}</button></div>
+     <p class="faint" style="font-size:.84rem">${esc(t('speakNote'))}</p>`;
+   case 'write':{const wv=v||{};const txt=wv.text||'';const n=txt.trim()?txt.trim().split(/\s+/).length:0;const sub=wv.sub&&S.subs.find(s=>s.id===wv.sub);
+    return `<p class="q">${esc(it.prompt.nl)}</p>${S.support?`<p class="muted">${esc(it.prompt.uk)}</p>`:''}
+     ${wv.sent?`<div class="card flat" style="background:var(--surface-2);white-space:pre-wrap">${esc(txt)}</div><div class="pill p-good" style="align-self:flex-start">${ICO.check} ${esc(t('writeSent'))}</div>${sub&&sub.status==='done'?`<div class="tip">${TI.bulb}<div><strong>${esc(t('teacherFb'))} · ${esc(t('grades')[sub.grade||0])}</strong><span style="display:block;margin-top:2px">${esc(sub.fb||'')}</span></div></div>`:''}<details><summary>${esc(t('modelA'))}</summary><p style="margin-top:8px">${esc(it.model)}</p></details>`
+     :`<textarea class="write-box" id="wr-${lid}-${i}" data-write="${lid}|${i}" aria-label="${esc(t('hints').write)}">${esc(txt)}</textarea>
+     <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap"><button class="btn btn-primary" data-act="wsend" data-l="${lid}" data-i="${i}">${esc(t('writeSend'))}</button><span class="faint num wcount" style="font-size:.86rem;font-weight:700">${n} ${esc(t('wordsN'))} · ${esc(t('minWords'))} ${it.min}</span></div>`}`;}
+  }return '';
+}
+function qCard(lid,it,i,fbOn){
+  return `<div class="qcard"><div class="qtype"><span class="tag"><span>${esc(EXI[it.type])}</span>${esc(t('exName')[it.type])}</span><span class="faint" style="font-size:.86rem;font-weight:600">${esc(t('hints')[it.type])}</span></div>${exBody(lid,it,i,fbOn)}</div>`;
+}
+/* builder preview + test review use the card directly */
+function exItem(lid,it,i){const st=exS(lid).items[i]||{};const fbOn=immediate(it)?answered(it,st.v):!!st.checked;return qCard(lid,it,i,fbOn&&!['speak','write'].includes(it.type));}
+
+/* ---------- step-by-step exercises ---------- */
+function stepState(l){const e=exS(l.id);if(e.step==null)e.step=0;return e;}
+function vSteps(l){
+  const test=l.type==='test';const e=stepState(l);const n=l.items.length;
+  if(!n)return `<div class="card"><p class="muted">${esc(t('noItems'))}</p></div>`;
+  const okAt=i=>isOk(l.items[i],(e.items[i]||{}).v);
+  const bar=`<div class="pbar" aria-label="${e.step}/${n}">${l.items.map((it,i)=>{const s=e.items[i]||{};let c='';if(i<e.step||(test&&e.submitted)){c=test&&!e.submitted?'cur':(['speak','write'].includes(it.type)?'done':okAt(i)?'done':'bad');}else if(i===e.step)c='cur';return `<i class="${c}"></i>`}).join('')}</div>`;
+  if(e.step>=n||(test&&e.submitted)){
+    const okN=l.items.filter((it,i)=>okAt(i)).length;const pct=Math.round(okN/n*100);const pass=pct>=70;
+    return {bar,body:`<div class="summary">${ring(pct/100,150,14,test&&!pass?'var(--sun)':'var(--mint)',pct+'%',esc(t('scoreN')))}
+      <h2>${esc(test?(pass?t('pass'):t('fail')):t('sumT'))}</h2>
+      <div class="stats3"><div><b>${okN}/${n}</b><span class="faint">${esc(t('correctN'))}</span></div><div><b>${l.min}</b><span class="faint">${esc(t('minN'))}</span></div><div><b>${S.streak}</b><span class="faint">${esc(t('streakT'))}</span></div></div>
+      <div class="ctas" style="justify-content:center"><button class="btn btn-ghost btn-lg" data-act="retry" data-l="${l.id}">${esc(test?t('retry'):t('againB'))}</button>${!test||pass?`<button class="btn btn-primary btn-lg" data-act="finish" data-id="${l.id}">${esc(t('finish'))} ${ICO.arrow}</button>`:''}</div>
+      <div class="review-list"><span class="label" style="margin:10px 0 4px">${esc(t('yourAns'))}</span>${l.items.map((it,i)=>{const ok=okAt(i);return `<div class="rl ${ok?'ok':'bad'}"><span class="d">${ok?ICO.check:ICO.x}</span><div><strong>${esc(t('exName')[it.type])}</strong>${it.q||it.say||it.text?` · <span class="muted">${esc(it.q||it.say||it.text)}</span>`:''}${ok?'':`<div style="font-size:.9rem;margin-top:2px"><span class="faint">${esc(t('rightIs'))}</span> <strong>${esc(answerText(it))}</strong></div>`}</div></div>`}).join('')}</div></div>`,fbar:''};
+  }
+  const i=e.step,it=l.items[i],st=e.items[i]||{};
+  const ans=answered(it,st.v);
+  const showFb=!test&&st.checked&&!['speak','write'].includes(it.type);
+  const ok=showFb&&okAt(i);
+  let fbar;
+  if(showFb){const g=t('great');fbar=`<div class="fbar ${ok?'ok':'bad'}" role="status"><div class="msg"><span class="bubble-ic">${ok?ICO.check:ICO.x}</span><div>${esc(ok?g[i%g.length]:t('notQ'))}${ok?'':`<small>${esc(t('rightIs'))} ${esc(answerText(it))}</small>`}</div></div><button class="btn ${ok?'btn-mint':'btn-bad'} btn-lg" data-act="stepnext" data-l="${l.id}">${esc(t('cont2'))}</button></div>`;}
+  else if(['speak','write'].includes(it.type)){fbar=`<div class="fbar"><span class="faint" style="font-weight:700">${i+1} / ${n}</span><button class="btn btn-primary btn-lg" data-act="stepnext" data-l="${l.id}" ${ans?'':'aria-disabled="true"'}>${esc(t('cont2'))}</button></div>`;}
+  else if(test){const last=i===n-1;fbar=`<div class="fbar"><span class="faint" style="font-weight:700">${i+1} / ${n}</span><div class="ctas">${i>0?`<button class="btn btn-ghost" data-act="stepback" data-l="${l.id}">${esc(t('prev'))}</button>`:''}<button class="btn btn-primary btn-lg" data-act="${last?'submit-test':'stepnext'}" data-l="${l.id}" ${ans?'':'aria-disabled="true"'}>${esc(last?t('submit'):t('nextQ'))}</button></div></div>`;}
+  else fbar=`<div class="fbar"><button class="btn btn-quiet" data-act="stepskip" data-l="${l.id}">${esc(t('skipB'))}</button><button class="btn btn-primary btn-lg" data-act="stepcheck" data-l="${l.id}" ${ans?'':'aria-disabled="true"'}>${esc(t('checkB'))}</button></div>`;
+  return {bar,body:qCard(l.id,it,i,showFb),fbar};
+}
+
+/* ---------- grammar & reading ---------- */
+function vGrammar(l){
+  const ukCol=(l.head||[]).indexOf('Українською');const cols=(l.head||[]).map((h,i)=>i).filter(i=>S.support||i!==ukCol);
+  const sayTxt=r=>l.head&&l.head[1]==='zijn'?`${r[0].split(' / ')[0]} ${r[1]}. ${r[0].split(' / ')[0]} ${r[2]}.`:(r[1]||r[0]);
+  return `<div class="card stack" style="gap:18px"><p style="font-size:1.1rem;max-width:65ch;font-weight:600">${esc(l.intro?l.intro.nl:'')}</p>${S.support&&l.intro?`<p class="muted" style="max-width:65ch">${esc(l.intro.uk)}</p>`:''}
+   ${l.rows&&l.rows.length?`<div class="tbl-wrap"><table class="gram" style="min-width:420px"><thead><tr>${cols.map(i=>`<th>${esc(l.head[i])}</th>`).join('')}<th><span class="sr">${esc(t('listen'))}</span></th></tr></thead><tbody>${l.rows.map(r=>`<tr>${cols.map(i=>`<td>${i===0||i===ukCol?esc(r[i]||''):`<b>${esc(r[i]||'')}</b>`}</td>`).join('')}<td style="width:56px">${say(sayTxt(r))}</td></tr>`).join('')}</tbody></table></div>`:''}
+   ${(l.tips||[]).map(tp=>`<div class="tip">${TI.bulb}<div><strong>${esc(tp.nl)}</strong>${S.support?`<span class="muted" style="display:block;font-size:.92rem;margin-top:2px">${esc(tp.uk)}</span>`:''}</div></div>`).join('')}</div>`;
+}
+function vLetter(l){const tx=l.text||{title:'',paras:[]};
+  return `<article class="letter"><span class="label">${esc(t('types2').reading)}</span><h2 style="margin:0 0 6px">${esc(tx.title)}</h2>${tx.paras.map(p=>`<p style="white-space:pre-line">${esc(p[0])}${S.support&&p[1]?`<span class="muted" style="display:block;font-size:.9rem;margin-top:2px;white-space:pre-line">${esc(p[1])}</span>`:''}</p>`).join('')}</article>`;}
+function lessonContent(l){
+  if(l.type==='video')return vVideo(l);
+  if(l.type==='words')return vCards(l.id,l.words||[])+(l.words&&l.words.length?`<div class="card"><div class="card-h"><h3>${esc(t('allWords'))}</h3></div><div class="wordlist">${l.words.map(w=>`<button data-act="speak" data-say="${esc(w[0])}"><span><strong>${esc(w[0])}</strong>${S.support?`<br><small>${esc(w[1])}</small>`:''}</span>${S.known[w[0]]?`<span class="k">${ICO.check}</span>`:TI.sound}</button>`).join('')}</div></div>`:'');
+  if(l.type==='grammar')return vGrammar(l);
+  if(l.type==='reading')return vLetter(l);
+  return '';
+}
+
+/* ---------- the lesson player ---------- */
+function vLesson(){
+  if(S.cur==='review'){
+    return `<div class="player"><div class="ptop"><button class="icon-btn" data-go="learner" aria-label="${esc(t('back'))}">${ICO.x}</button><span class="label">${esc(t('navReview'))}</span></div>
+      <div class="phead"><h1>${esc(t('reviewT'))}</h1></div>${vCards('review',reviewDeck())}</div>`;
+  }
+  const l=findL(S.cur)||nextOpen();if(!l)return '';const m=l.mod;
+  const stepped=['practice','test','speaking','writing','reading'].includes(l.type)&&l.items;
+  const st=stepped?vSteps(l):null;
+  const doneBar=`<div class="pbar"><i class="${S.done[l.id]?'done':'cur'}"></i></div>`;
+  return `<div class="player">
+   <div class="ptop"><button class="icon-btn" data-go="learner" aria-label="${esc(t('back'))}">${ICO.x}</button>${st?st.bar:doneBar}</div>
+   <div class="phead"><span class="label">${esc(m.lvl)} · ${esc(L(m.title))} · ${esc(t('types2')[l.type])} · ${l.min} ${esc(t('min'))}${l.status==='draft'?` · <span class="pill p-warn">${esc(t('draft'))}</span>`:''}</span>
+     <div style="display:flex;justify-content:space-between;gap:12px;align-items:flex-end;flex-wrap:wrap"><h1>${esc(L(l.title))}</h1><button class="switch" role="switch" aria-checked="${S.support}" data-act="support"><span class="tr"></span>${esc(t('support'))}</button></div></div>
+   ${lessonContent(l)}
+   ${st?st.body+st.fbar:`<div class="fbar"><span class="faint" style="font-weight:700">${esc(L(l.title))}</span><button class="btn btn-primary btn-lg" data-act="finish" data-id="${l.id}">${esc(S.done[l.id]?t('nextMod'):t('finish'))} ${ICO.arrow}</button></div>`}
+  </div>`;
+}
+function openLesson(id){S.cur=id;if(S.fc[id])S.fc[id].flip=false;const e=S.ex[id];if(e&&!e.submitted&&e.step!=null&&findL(id)&&e.step>=findL(id).items.length)e.step=0;go('lesson');}
+function finishLesson(id){
+  const l=findL(id);if(!S.done[id]){S.done[id]=1;S.week[6]+=l.min;toast(t('finished')+' · +'+l.min+' '+t('min'));}
+  const nx=nextOpen();if(nx)openLesson(nx.id);else go('learner');
+}
+function stopPlay(){if(canSpeak)try{speechSynthesis.cancel()}catch(e){}for(const k in S.line)S.line[k].playing=false;}
+function playFrom(l){const st=S.line[l.id];if(!st||!st.playing)return;render();
+  speak(l.lines[st.i][1],()=>{const s2=S.line[l.id];if(!s2||!s2.playing||S.view!=='lesson'||S.cur!==l.id)return;
+    if(s2.i<l.lines.length-1){s2.i++;setTimeout(()=>playFrom(l),450);}else{s2.playing=false;render();}});}
+
+/* ---------- teacher: builder ---------- */
+function vBuilder(){
+  const b=S.b;const l=findL(b.lid)||findL(C()[0].lessons[0].id);b.lid=l.id;
+  const itemsType=ITEM_TYPES_FOR[l.type];const sel=l.items&&l.items[b.item]?b.item:null;
+  const wordSources=allL().filter(x=>x.l.type==='words'&&x.l.words&&x.l.words.length);
+  const preview=()=>{
+    if(itemsType&&sel!=null)return exItem('pv-'+l.id,l.items[sel],sel);
+    if(!itemsType)return `<div class="pv-lesson">${lessonContent(Object.assign({},l,{id:'pv-'+l.id}))}</div>`;
+    return `<p class="muted">${esc(t('selectToPreview'))}</p>`;};
+  return `<div class="page-h"><div><span class="label">${esc(t('roles').teacher)}</span><h1>${esc(t('bTitle'))}</h1><p class="muted">${esc(t('bLead'))}</p></div></div>
+  <div class="builder">
+   <aside class="card tree" aria-label="${esc(t('mapT'))}">
+    ${C().map((m,mi)=>`<div class="tree-mod"><div class="tree-h"><span class="lvl">${esc(m.lvl)}</span><input aria-label="${esc(t('newModule'))}" data-bm="${mi}" value="${esc(m.title.nl)}"></div>
+      ${m.lessons.map((x,li)=>`<button class="tree-l ${x.id===l.id?'cur':''}" data-act="bsel" data-id="${x.id}"><span class="ti">${TI[x.type]}</span><span style="min-width:0;flex:1"><b>${num(mi,li)} ${esc(x.title.nl)}</b></span>${x.status==='draft'?`<span class="pill p-warn" style="padding:1px 7px;font-size:.7rem">${esc(t('draft'))}</span>`:''}</button>`).join('')}
+      <div class="tree-add"><select aria-label="${esc(t('fType'))}" id="nl-type-${mi}">${Object.keys(t('types2')).map(k=>`<option value="${k}" ${k==='practice'?'selected':''}>${esc(t('types2')[k])}</option>`).join('')}</select><button class="btn btn-ghost btn-sm" data-act="badd" data-mi="${mi}">${TI.plus} ${esc(t('addLesson'))}</button></div></div>`).join('')}
+    <button class="btn btn-ghost btn-sm" data-act="baddmod">${TI.plus} ${esc(t('addModule'))}</button>
+   </aside>
+   <section class="b-main">
+    <div class="card stack" style="gap:18px">
+     <div class="card-h" style="margin:0"><div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span class="pill ${l.status==='draft'?'p-warn':'p-good'}">${esc(l.status==='draft'?t('draft'):t('live'))}</span><span class="faint" style="font-size:.86rem;font-weight:700">${esc(l.num)} · ${esc(L(l.mod.title))} · ${esc(t('types2')[l.type])}</span></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-ghost btn-sm" data-act="bview">${esc(t('viewAsLearner'))}</button><button class="btn ${l.status==='draft'?'btn-primary':'btn-ghost'} btn-sm" data-act="bpub">${esc(l.status==='draft'?t('publish'):t('unpublish'))}</button></div></div>
+     <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:12px">
+      <div class="field"><label for="bl-tnl">${esc(t('fTitleNl'))}</label><input id="bl-tnl" data-bl="titleNl" value="${esc(l.title.nl)}"></div>
+      <div class="field"><label for="bl-tuk">${esc(t('fTitleUk'))}</label><input id="bl-tuk" data-bl="titleUk" value="${esc(l.title.uk||'')}"></div>
+      <div class="field"><label for="bl-min">${esc(t('fMin'))}</label><input id="bl-min" type="number" min="1" data-bl="min" value="${l.min}"></div>
+     </div>
+     ${lessonFields(l)}
+    </div>
+    ${itemsType?`<div class="card stack" style="gap:14px"><div class="card-h" style="margin:0"><h3>${esc(t('itemsT'))} <span class="faint num">(${l.items.length})</span></h3></div>
+      ${l.items.length?'':`<p class="muted">${esc(t('noItems'))}</p>`}
+      ${l.items.map((it,i)=>`<div class="b-item ${sel===i?'cur':''}"><div class="b-item-h"><button class="b-item-t" data-act="bitem" data-i="${i}"><span class="exi">${esc(EXI[it.type])}</span><strong>${i+1}. ${esc(t('exName')[it.type])}</strong></button>
+        <span class="b-tools"><button class="icon-btn sm" data-act="bmove" data-i="${i}" data-d="-1" aria-label="${esc(t('moveUp'))}" ${i===0?'disabled':''}>${TI.up}</button><button class="icon-btn sm" data-act="bmove" data-i="${i}" data-d="1" aria-label="${esc(t('moveDown'))}" ${i===l.items.length-1?'disabled':''}>${TI.down}</button><button class="icon-btn sm" data-act="bdel" data-i="${i}" aria-label="${esc(t('remove'))}">${TI.x}</button></span></div>
+        ${sel===i?`<div class="stack" style="gap:12px">${itemFields(it,i)}</div>`:''}</div>`).join('')}
+      <div><span class="label">${esc(t('addEx'))}</span><div class="palette">${itemsType.map(k=>`<button class="pal" data-act="badditem" data-type="${k}"><span class="exi">${esc(EXI[k])}</span><span><b>${esc(t('exName')[k])}</b><small>${esc(t('exDesc')[k])}</small></span></button>`).join('')}</div></div>
+      ${['practice','test'].includes(l.type)&&wordSources.length?`<div class="gen"><span style="display:flex;gap:8px;align-items:center;font-weight:800">${TI.bolt} ${esc(t('gen'))}</span><div class="place"><select class="sel" id="gen-src" aria-label="${esc(t('gen'))}">${wordSources.map(x=>`<option value="${x.l.id}" ${x.mi===l.mi?'selected':''}>${num(x.mi,x.li)} ${esc(x.l.title.nl)} (${x.l.words.length})</option>`).join('')}</select><button class="btn btn-primary btn-sm" data-act="bgen">${esc(t('genBtn'))}</button></div></div>`:''}
+    </div>`:''}
+    <div><button class="btn btn-quiet btn-sm" data-act="bdell" style="color:var(--bad-ink)">${esc(b.delArm?t('delSure'):t('del'))}</button></div>
+   </section>
+   <aside class="b-prev"><span class="label">${esc(t('previewT'))}</span><div id="pv">${preview()}</div></aside>
+  </div>`;
+}
+
+/* ---------- teacher: review writing ---------- */
+function vReview(){
+  const subs=S.subs.slice().sort((a,b)=>(a.status==='new'?0:1)-(b.status==='new'?0:1));
+  return `<div class="page-h"><div><span class="label">${esc(t('roles').teacher)}</span><h1>${esc(t('rTitle'))}</h1><p class="muted">${esc(t('rLead'))}</p></div></div>
+  ${subs.filter(s=>s.status==='new').length?'':`<div class="card"><p class="muted">${esc(t('rEmpty'))}</p></div>`}
+  <div class="grid g2">${subs.map(s=>{const l=findL(s.lid);const it=l&&l.items?l.items.find(x=>x.type==='write'):null;return `<article class="card stack" style="gap:14px">
+    <div class="card-h" style="margin:0"><span class="who"><span class="av ${avc(s.who)}">${esc(ini(s.who))}</span><span class="l"><strong>${esc(s.who)}</strong><span class="faint" style="font-size:.85rem">${l?esc(l.title.nl):''}</span></span></span><span class="pill ${s.status==='new'?'p-brand':'p-good'}">${esc(s.status==='new'?t('rNew'):t('rDone'))}</span></div>
+    <div style="background:var(--surface-2);border:1px solid var(--line);border-radius:16px;padding:16px;white-space:pre-wrap;font-size:1.04rem;line-height:1.6">${esc(s.text)}</div>
+    ${it?`<details><summary style="font-size:.9rem">${esc(t('modelA'))}</summary><p class="muted" style="margin-top:6px">${esc(it.model)}</p></details>`:''}
+    ${s.status==='new'?`<div class="seg" role="group">${t('grades').map((g,k)=>`<button data-act="rgrade" data-id="${s.id}" data-g="${k}" aria-pressed="${s.grade===k}">${esc(g)}</button>`).join('')}</div>
+      <div class="field"><label for="fb-${s.id}">${esc(t('teacherFb'))}</label><textarea id="fb-${s.id}" data-fb="${s.id}" rows="3" placeholder="${esc(t('fbPh'))}">${esc(s.fb||'')}</textarea></div>
+      <div><button class="btn btn-primary" data-act="rsend" data-id="${s.id}">${esc(t('send'))}</button></div>`
+     :`<div class="tip">${TI.bulb}<div><strong>${esc(t('grades')[s.grade||0])}</strong><span style="display:block;margin-top:2px">${esc(s.fb||'')}</span></div></div>`}
+  </article>`}).join('')}</div>`;
+}
+
+const VIEWS={home:vHome,signup:vSignup,learner:vLearn,lesson:vLesson,teacher:vTeacher,builder:vBuilder,review:vReview,client:vClient,admin:vAdmin};
+let overlay='';
+function render(){
+  document.documentElement.lang=S.lang==='uk'?'uk':'nl';
+  const v=VIEWS[S.view]?S.view:'home';
+  document.getElementById('app').innerHTML=(v==='home'||v==='signup'?VIEWS[v]():appShell(VIEWS[v]()))+overlay;
+}
+let toastTimer;
+function toast(msg){clearTimeout(toastTimer);let el=document.querySelector('.toast');if(!el){el=document.createElement('div');el.className='toast';el.setAttribute('role','status');document.body.appendChild(el);}el.textContent=msg;el.hidden=false;toastTimer=setTimeout(()=>{el.hidden=true},2600);}
+function go(v){stopPlay();S.view=v;overlay='';save();render();try{history.replaceState(null,'','#'+v)}catch(e){}window.scrollTo(0,0);}
+
+/* ---------- teacher: lesson builder (CMS) ---------- */
+function teacherNav(active){const keys=['teacher','builder','review'];const nNew=S.subs.filter(s=>s.status==='new').length;
+  return `<div class="seg" role="group" aria-label="${esc(t('roles').teacher)}">${keys.map((k,i)=>`<button data-go="${k}" aria-pressed="${active===k}">${esc(t('tSub')[i])}${k==='review'&&nNew?` <span class="pill p-warn" style="padding:1px 7px">${nNew}</span>`:''}</button>`).join('')}</div>`;}
+const DEF_ITEM={
+  mc:()=>({type:'mc',q:'Ik ___ in Utrecht.',opts:['woon','woont','wonen'],a:0}),
+  listen:()=>({type:'listen',say:'de huisarts',opts:['сімейний лікар','аптека','лікарня'],a:0}),
+  tf:()=>({type:'tf',q:'Utrecht ligt in Nederland.',a:true}),
+  gap:()=>({type:'gap',before:'Ik woon',after:'Utrecht.',a:['in']}),
+  order:()=>({type:'order',words:['Utrecht','woon','in','Ik'],a:'Ik woon in Utrecht'}),
+  match:()=>({type:'match',pairs:[['het huis','будинок'],['de straat','вулиця'],['de stad','місто']]}),
+  dictation:()=>({type:'dictation',say:'Ik woon in Utrecht.'}),
+  sort:()=>({type:'sort',cats:['de','het'],words:[['huis','het'],['straat','de'],['stad','de'],['station','het']]}),
+  clock:()=>({type:'clock',h:14,m:30,q:'Hoe laat is het?'}),
+  speak:()=>({type:'speak',text:'Ik wil graag een afspraak maken.',uk:'Я хотів(ла) б записатися на прийом.'}),
+  write:()=>({type:'write',prompt:{nl:'Schrijf 3 zinnen over je werk.',uk:'Напишіть 3 речення про свою роботу.'},model:'Ik werk in een magazijn. Ik begin om acht uur. Mijn collega’s zijn aardig.',min:12})
+};
+const ITEM_TYPES_FOR={practice:EXTYPES,test:EXTYPES.filter(x=>!['speak','write'].includes(x)),reading:['tf','mc','gap','match'],speaking:['speak','listen','dictation'],writing:['write']};
+const shuffleWords=s=>{const w=s.replace(/[.?!]$/,'').split(/\s+/).filter(Boolean);if(w.length<2)return w;const r=w.slice(1).concat(w[0]);return r.length>3?[r[1],r[0],...r.slice(2)]:r.reverse();};
+const lines2=(v,sep)=>v.split('\n').map(x=>x.split(sep).map(y=>y.trim())).filter(r=>r[0]);
+
+function itemFields(it,i){
+  const F=(key,label,val,ta)=>`<div class="field"><label for="bf-${i}-${key}">${esc(label)}</label>${ta?`<textarea id="bf-${i}-${key}" data-bi="${i}|${key}" rows="${ta}">${esc(val)}</textarea>`:`<input id="bf-${i}-${key}" data-bi="${i}|${key}" value="${esc(val)}">`}</div>`;
+  switch(it.type){
+   case 'mc':return F('q',t('fq'),it.q)+F('opts',t('fopts'),it.opts.join('\n'),3)+F('aN',t('fa'),it.a+1);
+   case 'listen':return F('say',t('fsay'),it.say)+F('opts',t('fopts'),it.opts.join('\n'),3)+F('aN',t('fa'),it.a+1);
+   case 'tf':return F('q',t('fq'),it.q)+`<div class="field"><label for="bf-${i}-tf">${esc(t('ftf'))}</label><select id="bf-${i}-tf" data-bi="${i}|tfA"><option value="1" ${it.a?'selected':''}>${esc(t('tfOpts')[0])}</option><option value="0" ${!it.a?'selected':''}>${esc(t('tfOpts')[1])}</option></select></div>`;
+   case 'gap':return `<div class="grid g3" style="gap:10px">${F('before',t('fbefore'),it.before)+F('answers',t('fanswers'),it.a.join(', '))+F('after',t('fafter'),it.after)}</div>`;
+   case 'order':return F('sentence',t('fsentence'),it.a);
+   case 'match':return F('pairs',t('fpairs'),it.pairs.map(p=>p.join(' = ')).join('\n'),4);
+   case 'dictation':return F('say',t('fsay'),it.say);
+   case 'sort':return F('cats',t('fcats'),it.cats.join(', '))+F('swords',t('fswords'),it.words.map(w=>w.join(' = ')).join('\n'),4);
+   case 'clock':return F('q',t('fq'),it.q||'')+`<div class="grid g2" style="gap:10px"><div class="field"><label for="bf-${i}-h">${esc(t('fh'))}</label><input id="bf-${i}-h" type="number" min="0" max="23" data-bi="${i}|h" value="${it.h}"></div><div class="field"><label for="bf-${i}-m">${esc(t('fm'))}</label><select id="bf-${i}-m" data-bi="${i}|m">${Array.from({length:12},(_,k)=>k*5).map(m=>`<option value="${m}" ${it.m===m?'selected':''}>${String(m).padStart(2,'0')} · ${esc(dutchTime(it.h,m))}</option>`).join('')}</select></div></div>`;
+   case 'speak':return F('text',t('ftext'),it.text)+F('uk',t('fuk'),it.uk||'');
+   case 'write':return F('promptNl',t('fpromptNl'),it.prompt.nl,2)+F('promptUk',t('fpromptUk'),it.prompt.uk,2)+F('model',t('fmodel'),it.model,3)+F('min',t('fminw'),it.min);
+  }return '';
+}
+function setItem(it,key,val){
+  switch(key){
+   case 'opts':it.opts=val.split('\n').map(s=>s.trim()).filter(Boolean);if(it.a>=it.opts.length)it.a=0;break;
+   case 'aN':it.a=Math.max(0,Math.min((it.opts||[]).length-1,(parseInt(val,10)||1)-1));break;
+   case 'tfA':it.a=val==='1';break;
+   case 'answers':it.a=val.split(',').map(s=>s.trim()).filter(Boolean);break;
+   case 'sentence':it.a=val.trim().replace(/[.?!]$/,'');it.words=shuffleWords(it.a);break;
+   case 'pairs':it.pairs=lines2(val,'=').filter(r=>r[1]).map(r=>[r[0],r[1]]);break;
+   case 'cats':it.cats=val.split(',').map(s=>s.trim()).filter(Boolean);break;
+   case 'swords':it.words=lines2(val,'=').filter(r=>r[1]).map(r=>[r[0],r[1]]);break;
+   case 'h':it.h=Math.max(0,Math.min(23,parseInt(val,10)||0));break;
+   case 'm':it.m=parseInt(val,10)||0;break;
+   case 'min':it.min=parseInt(val,10)||0;break;
+   case 'promptNl':it.prompt.nl=val;break;case 'promptUk':it.prompt.uk=val;break;
+   default:it[key]=val;}
+}
+function lessonFields(l){
+  const F=(key,label,val,ta)=>`<div class="field"><label for="bl-${key}">${esc(label)}</label>${ta?`<textarea id="bl-${key}" data-bl="${key}" rows="${ta}">${esc(val)}</textarea>`:`<input id="bl-${key}" data-bl="${key}" value="${esc(val)}">`}</div>`;
+  if(l.type==='words')return F('words',t('fwordsL'),(l.words||[]).map(w=>w.join(' | ')).join('\n'),8);
+  if(l.type==='video')return F('scene',t('fscene'),L(l.scene)||(l.scene&&l.scene.nl)||'')+F('lines',t('flines'),(l.lines||[]).map(w=>w.join(' | ')).join('\n'),8);
+  if(l.type==='grammar')return F('introNl',t('fintroNl'),(l.intro||{}).nl||'',2)+F('introUk',t('fintroUk'),(l.intro||{}).uk||'',2)+F('rows',t('frows'),[l.head||[],...(l.rows||[])].map(r=>r.join(' | ')).join('\n'),6)+F('tips',t('ftips'),(l.tips||[]).map(x=>`${x.nl} | ${x.uk}`).join('\n'),3);
+  if(l.type==='reading')return F('ttitle',t('ftextT'),(l.text||{}).title||'')+F('paras',t('ftextP'),((l.text||{}).paras||[]).map(p=>p.join(' | ')).join('\n'),6);
+  return '';
+}
+function setLesson(l,key,val){
+  switch(key){
+   case 'titleNl':l.title.nl=val;break;case 'titleUk':l.title.uk=val;break;case 'min':l.min=parseInt(val,10)||1;break;
+   case 'words':l.words=lines2(val,'|');break;
+   case 'scene':l.scene={nl:val,uk:val};break;case 'lines':l.lines=lines2(val,'|').filter(r=>r[1]);break;
+   case 'introNl':(l.intro=l.intro||{nl:'',uk:''}).nl=val;break;case 'introUk':(l.intro=l.intro||{nl:'',uk:''}).uk=val;break;
+   case 'rows':{const r=lines2(val,'|');l.head=r[0]||[];l.rows=r.slice(1);break;}
+   case 'tips':l.tips=lines2(val,'|').map(r=>({nl:r[0],uk:r[1]||''}));break;
+   case 'ttitle':(l.text=l.text||{title:'',paras:[]}).title=val;break;case 'paras':(l.text=l.text||{title:'',paras:[]}).paras=lines2(val,'|');break;
+  }
+}
+function newLessonObj(type){const base={id:'L'+Date.now().toString(36),type,min:10,title:{nl:t('newLesson'),uk:''},status:'draft'};
+  if(type==='words')base.words=[['het voorbeeld','приклад','Dit is een voorbeeld.']];
+  else if(type==='video'){base.scene={nl:'',uk:''};base.lines=[['A','Hallo!','Привіт!'],['B','Hoi, hoe gaat het?','Привіт, як справи?']];}
+  else if(type==='grammar'){base.intro={nl:'',uk:''};base.head=['','',''];base.rows=[];base.tips=[];}
+  else if(type==='reading'){base.text={title:'',paras:[]};base.items=[];}
+  else base.items=[];
+  return base;}
+function generateFrom(srcId){const src=findL(srcId);if(!src||!src.words||!src.words.length)return [];const w=src.words;const out=[];
+  out.push({type:'match',pairs:w.slice(0,5).map(x=>[x[0],x[1]])});
+  w.slice(0,3).forEach((x,k)=>{const others=w.filter(y=>y!==x).slice(k,k+2).map(y=>y[1]);if(others.length===2)out.push({type:'listen',say:x[0],opts:[x[1],...others],a:0});});
+  w.filter(x=>x[2]).slice(0,2).forEach(x=>out.push({type:'dictation',say:x[2]}));
+  w.filter(x=>x[2]).forEach(x=>{const bare=x[0].replace(/^(de|het)\s+/,'');const ix=x[2].toLowerCase().indexOf(bare.toLowerCase());if(ix>0&&out.filter(o=>o.type==='gap').length<2){out.push({type:'gap',before:x[2].slice(0,ix).trim(),after:x[2].slice(ix+bare.length).trim(),a:[bare]});}});
+  const art=w.filter(x=>/^(de|het)\s/.test(x[0]));if(art.length>=3)out.push({type:'sort',cats:['de','het'],words:art.slice(0,6).map(x=>[x[0].replace(/^(de|het)\s+/,''),x[0].split(' ')[0]])});
+  return out;}
+
+
+document.addEventListener('click',e=>{
+  const scr=e.target.closest('[data-scroll]');if(scr){if(S.view!=='home')go('home');const el=document.getElementById(scr.dataset.scroll);if(el)el.scrollIntoView({behavior:'smooth',block:'start'});return;}
+  const g=e.target.closest('[data-go]');if(g){go(g.dataset.go);return;}
+  const l=e.target.closest('[data-lang]');if(l){S.lang=l.dataset.lang;save();render();return;}
+  const a=e.target.closest('[data-act]');if(!a)return;
+  const act=a.dataset.act;
+  const realL=lid=>findL(String(lid).replace(/^pv-/,''));
+  const itemAt=(lid,i)=>{const l=realL(lid);return l&&l.items?l.items[i]:null;};
+  const stAt=(lid,i)=>{const e2=exS(lid);return e2.items[i]=e2.items[i]||{};};
+  if(act==='speak'){speak(a.dataset.say);return;}
+  if(act==='stepcheck'||act==='stepnext'||act==='stepskip'||act==='stepback'){const l=findL(a.dataset.l);const e2=exS(l.id);if(e2.step==null)e2.step=0;const it=l.items[e2.step];const s2=e2.items[e2.step]=e2.items[e2.step]||{};
+    if(a.getAttribute&&a.getAttribute('aria-disabled')==='true'){return;}
+    if(act==='stepcheck'){s2.checked=true;}
+    else if(act==='stepback'){e2.step=Math.max(0,e2.step-1);}
+    else{if(act==='stepskip')s2.checked=true;e2.step++;if(e2.step>=l.items.length&&l.type!=='test'){}}
+    save();render();if(act!=='stepcheck')window.scrollTo(0,0);return;}
+  if(act==='open'){openLesson(a.dataset.id);return;}
+  if(act==='finish'){finishLesson(a.dataset.id);return;}
+  if(act==='support'){S.support=!S.support;}
+  else if(act==='line'||act==='goline'||act==='playline'){
+    const l=findL(S.cur);const st=S.line[l.id]=S.line[l.id]||{i:0,playing:false};
+    if(act==='playline'){if(st.playing){stopPlay();}else{st.playing=true;save();playFrom(l);return;}}
+    else{stopPlay();st.i=act==='goline'?+a.dataset.i:Math.max(0,Math.min(l.lines.length-1,st.i+ +a.dataset.d));save();render();speak(l.lines[st.i][1]);return;}
+  }
+  else if(act==='fc-flip'){S.fc[a.dataset.deck].flip=true;}
+  else if(act==='fc-next'){const fc=S.fc[a.dataset.deck];if(a.dataset.k==='1'&&a.dataset.w)S.known[a.dataset.w]=1;
+    if(a.dataset.deck==='review'){fc.flip=false;if(a.dataset.k==='0')fc.i++;}else{fc.i++;fc.flip=false;}}
+  else if(act==='fc-restart'){S.fc[a.dataset.deck]={i:0,flip:false};}
+  else if(act==='ans'){stAt(a.dataset.l,+a.dataset.i).v=+a.dataset.o;}
+  else if(act==='ow'){const s=stAt(a.dataset.l,+a.dataset.i);s.v=(s.v||[]).concat(+a.dataset.k);}
+  else if(act==='ob'){const s=stAt(a.dataset.l,+a.dataset.i);s.v=(s.v||[]).filter((_,p)=>p!==+a.dataset.p);}
+  else if(act==='chk'){stAt(a.dataset.l,+a.dataset.i).checked=true;}
+  else if(act==='mL'){const s=stAt(a.dataset.l,+a.dataset.i);s.v=s.v||{m:{},sel:null,err:0};s.v.sel=+a.dataset.k;s.v.bad=null;}
+  else if(act==='mR'){const s=stAt(a.dataset.l,+a.dataset.i);s.v=s.v||{m:{},sel:null,err:0};const k=+a.dataset.k;
+    if(s.v.sel==null){s.v.bad=null;}else if(s.v.sel===k){s.v.m[k]=k;s.v.sel=null;s.v.bad=null;}else{s.v.err=(s.v.err||0)+1;s.v.bad=k;}}
+  else if(act==='srt'){const s=stAt(a.dataset.l,+a.dataset.i);s.v=s.v||{};s.v[+a.dataset.k]=a.dataset.c;}
+  else if(act==='wsend'){const it=itemAt(a.dataset.l,+a.dataset.i);const s=stAt(a.dataset.l,+a.dataset.i);const txt=((s.v||{}).text||'').trim();
+    const n=txt?txt.split(/\s+/).length:0;if(n<(it.min||1)){toast(t('minWords')+' '+it.min+' '+t('wordsN'));return;}
+    const id='s'+Date.now();s.v={text:txt,sent:true,sub:id};
+    if(!String(a.dataset.l).startsWith('pv-'))S.subs.push({id,lid:a.dataset.l,who:'Olena K.',text:txt,status:'new'});}
+  else if(act==='submit-test'){const l=findL(a.dataset.l);const e2=exS(l.id);
+    if(!l.items.every((it,i)=>answered(it,(e2.items[i]||{}).v))){toast(t('answerAll'));return;}
+    const okN=l.items.filter((it,i)=>isOk(it,e2.items[i].v)).length;const pct=Math.round(okN/l.items.length*100);
+    e2.submitted=true;e2.last=pct;e2.step=l.items.length;S.scores[l.id]=Math.max(S.scores[l.id]||0,pct);
+    if(pct>=70&&!S.done[l.id]){S.done[l.id]=1;S.week[6]+=l.min;}
+    save();render();window.scrollTo(0,0);return;}
+  else if(act==='retry'){S.ex[a.dataset.l]={items:{},submitted:false,step:0};}
+  /* builder */
+  else if(act==='bsel'){S.b={lid:a.dataset.id,item:0,delArm:false};}
+  else if(act==='bitem'){S.b.item=S.b.item===+a.dataset.i?null:+a.dataset.i;}
+  else if(act==='badd'){const mi=+a.dataset.mi;const type=(document.getElementById('nl-type-'+mi)||{}).value||'practice';const m=C()[mi];const nl=newLessonObj(type);
+    const ti=m.lessons.findIndex(x=>x.type==='test');if(ti>=0&&type!=='test')m.lessons.splice(ti,0,nl);else m.lessons.push(nl);S.b={lid:nl.id,item:0,delArm:false};}
+  else if(act==='baddmod'){const mods=C();const prevLvl=mods[mods.length-1].lvl;mods.push({id:'M'+Date.now().toString(36),lvl:prevLvl,title:{nl:t('newModule'),uk:''},lessons:[]});const nl=newLessonObj('practice');mods[mods.length-1].lessons.push(nl);S.b={lid:nl.id,item:0,delArm:false};}
+  else if(act==='badditem'){const l=findL(S.b.lid);l.items.push(DEF_ITEM[a.dataset.type]());S.b.item=l.items.length-1;S.ex['pv-'+l.id]={items:{},submitted:false};}
+  else if(act==='bmove'){const l=findL(S.b.lid);const i=+a.dataset.i,j=i+ +a.dataset.d;if(j>=0&&j<l.items.length){const x=l.items[i];l.items[i]=l.items[j];l.items[j]=x;S.b.item=j;S.ex['pv-'+l.id]={items:{},submitted:false};}}
+  else if(act==='bdel'){const l=findL(S.b.lid);l.items.splice(+a.dataset.i,1);S.b.item=null;S.ex['pv-'+l.id]={items:{},submitted:false};}
+  else if(act==='bgen'){const l=findL(S.b.lid);const src=(document.getElementById('gen-src')||{}).value;const gen=generateFrom(src).filter(x=>ITEM_TYPES_FOR[l.type].includes(x.type));l.items.push(...gen);S.b.item=l.items.length-gen.length;S.ex['pv-'+l.id]={items:{},submitted:false};toast(gen.length+' '+t('genDone'));}
+  else if(act==='bpub'){const l=findL(S.b.lid);l.status=l.status==='draft'?'live':'draft';toast(l.status==='draft'?t('draft'):t('live'));}
+  else if(act==='bview'){S.ex[S.b.lid]={items:{},submitted:false};openLesson(S.b.lid);return;}
+  else if(act==='bdell'){if(!S.b.delArm){S.b.delArm=true;}else{for(const m of C()){const i=m.lessons.findIndex(x=>x.id===S.b.lid);if(i>=0){m.lessons.splice(i,1);break;}}const first=C().find(m=>m.lessons.length);S.b={lid:first?first.lessons[0].id:'',item:0,delArm:false};}}
+  /* review */
+  else if(act==='rgrade'){const s=S.subs.find(x=>x.id===a.dataset.id);if(s)s.grade=+a.dataset.g;}
+  else if(act==='rsend'){const s=S.subs.find(x=>x.id===a.dataset.id);if(s){s.status='done';if(s.grade==null)s.grade=0;toast(t('sent'));}}
+  else if(act==='absent'){S.absent=!S.absent;}
+  else if(act==='hw'){const i=+a.dataset.i;S.hw[i]=!S.hw[i];}
+  else if(act==='tgroup'){S.teacherGroup=a.dataset.id;}
+  else if(act==='att'){for(const g of S.groups)for(const m of g.members)if(m.id===a.dataset.id)m.in=!m.in;}
+  else if(act==='save-att'){toast(t('saved'));}
+  else if(act==='period'){S.clientPeriod=+a.dataset.p;}
+  else if(act==='report'){overlay=`<div class="overlay" data-act="close-ov"><div class="sheet" role="dialog" aria-modal="true" aria-label="${esc(a.dataset.name)}"><span class="eyebrow">${esc(t('repBody'))}</span><h2>${esc(a.dataset.name)}</h2><ul style="margin:0;padding-left:20px;display:flex;flex-direction:column;gap:8px">${t('repLines').map(x=>`<li>${esc(x)}</li>`).join('')}</ul><p class="muted" style="font-size:.88rem">${esc(t('demo'))}</p><div><button class="btn btn-primary" data-act="close-ov">${esc(t('close'))}</button></div></div></div>`;}
+  else if(act==='close-ov'){if(e.target.closest('.sheet')&&!e.target.closest('button'))return;overlay='';}
+  else if(act==='place'){const w=S.waitlist.find(x=>x.id===a.dataset.id);const sel=document.getElementById('sel-'+w.id);const g=S.groups.find(x=>x.id===sel.value);
+    if(w&&g&&g.members.length<g.cap){g.members.push({id:'n'+Date.now(),name:w.name,intake:w.level,now:w.level,att:100,in:true});S.waitlist=S.waitlist.filter(x=>x!==w);toast(w.name+' '+t('placed')+' '+g.name);}}
+  else if(act==='pay'){const i=S.invoices.find(x=>x.id===a.dataset.id);if(i)i.paid=true;}
+  else if(act==='signup-again'){S.signup=null;}
+  else if(act==='reset'){const lang=S.lang;S=seed();ensureLearn();S.lang=lang;S.view='home';save();render();toast(t('resetDone'));window.scrollTo(0,0);return;}
+  save();render();
+});
+document.addEventListener('input',e=>{const d=e.target.dataset||{};
+  if(d.val){const [lid,i]=d.val.split('|');const e2=exS(lid);(e2.items[i]=e2.items[i]||{}).v=e.target.value;save();
+    const l=findL(lid);if(l&&l.type==='test'){const left=document.getElementById('left-n');if(left){const n=l.items.filter((it,k)=>answered(it,(e2.items[k]||{}).v)).length;left.textContent=(l.items.length-n)+' '+t('unanswered');}}return;}
+  if(d.write){const [lid,i]=d.write.split('|');const e2=exS(lid);const s=e2.items[i]=e2.items[i]||{};s.v={text:e.target.value};save();
+    const wc=e.target.parentElement.querySelector('.wcount');const it=(findL(lid.replace(/^pv-/,''))||{items:[]}).items[i];
+    if(wc&&it){const n=e.target.value.trim()?e.target.value.trim().split(/\s+/).length:0;wc.textContent=n+' '+t('wordsN')+' · '+t('minWords')+' '+it.min;}return;}
+  if(d.bi){const [i,key]=d.bi.split('|');const l=findL(S.b.lid);const it=l&&l.items[+i];if(!it)return;setItem(it,key,e.target.value);S.ex['pv-'+l.id]={items:{},submitted:false};save();
+    const pv=document.getElementById('pv');if(pv)pv.innerHTML=exItem('pv-'+l.id,it,+i,'practice');return;}
+  if(d.bl){const l=findL(S.b.lid);if(!l)return;setLesson(l,d.bl,e.target.value);save();
+    const pv=document.getElementById('pv');if(pv&&!ITEM_TYPES_FOR[l.type])pv.innerHTML=`<div class="pv-lesson">${lessonContent(Object.assign({},l,{id:'pv-'+l.id}))}</div>`;return;}
+  if(d.bm){const m=C()[+d.bm];if(m){m.title.nl=e.target.value;save();}return;}
+  if(d.fb){const s=S.subs.find(x=>x.id===d.fb);if(s){s.fb=e.target.value;save();}return;}
+  const n=d.note;if(n){const g=S.groups.find(x=>x.id===n);if(g){g.note=e.target.value;save();}}});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&overlay){overlay='';render();}});
+document.addEventListener('submit',e=>{
+  if(e.target.id!=='signup')return;e.preventDefault();
+  const f=new FormData(e.target);const name=(f.get('name')||'').trim(),phone=(f.get('phone')||'').trim();
+  const errors={};if(!name)errors.name=1;if(!phone)errors.phone=1;if(!f.get('consent'))errors.consent=1;
+  if(Object.keys(errors).length){const keep={name,phone,email:f.get('email'),city:f.get('city'),goal:f.get('goal')};S.signup={errors};render();
+    const form=document.getElementById('signup');for(const k in keep){const el=form.elements[k];if(el&&keep[k])el.value=keep[k];}
+    const first=form.querySelector('.err');if(first)first.previousElementSibling&&first.previousElementSibling.focus&&first.previousElementSibling.focus();return;}
+  const lvl=f.get('level');S.waitlist.push({id:'w'+Date.now(),name,level:lvl!==null?LV[+lvl]:'A0',time:f.get('time')!==null?+f.get('time'):1,pay:f.get('pay')!==null?+f.get('pay'):0});
+  S.signup={done:true,name};save();render();window.scrollTo(0,0);
+});
+
+const h=(location.hash||'').slice(1);if(VIEWS[h])S.view=h;
+render();
+
+})();
+</script>
+
+</body></html>
