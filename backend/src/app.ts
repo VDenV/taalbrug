@@ -7,6 +7,7 @@ import type { Db } from './db.js';
 import type { Mailer } from './mailer.js';
 import { sanitizeProgress } from './progress.js';
 import { publishedOnly, validateCourse, type Course } from './course.js';
+import { canonicalCode, gateCourse, hashCode, isLevel, lessonIsAccessible, newCode } from './access.js';
 import { answer as placementAnswer, cryptoRng, initState, present, type Result, type State } from './placement.js';
 
 const TOKEN_TTL_MS = 15 * 60 * 1000;
@@ -147,14 +148,17 @@ export function buildApp(deps: { config: Config; db: Db; mailer: Mailer }): Fast
   });
 
   const STAFF = new Set(['teacher', 'admin']);
+  const levelsOf = async (userId: string): Promise<Set<string>> =>
+    new Set((await db.query<{ level: string }>('SELECT level FROM entitlements WHERE user_id = $1', [userId])).map((r) => r.level));
 
   app.get('/api/course', async (req, reply) => {
     const user = await userFromRequest(db, req);
     if (!user) return reply.code(401).send({ error: 'unauthorized' });
     const rows = await db.query<{ data: Course; version: number }>('SELECT data, version FROM course WHERE id = 1');
-    if (!rows[0]) return { course: null, version: 0 };
-    const course = STAFF.has(user.role) ? rows[0].data : publishedOnly(rows[0].data);
-    return { course, version: rows[0].version };
+    const levels = await levelsOf(user.id);
+    if (!rows[0]) return { course: null, version: 0, entitlements: [...levels] };
+    const course = STAFF.has(user.role) ? rows[0].data : gateCourse(publishedOnly(rows[0].data), levels);
+    return { course, version: rows[0].version, entitlements: [...levels] };
   });
 
   // Сохранение курса. baseVersion защищает от затирания чужих правок: при расхождении 409.
@@ -218,6 +222,9 @@ export function buildApp(deps: { config: Config; db: Db; mailer: Mailer }): Fast
       const item = (lesson?.items as { type?: string }[] | undefined)?.[b.itemIdx as number];
       if (!lesson || lesson.status === 'draft' || item?.type !== 'write') {
         return reply.code(400).send({ error: 'invalid_submission' });
+      }
+      if (!STAFF.has(user.role) && !lessonIsAccessible(cr[0].data, b.lessonId, await levelsOf(user.id))) {
+        return reply.code(403).send({ error: 'locked' });
       }
     }
     const rows = await db.query<{ id: string }>(
@@ -332,6 +339,124 @@ export function buildApp(deps: { config: Config; db: Db; mailer: Mailer }): Fast
     );
     return rows[0] ? { result: rows[0].result, at: rows[0].updated_at } : { result: null, at: null };
   });
+
+  // ---- доступ: коды и ручная выдача ----
+  const ADMIN = (user: SessionUser | null) => user?.role === 'admin';
+  const redeemFails = new Map<string, number[]>();
+  const redeemAllowed = (key: string) => {
+    const now = Date.now();
+    const recent = (redeemFails.get(key) ?? []).filter((t) => now - t < 3600_000);
+    redeemFails.set(key, recent);
+    return recent.length < 10;
+  };
+
+  app.get('/api/me/entitlements', async (req, reply) => {
+    const user = await userFromRequest(db, req);
+    if (!user) return reply.code(401).send({ error: 'unauthorized' });
+    return { levels: [...(await levelsOf(user.id))] };
+  });
+
+  app.post('/api/me/redeem', async (req, reply) => {
+    const user = await userFromRequest(db, req);
+    if (!user) return reply.code(401).send({ error: 'unauthorized' });
+    if (!redeemAllowed(user.id)) return reply.code(429).send({ error: 'too_many_attempts' });
+    const fail = (status: number, error: string) => {
+      redeemFails.get(user.id)!.push(Date.now());
+      return reply.code(status).send({ error });
+    };
+    const canonical = canonicalCode((req.body as { code?: unknown } | null)?.code);
+    if (!canonical) return fail(400, 'invalid_code');
+
+    const codes = await db.query<{ id: string; level: string }>(
+      `SELECT id::text AS id, level FROM access_codes
+        WHERE code_hash = $1 AND NOT revoked AND (expires_at IS NULL OR expires_at > now())`,
+      [hashCode(canonical)],
+    );
+    if (!codes[0]) return fail(404, 'invalid_code');
+    const code = codes[0];
+
+    const ins = await db.query(
+      'INSERT INTO code_redemptions(code_id, user_id) VALUES ($1, $2) ON CONFLICT DO NOTHING RETURNING code_id',
+      [code.id, user.id],
+    );
+    if (ins[0]) {
+      // Место занимаем одним условным UPDATE, чтобы при гонке не выйти за лимит.
+      const taken = await db.query('UPDATE access_codes SET used = used + 1 WHERE id = $1 AND used < seats RETURNING id', [code.id]);
+      if (!taken[0]) {
+        await db.query('DELETE FROM code_redemptions WHERE code_id = $1 AND user_id = $2', [code.id, user.id]);
+        return fail(409, 'code_full');
+      }
+    }
+    await db.query(
+      `INSERT INTO entitlements(user_id, level, source, code_id) VALUES ($1, $2, 'code', $3) ON CONFLICT DO NOTHING`,
+      [user.id, code.level, code.id],
+    );
+    return { ok: true, level: code.level, levels: [...(await levelsOf(user.id))] };
+  });
+
+  app.post('/api/admin/codes', async (req, reply) => {
+    const user = await userFromRequest(db, req);
+    if (!user) return reply.code(401).send({ error: 'unauthorized' });
+    if (!ADMIN(user)) return reply.code(403).send({ error: 'forbidden' });
+    const b = (req.body ?? {}) as { level?: unknown; seats?: unknown; label?: unknown; days?: unknown };
+    const label = typeof b.label === 'string' ? b.label.trim().slice(0, 100) : null;
+    const days = b.days === undefined || b.days === null ? null : b.days;
+    if (!isLevel(b.level) || !Number.isInteger(b.seats) || (b.seats as number) < 1 || (b.seats as number) > 500 ||
+        (days !== null && (!Number.isInteger(days) || (days as number) < 1 || (days as number) > 730))) {
+      return reply.code(400).send({ error: 'invalid_code_request' });
+    }
+    const { code, canonical } = newCode();
+    const rows = await db.query<{ id: string }>(
+      `INSERT INTO access_codes(code_hash, level, seats, label, created_by, expires_at)
+       VALUES ($1, $2, $3, $4, $5, CASE WHEN $6::int IS NULL THEN NULL ELSE now() + ($6::int * interval '1 day') END)
+       RETURNING id::text AS id`,
+      [hashCode(canonical), b.level, b.seats, label, user.id, days],
+    );
+    return { id: rows[0].id, code }; // код показывается один раз
+  });
+
+  app.get('/api/admin/codes', async (req, reply) => {
+    const user = await userFromRequest(db, req);
+    if (!user) return reply.code(401).send({ error: 'unauthorized' });
+    if (!ADMIN(user)) return reply.code(403).send({ error: 'forbidden' });
+    const codes = await db.query(
+      `SELECT id::text AS id, level, seats, used, label, revoked, expires_at AS "expiresAt", created_at AS "createdAt"
+         FROM access_codes ORDER BY created_at DESC LIMIT 200`,
+    );
+    return { codes };
+  });
+
+  app.patch('/api/admin/codes/:id', async (req, reply) => {
+    const user = await userFromRequest(db, req);
+    if (!user) return reply.code(401).send({ error: 'unauthorized' });
+    if (!ADMIN(user)) return reply.code(403).send({ error: 'forbidden' });
+    const { id } = req.params as { id: string };
+    if (!/^\d+$/.test(id)) return reply.code(400).send({ error: 'invalid_id' });
+    const rows = await db.query('UPDATE access_codes SET revoked = true WHERE id = $1 RETURNING id', [id]);
+    return rows[0] ? { ok: true } : reply.code(404).send({ error: 'not_found' });
+  });
+
+  const adminEntitlement = async (req: FastifyRequest, reply: import('fastify').FastifyReply, grant: boolean) => {
+    const user = await userFromRequest(db, req);
+    if (!user) return reply.code(401).send({ error: 'unauthorized' });
+    if (!ADMIN(user)) return reply.code(403).send({ error: 'forbidden' });
+    const b = (req.body ?? {}) as { email?: unknown; level?: unknown };
+    const email = typeof b.email === 'string' ? b.email.trim().toLowerCase() : '';
+    if (!EMAIL_RE.test(email) || !isLevel(b.level)) return reply.code(400).send({ error: 'invalid_entitlement' });
+    const target = await db.query<{ id: string }>('SELECT id::text AS id FROM users WHERE email = $1', [email]);
+    if (!target[0]) return reply.code(404).send({ error: 'user_not_found' });
+    if (grant) {
+      await db.query(
+        `INSERT INTO entitlements(user_id, level, source, granted_by) VALUES ($1, $2, 'manual', $3) ON CONFLICT DO NOTHING`,
+        [target[0].id, b.level, user.id],
+      );
+    } else {
+      await db.query('DELETE FROM entitlements WHERE user_id = $1 AND level = $2', [target[0].id, b.level]);
+    }
+    return { ok: true, levels: [...(await levelsOf(target[0].id))] };
+  };
+  app.post('/api/admin/entitlements', (req, reply) => adminEntitlement(req, reply, true));
+  app.delete('/api/admin/entitlements', (req, reply) => adminEntitlement(req, reply, false));
 
   return app;
 }

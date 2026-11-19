@@ -866,7 +866,7 @@ const num=(mi,li)=>`${mi+1}.${li+1}`;
 function findL(id){const x=allL().find(x=>x.l.id===id);if(!x)return null;const def=v=>({value:v,writable:true,configurable:true,enumerable:false});Object.defineProperties(x.l,{mi:def(x.mi),mod:def(x.m),num:def(num(x.mi,x.li))});return x.l;}
 const liveLessons=m=>m.lessons.filter(isLive);
 const testOf=m=>liveLessons(m).filter(l=>l.type==='test').pop();
-const unlocked=mi=>{const m=C()[mi];if(!m||m.soon)return false;if(mi===0)return true;
+const unlocked=mi=>{const m=C()[mi];if(!m||m.soon||m.locked)return false;if(mi===0)return true;
   if(S.placed){const pr=LV.indexOf(S.placed),mr=LV.indexOf(m.lvl);
     if(pr>=0&&mr>=0){if(mr<pr)return true;if(mr===pr&&C().findIndex(x=>x.lvl===m.lvl&&!x.soon)===mi)return true;}} /* результат теста уровня открывает свой модуль */
   const tst=testOf(C()[mi-1]);return !tst||(S.scores[tst.id]||0)>=70;};
@@ -1182,7 +1182,7 @@ function vAdmin(){
         <span class="place">${free.length?`<label class="sr" for="sel-${w.id}">${esc(t('chooseGroup'))}</label><select class="sel" id="sel-${w.id}">${free.map(g=>`<option value="${g.id}">${esc(g.name)} (${g.cap-g.members.length})</option>`).join('')}</select><button class="btn btn-primary btn-sm" data-act="place" data-id="${w.id}">${esc(t('placeIn'))}</button>`:`<span class="pill p-warn">${esc(t('noSeat'))}</span>`}</span></div>`).join(''):`<p class="muted">${esc(t('wEmpty'))}</p>`}</div>
     <div class="card"><div class="card-h"><h2 style="font-size:1.2rem">${esc(t('iT'))}</h2></div>
       ${S.invoices.map(i=>`<div class="row-item"><span class="l"><strong>${esc(L(i.client))}</strong><span class="faint" style="font-size:.86rem">${esc(L(i.desc))}</span></span><span class="r"><strong class="num">${eur(i.amount)}</strong>${i.paid?`<span class="pill p-good">${esc(t('paid'))}</span>`:`<button class="btn btn-ghost btn-sm" data-act="pay" data-id="${i.id}">${esc(t('markPaid'))}</button>`}</span></div>`).join('')}</div>
-  </div>`;
+  </div>${ACCOUNT&&ACCOUNT.role==='admin'?accessAdmin():''}`;
 }
 
 const LV=['A0','A1','A2','B1'];
@@ -1201,13 +1201,14 @@ function vLearn(){
   const fbNew=S.subs.find(s=>(ACCOUNT?s.mine:s.who==='Olena K.')&&s.status==='done');
   let k=0;
   const path=C().map((m,mi)=>{const open=unlocked(mi);const ls=liveLessons(m);const tst=testOf(m);const sc=tst?S.scores[tst.id]:null;const dn=ls.filter(l=>S.done[l.id]).length;
-    return `<div class="unit u${open?Math.min(mi,2):3}"><div class="l"><small>${esc(m.lvl)} · ${mi+1}</small><h3>${esc(L(m.title))}</h3></div>${open?`<span class="score num">${dn}/${ls.length}${sc!=null?` · ${sc}%`:''}</span>`:`<span class="score">${TI.lock} ${esc(m.soon?t('soon'):'70%')}</span>`}</div>
+    return `<div class="unit u${open?Math.min(mi,2):3}"><div class="l"><small>${esc(m.lvl)} · ${mi+1}</small><h3>${esc(L(m.title))}</h3></div>${open?`<span class="score num">${dn}/${ls.length}${sc!=null?` · ${sc}%`:''}</span>`:(m.locked&&!m.soon?`<button class="btn btn-primary btn-sm" data-act="paywall" data-mi="${mi}">${TI.lock} ${esc(t('unlock'))}</button>`:`<span class="score">${TI.lock} ${esc(m.soon?t('soon'):'70%')}</span>`)}</div>
     ${ls.map(x=>{const l=findL(x.id);const done=!!S.done[l.id];const isCur=nx&&l.id===nx.id;const x0=NODE_X[k++%NODE_X.length];
       return `<div class="node-row" style="--x:${x0}px">${isCur?`<span class="start-tip">${esc(t('start'))}</span>`:''}<button class="node ${done?'done':''} ${isCur?'cur':''} ${l.type==='test'?'test':''}" ${open?`data-act="open" data-id="${l.id}"`:'disabled'} aria-label="${esc(l.num)} ${esc(L(l.title))}">${open?(done?sv('<path d="M5 12.5l4.5 4.5L19 7.5"/>',28):TI[l.type].replace(/width="1[68]" height="1[68]"/,'width="26" height="26"')):TI.lock}</button>
         <span class="node-cap">${esc(L(l.title))}<small>${esc(t('types2')[l.type])} · ${l.min} ${esc(t('min'))}</small></span></div>`}).join('')}`}).join('');
   return `<div class="page-h"><div class="hello"><span class="big-av">O</span><div><span class="label">${esc(t('course'))}</span><h1>${esc(t('hello'))}</h1></div></div>
     <div class="chips"><span class="chip fire">${ICO.fire} <span class="num">${S.streak}</span> ${esc(t('streakT'))}</span><button class="switch" role="switch" aria-checked="${S.support}" data-act="support"><span class="tr"></span>${esc(t('support'))}</button></div></div>
   ${API_UP&&!S.placed?`<div class="card" style="display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:16px"><div><h3>${esc(t('plBannerT'))}</h3><p class="muted" style="margin-top:4px">${esc(t('plBannerB'))}</p></div><button class="btn btn-primary" data-go="placement">${esc(t('plCta'))}</button></div>`:''}
+  ${ACCOUNT&&!nx&&C().find(m=>m.locked&&!m.soon)?(m=>`<div class="card" style="display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:16px"><div><h3>${esc(t('lockedBannerT'))}</h3><p class="muted" style="margin-top:4px">${esc(t('lockedBannerB'))} ${esc(m.lvl)}.</p></div><button class="btn btn-primary" data-act="paywall" data-mi="${C().indexOf(m)}">${esc(t('unlock'))} ${esc(m.lvl)}</button></div>`)(C().find(m=>m.locked&&!m.soon)):''}
   <div class="top2">
     <div class="cont"><span class="label">${esc(t('cont'))}</span>
       ${nx?`<div class="meta"><span>${esc(nx.mod.lvl)} · ${esc(L(nx.mod.title))}</span><span>${esc(t('types2')[nx.type])}</span><span>${nx.min} ${esc(t('min'))}</span></div><h2>${esc(L(nx.title))}</h2>
@@ -1599,6 +1600,8 @@ document.addEventListener('click',e=>{
   else if(act==='place'){const w=S.waitlist.find(x=>x.id===a.dataset.id);const sel=document.getElementById('sel-'+w.id);const g=S.groups.find(x=>x.id===sel.value);
     if(w&&g&&g.members.length<g.cap){g.members.push({id:'n'+Date.now(),name:w.name,intake:w.level,now:w.level,att:100,in:true});S.waitlist=S.waitlist.filter(x=>x!==w);toast(w.name+' '+t('placed')+' '+g.name);}}
   else if(act==='pay'){const i=S.invoices.find(x=>x.id===a.dataset.id);if(i)i.paid=true;}
+  else if(act==='paywall'){paywallOpen(+a.dataset.mi);}
+  else if(act==='code-revoke'){revokeCode(a.dataset.id);return;}
   else if(act==='pl-start'){plStart();return;}
   else if(act==='pl-pick'){PL.sel=+a.dataset.i;render();return;}
   else if(act==='pl-next'){if(PL.sel==null){toast(t('plPick'));return;}plSubmit(PL.sel);return;}
@@ -1722,6 +1725,86 @@ Object.assign(T.uk,{plCta:'Перевірити рівень',plBannerT:'Яки�
   plLvl:{A0:'Початківець. Ви починаєте з перших слів і речень.',A1:'Ви розумієте прості речення і можете розповісти про себе.',A2:'Ви даєте раду в побутових ситуаціях. Працюєте над роботою та установами.'},
   plSaveT:'Збережіть результат',plSaveB:'Увійдіть за допомогою електронної пошти. Ви отримаєте посилання, пароль не потрібен.',plGo:'До мого курсу',plAgain:'Пройти тест ще раз',plBack:'Назад'});
 
+/* ---------- access: paywall, codes, admin ---------- */
+Object.assign(T.nl,{unlock:'Ontgrendel',lockedBannerT:'Gratis start afgerond',lockedBannerB:'Ga verder met het volgende niveau:',
+  payT:'Ontgrendel niveau',payLead:'Dit deel hoort bij de betaalde cursus. De gratis start heb je al gedaan.',
+  payNote:'Online betalen komt binnenkort. Heb je een toegangscode van je gemeente, werkgever of docent? Vul die hieronder in.',
+  codeLabel:'Toegangscode',codeBtn:'Ontgrendel',codeOk:'Niveau ontgrendeld.',codeBad:'Deze code klopt niet of is niet meer geldig.',
+  codeFull:'Deze code is al door het maximale aantal cursisten gebruikt.',codeLimit:'Te veel pogingen. Probeer het later opnieuw.',needLogin:'Log eerst in om een code te gebruiken.',
+  acT:'Toegang beheren',acGrantT:'Toegang geven of intrekken',acEmail:'E-mailadres van de cursist',acLevel:'Niveau',acGive:'Geven',acTake:'Intrekken',
+  acCodeT:'Toegangscode maken',acSeats:'Aantal plaatsen',acLabel:'Omschrijving (bijv. gemeente)',acDays:'Geldig (dagen, leeg = onbeperkt)',acMake:'Code maken',
+  acNew:'Nieuwe code. Deze zie je maar één keer:',acList:'Codes',acUsed:'gebruikt',acNone:'Nog geen codes.',acDone:'Gedaan.',acNoUser:'Deze gebruiker bestaat niet. Die moet eerst een keer ingelogd zijn.',acFail:'Dat is niet gelukt.',acRevoked:'ingetrokken'});
+Object.assign(T.uk,{unlock:'Відкрити',lockedBannerT:'Безкоштовну частину завершено',lockedBannerB:'Продовжте з наступним рівнем:',
+  payT:'Відкрити рівень',payLead:'Ця частина належить до платного курсу. Безкоштовний початок ви вже пройшли.',
+  payNote:'Онлайн-оплата з’явиться найближчим часом. Маєте код доступу від громади, роботодавця чи викладача? Введіть його нижче.',
+  codeLabel:'Код доступу',codeBtn:'Відкрити',codeOk:'Рівень відкрито.',codeBad:'Цей код неправильний або вже недійсний.',
+  codeFull:'Цей код уже використала максимальна кількість учнів.',codeLimit:'Забагато спроб. Спробуйте пізніше.',needLogin:'Спершу увійдіть, щоб використати код.',
+  acT:'Керування доступом',acGrantT:'Надати або забрати доступ',acEmail:'Електронна пошта учня',acLevel:'Рівень',acGive:'Надати',acTake:'Забрати',
+  acCodeT:'Створити код доступу',acSeats:'Кількість місць',acLabel:'Опис (напр. громада)',acDays:'Діє (днів, порожньо = без обмеження)',acMake:'Створити код',
+  acNew:'Новий код. Ви бачите його лише один раз:',acList:'Коди',acUsed:'використано',acNone:'Кодів ще немає.',acDone:'Готово.',acNoUser:'Такого користувача немає. Він має хоча б раз увійти.',acFail:'Не вдалося.',acRevoked:'відкликано'});
+
+let AC={codes:[],fresh:null};
+function paywallOpen(mi){
+  const m=C()[mi];if(!m)return;
+  if(!ACCOUNT){loginState='form';overlay=loginSheet(t('needLogin'));return;}
+  overlay=paywallSheet(m);
+}
+function paywallSheet(m,msg){
+  return `<div class="overlay" data-act="close-ov"><div class="sheet" role="dialog" aria-modal="true" aria-label="${esc(t('payT'))} ${esc(m.lvl)}">
+    <span class="eyebrow">${esc(m.lvl)} · ${esc(L(m.title))}</span><h2>${esc(t('payT'))} ${esc(m.lvl)}</h2><p>${esc(t('payLead'))}</p><p class="muted">${esc(t('payNote'))}</p>
+    <form id="redeem-form" novalidate style="display:flex;flex-direction:column;gap:12px"><input type="hidden" name="mi" value="${C().indexOf(m)}">
+      <div class="field"><label for="code-in">${esc(t('codeLabel'))}</label><input id="code-in" name="code" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="TB-XXXX-XXXX"></div>
+      ${msg?`<p class="err" role="alert">${esc(msg)}</p>`:''}
+      <div style="display:flex;gap:10px"><button class="btn btn-primary" type="submit">${esc(t('codeBtn'))}</button><button class="btn btn-quiet" type="button" data-act="close-ov">${esc(t('close'))}</button></div></form></div></div>`;
+}
+const CODE_ERR={invalid_code:'codeBad',code_full:'codeFull',too_many_attempts:'codeLimit'};
+function accessAdmin(){
+  const lv=LV.map(x=>`<option>${x}</option>`).join('');
+  return `<div class="card stack" style="gap:18px;margin-top:20px"><div class="card-h" style="margin:0"><h2 style="font-size:1.2rem">${esc(t('acT'))}</h2></div>
+    <div class="grid g2" style="gap:20px">
+      <form id="grant-form" novalidate class="stack" style="gap:12px"><h3>${esc(t('acGrantT'))}</h3>
+        <div class="field"><label for="ac-email">${esc(t('acEmail'))}</label><input id="ac-email" name="email" type="email" autocomplete="off"></div>
+        <div class="field"><label for="ac-level">${esc(t('acLevel'))}</label><select id="ac-level" name="level">${lv}</select></div>
+        <div style="display:flex;gap:10px"><button class="btn btn-primary" type="submit" name="op" value="give">${esc(t('acGive'))}</button><button class="btn btn-ghost" type="submit" name="op" value="take">${esc(t('acTake'))}</button></div></form>
+      <form id="code-form" novalidate class="stack" style="gap:12px"><h3>${esc(t('acCodeT'))}</h3>
+        <div class="grid g2" style="gap:12px"><div class="field"><label for="cd-level">${esc(t('acLevel'))}</label><select id="cd-level" name="level">${lv}</select></div>
+        <div class="field"><label for="cd-seats">${esc(t('acSeats'))}</label><input id="cd-seats" name="seats" type="number" min="1" max="500" value="10"></div></div>
+        <div class="field"><label for="cd-label">${esc(t('acLabel'))}</label><input id="cd-label" name="label" maxlength="100"></div>
+        <div class="field"><label for="cd-days">${esc(t('acDays'))}</label><input id="cd-days" name="days" type="number" min="1" max="730"></div>
+        <div><button class="btn btn-primary" type="submit">${esc(t('acMake'))}</button></div></form></div>
+    ${AC.fresh?`<div class="tip">${TI.bulb}<div><strong>${esc(t('acNew'))}</strong><span style="display:block;margin-top:4px;font-size:1.3rem;font-weight:800;letter-spacing:.06em;user-select:all">${esc(AC.fresh)}</span></div></div>`:''}
+    <div><h3 style="margin-bottom:8px">${esc(t('acList'))}</h3>${AC.codes.length?AC.codes.map(c=>`<div class="row-item"><span class="l"><strong>${esc(c.level)} · ${esc(c.label||'')}</strong><span class="faint" style="font-size:.86rem">${c.used}/${c.seats} ${esc(t('acUsed'))}${c.revoked?' · '+esc(t('acRevoked')):''}</span></span>${c.revoked?'':`<span class="r"><button class="btn btn-quiet btn-sm" data-act="code-revoke" data-id="${c.id}">${esc(t('acTake'))}</button></span>`}</div>`).join(''):`<p class="muted">${esc(t('acNone'))}</p>`}</div></div>`;
+}
+async function loadAdminCodes(){
+  if(!ACCOUNT||ACCOUNT.role!=='admin')return;
+  try{const r=await api('/admin/codes');if(r.ok&&r.json){AC.codes=r.json.codes;}}catch(e){}
+}
+async function revokeCode(id){
+  try{const r=await api('/admin/codes/'+encodeURIComponent(id),{method:'PATCH',body:'{}'});
+    if(r.ok){await loadAdminCodes();toast(t('acDone'));}else toast(t('acFail'));}catch(e){toast(t('acFail'));}
+  render();
+}
+document.addEventListener('submit',async e=>{
+  const id=e.target.id;if(id!=='redeem-form'&&id!=='grant-form'&&id!=='code-form')return;e.preventDefault();
+  const f=new FormData(e.target);
+  try{
+    if(id==='redeem-form'){
+      const mi=+f.get('mi');const r=await api('/me/redeem',{method:'POST',body:JSON.stringify({code:String(f.get('code')||'')})});
+      if(r.ok){await loadCourse();overlay='';render();toast(t('codeOk'));return;}
+      overlay=paywallSheet(C()[mi],t(CODE_ERR[r.json&&r.json.error]||'codeBad'));render();return;}
+    if(id==='grant-form'){
+      const body=JSON.stringify({email:String(f.get('email')||'').trim(),level:f.get('level')});
+      const submitter=e.submitter&&e.submitter.value;
+      const r=await api('/admin/entitlements',{method:submitter==='take'?'DELETE':'POST',body});
+      toast(r.ok?t('acDone'):t(r.json&&r.json.error==='user_not_found'?'acNoUser':'acFail'));return;}
+    if(id==='code-form'){
+      const body={level:f.get('level'),seats:+f.get('seats'),label:String(f.get('label')||'').trim()};
+      if(f.get('days'))body.days=+f.get('days');
+      const r=await api('/admin/codes',{method:'POST',body:JSON.stringify(body)});
+      if(r.ok&&r.json){AC.fresh=r.json.code;await loadAdminCodes();render();}else toast(t('acFail'));}
+  }catch(err){toast(t('acFail'));}
+});
+
 /* ---------- placement test (adaptive; questions and scoring live on the server) ---------- */
 const PL_KEY='taalbrug-placement-token';
 let PL={phase:'intro',sel:null,busy:false};
@@ -1829,7 +1912,7 @@ async function bootstrapAccount(){
     const r=await api('/auth/verify',{method:'POST',body:JSON.stringify({token:tok})});
     toast(t(r.ok?'loginDone':'loginInvalid'));}
   const me=await api('/me');
-  if(me.ok&&me.json&&me.json.user){ACCOUNT=me.json.user;await loadProgress();await loadCourse();await loadSubs();await claimPlacement();}
+  if(me.ok&&me.json&&me.json.user){ACCOUNT=me.json.user;await loadProgress();await loadCourse();await loadSubs();await claimPlacement();await loadAdminCodes();}
   render();
 }
 

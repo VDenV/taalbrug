@@ -84,7 +84,7 @@ describe('submissions', () => {
   it('checks the lesson against the server course when one exists', async () => {
     const anna = await login('anna@example.com');
     const teacher = await login('teach@example.com');
-    const course = [{ id: 'M1', lessons: [
+    const course = [{ id: 'M1', lvl: 'A0', lessons: [
       { id: 'w', type: 'writing', status: 'live', items: [{ type: 'mc' }, { type: 'write' }] },
       { id: 'd', type: 'writing', status: 'draft', items: [{ type: 'write' }] },
     ] }];

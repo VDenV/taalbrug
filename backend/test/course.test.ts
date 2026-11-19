@@ -69,7 +69,7 @@ describe('course', () => {
   });
 
   it('is empty until a teacher saves it', async () => {
-    expect((await get(await login('kid@example.com'))).json()).toEqual({ course: null, version: 0 });
+    expect((await get(await login('kid@example.com'))).json()).toMatchObject({ course: null, version: 0 });
   });
 
   it('lets only staff save', async () => {
