@@ -866,8 +866,12 @@ const num=(mi,li)=>`${mi+1}.${li+1}`;
 function findL(id){const x=allL().find(x=>x.l.id===id);if(!x)return null;const def=v=>({value:v,writable:true,configurable:true,enumerable:false});Object.defineProperties(x.l,{mi:def(x.mi),mod:def(x.m),num:def(num(x.mi,x.li))});return x.l;}
 const liveLessons=m=>m.lessons.filter(isLive);
 const testOf=m=>liveLessons(m).filter(l=>l.type==='test').pop();
-const unlocked=mi=>{const m=C()[mi];if(!m||m.soon)return false;if(mi===0)return true;const tst=testOf(C()[mi-1]);return !tst||(S.scores[tst.id]||0)>=70;};
-const nextOpen=()=>{const x=ALLV().find(x=>!S.done[x.l.id]&&unlocked(x.mi));return x?findL(x.l.id):null;};
+const unlocked=mi=>{const m=C()[mi];if(!m||m.soon)return false;if(mi===0)return true;
+  if(S.placed){const pr=LV.indexOf(S.placed),mr=LV.indexOf(m.lvl);
+    if(pr>=0&&mr>=0){if(mr<pr)return true;if(mr===pr&&C().findIndex(x=>x.lvl===m.lvl&&!x.soon)===mi)return true;}} /* результат теста уровня открывает свой модуль */
+  const tst=testOf(C()[mi-1]);return !tst||(S.scores[tst.id]||0)>=70;};
+const placedIdx=()=>{if(!S.placed)return 0;const i=C().findIndex(m=>m.lvl===S.placed&&!m.soon);return i<0?0:i;};
+const nextOpen=()=>{const all=ALLV(),from=placedIdx();const x=all.find(y=>y.mi>=from&&!S.done[y.l.id]&&unlocked(y.mi))||all.find(y=>!S.done[y.l.id]&&unlocked(y.mi));return x?findL(x.l.id):null;};
 const totalLive=()=>ALLV().length;
 const norm=s=>String(s||'').toLowerCase().replace(/[.,!?„”"’']/g,'').replace(/\s+/g,' ').trim();
 const exS=id=>(S.ex[id]=S.ex[id]||{items:{},submitted:false});
@@ -1023,7 +1027,7 @@ function vHome(){
       <span class="kicker"><span class="flag">NL · УКР</span>${esc(t('kicker'))}</span>
       <h1><em>${esc(t('heroA'))}</em> ${esc(t('heroB'))}</h1>
       <p class="lead">${esc(t('heroLead'))}</p>
-      <div class="ctas"><button class="btn btn-primary btn-lg" data-go="signup">${esc(t('ctaSignup'))} ${ICO.arrow}</button><button class="btn btn-ghost btn-lg" data-scroll="partner">${esc(t('ctaPartner'))}</button></div>
+      <div class="ctas"><button class="btn btn-primary btn-lg" data-go="signup">${esc(t('ctaSignup'))} ${ICO.arrow}</button>${API_UP?`<button class="btn btn-ghost btn-lg" data-go="placement">${esc(t('plCta'))}</button>`:''}<button class="btn btn-ghost btn-lg" data-scroll="partner">${esc(t('ctaPartner'))}</button></div>
       <div class="trust">${t('trust').map(x=>`<span>${ICO.check}${esc(x)}</span>`).join('')}</div>
     </div>
     <div class="stage" aria-hidden="true">
@@ -1203,6 +1207,7 @@ function vLearn(){
         <span class="node-cap">${esc(L(l.title))}<small>${esc(t('types2')[l.type])} · ${l.min} ${esc(t('min'))}</small></span></div>`}).join('')}`}).join('');
   return `<div class="page-h"><div class="hello"><span class="big-av">O</span><div><span class="label">${esc(t('course'))}</span><h1>${esc(t('hello'))}</h1></div></div>
     <div class="chips"><span class="chip fire">${ICO.fire} <span class="num">${S.streak}</span> ${esc(t('streakT'))}</span><button class="switch" role="switch" aria-checked="${S.support}" data-act="support"><span class="tr"></span>${esc(t('support'))}</button></div></div>
+  ${API_UP&&!S.placed?`<div class="card" style="display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:16px"><div><h3>${esc(t('plBannerT'))}</h3><p class="muted" style="margin-top:4px">${esc(t('plBannerB'))}</p></div><button class="btn btn-primary" data-go="placement">${esc(t('plCta'))}</button></div>`:''}
   <div class="top2">
     <div class="cont"><span class="label">${esc(t('cont'))}</span>
       ${nx?`<div class="meta"><span>${esc(nx.mod.lvl)} · ${esc(L(nx.mod.title))}</span><span>${esc(t('types2')[nx.type])}</span><span>${nx.min} ${esc(t('min'))}</span></div><h2>${esc(L(nx.title))}</h2>
@@ -1420,17 +1425,17 @@ function vReview(){
   </article>`}).join('')}</div>`;
 }
 
-const VIEWS={home:vHome,signup:vSignup,learner:vLearn,lesson:vLesson,teacher:vTeacher,builder:vBuilder,review:vReview,client:vClient,admin:vAdmin};
+const VIEWS={placement:vPlacement,home:vHome,signup:vSignup,learner:vLearn,lesson:vLesson,teacher:vTeacher,builder:vBuilder,review:vReview,client:vClient,admin:vAdmin};
 let overlay='';
 function render(){
   document.documentElement.lang=S.lang==='uk'?'uk':'nl';
   let v=VIEWS[S.view]?S.view:'home';
-  if(ACCOUNT&&v!=='home'&&v!=='signup'&&!allowedRoles().includes(ROLE_OF[v]||'learner')){v=S.view=ROLE_HOME[allowedRoles()[0]];}
-  document.getElementById('app').innerHTML=(v==='home'||v==='signup'?VIEWS[v]():appShell(VIEWS[v]()))+overlay;
+  if(ACCOUNT&&v!=='home'&&v!=='signup'&&v!=='placement'&&!allowedRoles().includes(ROLE_OF[v]||'learner')){v=S.view=ROLE_HOME[allowedRoles()[0]];}
+  document.getElementById('app').innerHTML=(v==='home'||v==='signup'||v==='placement'?VIEWS[v]():appShell(VIEWS[v]()))+overlay;
 }
 let toastTimer;
 function toast(msg){clearTimeout(toastTimer);let el=document.querySelector('.toast');if(!el){el=document.createElement('div');el.className='toast';el.setAttribute('role','status');document.body.appendChild(el);}el.textContent=msg;el.hidden=false;toastTimer=setTimeout(()=>{el.hidden=true},2600);}
-function go(v){stopPlay();S.view=v;overlay='';save();render();try{history.replaceState(null,'','#'+v)}catch(e){}window.scrollTo(0,0);}
+function go(v){stopPlay();if(v==='placement'&&PL.phase!=='q')PL={phase:'intro',sel:null,busy:false};S.view=v;overlay='';save();render();try{history.replaceState(null,'','#'+v)}catch(e){}window.scrollTo(0,0);}
 
 /* ---------- teacher: lesson builder (CMS) ---------- */
 function teacherNav(active){const keys=['teacher','builder','review'];const nNew=S.subs.filter(s=>s.status==='new').length;
@@ -1594,6 +1599,10 @@ document.addEventListener('click',e=>{
   else if(act==='place'){const w=S.waitlist.find(x=>x.id===a.dataset.id);const sel=document.getElementById('sel-'+w.id);const g=S.groups.find(x=>x.id===sel.value);
     if(w&&g&&g.members.length<g.cap){g.members.push({id:'n'+Date.now(),name:w.name,intake:w.level,now:w.level,att:100,in:true});S.waitlist=S.waitlist.filter(x=>x!==w);toast(w.name+' '+t('placed')+' '+g.name);}}
   else if(act==='pay'){const i=S.invoices.find(x=>x.id===a.dataset.id);if(i)i.paid=true;}
+  else if(act==='pl-start'){plStart();return;}
+  else if(act==='pl-pick'){PL.sel=+a.dataset.i;render();return;}
+  else if(act==='pl-next'){if(PL.sel==null){toast(t('plPick'));return;}plSubmit(PL.sel);return;}
+  else if(act==='pl-dont'){plSubmit(null);return;}
   else if(act==='login-open'){loginState='form';overlay=loginSheet();}
   else if(act==='logout'){logout();return;}
   else if(act==='signup-again'){S.signup=null;}
@@ -1698,6 +1707,79 @@ async function gradeSubmission(s){
   s.status='new';save();render();toast(t('gradeFail'));
 }
 setInterval(async()=>{if(!ACCOUNT||document.hidden||overlay)return;try{if(await loadSubs())render();}catch(e){}},30000);
+Object.assign(T.nl,{plCta:'Check je niveau',plBannerT:'Welk niveau heb je?',plBannerB:'Doe de korte test (ongeveer 5 minuten). We kiezen daarna het juiste begin voor je cursus.',
+  plT:'Check je niveau',plLead:'Beantwoord een paar vragen. De test past zich aan: gaat het goed, dan worden de vragen moeilijker; gaat het minder goed, dan worden ze makkelijker.',
+  plPoints:['Ongeveer 5 minuten','Geen account nodig om te beginnen','Weet je het niet? Kies “Ik weet het niet”. Dat is prima.'],plStart:'Start de test',
+  plQ:'Vraag',plNext:'Doorgaan',plDont:'Ik weet het niet',plPick:'Kies eerst een antwoord.',plErr:'De test kon niet worden geladen. Probeer het later opnieuw.',
+  plRes:'Jouw niveau',plRight:'goed beantwoord',plRec:'Begin met',plNoRec:'Je kunt beginnen met de cursus.',
+  plLvl:{A0:'Beginner. Je begint met de eerste woorden en zinnen.',A1:'Je begrijpt eenvoudige zinnen en kunt over jezelf vertellen.',A2:'Je redt je in alledaagse situaties. Je werkt aan werk en instanties.'},
+  plSaveT:'Sla je resultaat op',plSaveB:'Log in met je e-mailadres. Je krijgt een link, een wachtwoord is niet nodig.',plGo:'Naar mijn cursus',plAgain:'Test opnieuw doen',plBack:'Terug'});
+Object.assign(T.uk,{plCta:'Перевірити рівень',plBannerT:'Який у вас рівень?',plBannerB:'Пройдіть короткий тест (приблизно 5 хвилин). Ми підберемо вам правильний початок курсу.',
+  plT:'Перевірте свій рівень',plLead:'Дайте відповідь на кілька запитань. Тест адаптується: якщо йде добре, питання стають складнішими, якщо важко, то легшими.',
+  plPoints:['Приблизно 5 хвилин','Для початку обліковий запис не потрібен','Не знаєте відповіді? Натисніть «Не знаю». Це нормально.'],plStart:'Почати тест',
+  plQ:'Питання',plNext:'Далі',plDont:'Не знаю',plPick:'Спершу оберіть відповідь.',plErr:'Не вдалося завантажити тест. Спробуйте пізніше.',
+  plRes:'Ваш рівень',plRight:'правильних відповідей',plRec:'Почніть з',plNoRec:'Ви можете починати курс.',
+  plLvl:{A0:'Початківець. Ви починаєте з перших слів і речень.',A1:'Ви розумієте прості речення і можете розповісти про себе.',A2:'Ви даєте раду в побутових ситуаціях. Працюєте над роботою та установами.'},
+  plSaveT:'Збережіть результат',plSaveB:'Увійдіть за допомогою електронної пошти. Ви отримаєте посилання, пароль не потрібен.',plGo:'До мого курсу',plAgain:'Пройти тест ще раз',plBack:'Назад'});
+
+/* ---------- placement test (adaptive; questions and scoring live on the server) ---------- */
+const PL_KEY='taalbrug-placement-token';
+let PL={phase:'intro',sel:null,busy:false};
+const plRecModule=lvl=>C().find(m=>m.lvl===lvl&&!m.soon)||null;
+function vPlacement(){
+  let inner='';
+  if(PL.phase==='intro'||PL.phase==='error'){
+    inner=`<div class="card" style="max-width:680px;margin:0 auto;padding:36px;display:flex;flex-direction:column;gap:18px">
+      <span class="label">${esc(t('plCta'))}</span><h1 style="font-size:clamp(1.8rem,4vw,2.5rem)">${esc(t('plT'))}</h1><p class="muted" style="font-size:1.05rem">${esc(t('plLead'))}</p>
+      <ul style="margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px">${t('plPoints').map(x=>`<li>${esc(x)}</li>`).join('')}</ul>
+      ${PL.phase==='error'?`<p class="err" role="alert">${esc(t('plErr'))}</p>`:''}
+      <div class="ctas"><button class="btn btn-primary btn-lg" data-act="pl-start" ${PL.busy?'disabled':''}>${esc(t('plStart'))} ${ICO.arrow}</button><button class="btn btn-ghost btn-lg" data-go="${ACCOUNT?'learner':'home'}">${esc(t('plBack'))}</button></div></div>`;
+  }else if(PL.phase==='q'&&PL.q){
+    const q=PL.q,pct=Math.min(100,Math.round((PL.n-1)/PL.max*100));
+    inner=`<div class="card" style="max-width:680px;margin:0 auto;padding:32px;display:flex;flex-direction:column;gap:18px">
+      <div><div style="display:flex;justify-content:space-between;font-weight:700;font-size:.9rem;margin-bottom:8px"><span>${esc(t('plQ'))} ${PL.n}</span><span class="faint">${esc(t('plT'))}</span></div>
+        <div style="height:8px;border-radius:99px;background:var(--line-2);overflow:hidden" role="progressbar" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100"><i style="display:block;height:100%;width:${pct}%;background:var(--iris);transition:width .3s"></i></div></div>
+      ${q.type==='listen'?`<div class="say-row">${say(q.say,'?',true)}${!canSpeak?`<em class="muted">„${esc(q.say)}”</em>`:''}</div>`:''}
+      <h2 class="q" style="font-size:1.35rem">${esc(q.prompt.nl)}</h2>${S.support?`<p class="muted">${esc(q.prompt.uk)}</p>`:''}
+      <div class="opts" role="group" aria-label="${esc(q.prompt.nl)}">${q.options.map((o,i)=>`<button class="opt ${PL.sel===i?'sel':''}" data-act="pl-pick" data-i="${i}" aria-pressed="${PL.sel===i}">${esc(o)}</button>`).join('')}</div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center"><button class="btn btn-primary" data-act="pl-next" ${PL.busy?'disabled':''}>${esc(t('plNext'))}</button><button class="btn btn-quiet" data-act="pl-dont" ${PL.busy?'disabled':''}>${esc(t('plDont'))}</button></div></div>`;
+  }else if(PL.phase==='result'&&PL.result){
+    const r=PL.result,m=plRecModule(r.level);
+    inner=`<div class="card" style="max-width:680px;margin:0 auto;padding:36px;display:flex;flex-direction:column;gap:16px">
+      <span class="label">${esc(t('plRes'))}</span><h1 style="font-size:clamp(2.4rem,6vw,3.6rem)">${esc(r.level)}</h1><p style="font-size:1.1rem">${esc(t('plLvl')[r.level])}</p>
+      <p class="muted num">${r.correct}/${r.total} ${esc(t('plRight'))}</p>
+      <div class="tip">${TI.bulb}<div><strong>${m?esc(t('plRec'))+' '+esc(m.lvl)+' · '+esc(L(m.title)):esc(t('plNoRec'))}</strong></div></div>
+      ${!ACCOUNT&&API_UP?`<div class="card flat" style="background:var(--surface-2);display:flex;flex-direction:column;gap:10px"><h3>${esc(t('plSaveT'))}</h3><p class="muted">${esc(t('plSaveB'))}</p><div><button class="btn btn-primary" data-act="login-open">${esc(t('login'))}</button></div></div>`:''}
+      <div class="ctas"><button class="btn btn-primary btn-lg" data-go="learner">${esc(t('plGo'))} ${ICO.arrow}</button><button class="btn btn-ghost btn-lg" data-act="pl-start">${esc(t('plAgain'))}</button></div></div>`;
+  }
+  return mShell(`<section style="padding:24px 0 48px">${inner}</section>`);
+}
+async function plStart(){
+  PL={phase:'intro',sel:null,busy:true};render();
+  try{const r=await api('/placement/start',{method:'POST',body:'{}'});
+    if(!r.ok||!r.json||!r.json.question)throw new Error('start');
+    try{localStorage.setItem(PL_KEY,r.json.token)}catch(e){}
+    PL={phase:'q',token:r.json.token,n:r.json.n,max:r.json.max,q:r.json.question,sel:null,busy:false};
+  }catch(e){PL={phase:'error',sel:null,busy:false};}
+  render();window.scrollTo(0,0);
+}
+async function plSubmit(choice){
+  if(PL.busy||!PL.q)return;PL.busy=true;render();
+  try{const r=await api('/placement/answer',{method:'POST',body:JSON.stringify({token:PL.token,n:PL.n,choice})});
+    if(r.status===409&&r.json&&r.json.n){const rs=await api('/placement/resume',{method:'POST',body:JSON.stringify({token:PL.token})});
+      if(rs.ok&&rs.json&&rs.json.question){PL.n=rs.json.n;PL.q=rs.json.question;PL.sel=null;PL.busy=false;render();return;}}
+    if(!r.ok||!r.json)throw new Error('answer');
+    if(r.json.done){PL={phase:'result',result:r.json.result,token:PL.token,sel:null,busy:false};S.placed=r.json.result.level;save();
+      if(ACCOUNT)claimPlacement();}
+    else{PL.n=r.json.n;PL.max=r.json.max;PL.q=r.json.question;PL.sel=null;PL.busy=false;}
+  }catch(e){PL.busy=false;toast(t('plErr'));}
+  render();window.scrollTo(0,0);
+}
+async function claimPlacement(){
+  let tok=null;try{tok=localStorage.getItem(PL_KEY)}catch(e){}
+  if(tok){try{const r=await api('/placement/claim',{method:'POST',body:JSON.stringify({token:tok})});if(r.ok||r.status===404){localStorage.removeItem(PL_KEY);}}catch(e){}}
+  try{const m=await api('/me/placement');if(m.ok&&m.json&&m.json.result&&m.json.result.level&&m.json.result.level!==S.placed){S.placed=m.json.result.level;save();render();}}catch(e){}
+}
 const SYNC_KEYS=['done','scores','known','fc','ex','cur','week','streak'];
 let API_UP=false,loginState='form',loginEmail='',syncTimer=0,syncReady=false;
 const api=async(path,opt)=>{const r=await fetch('/api'+path,Object.assign({credentials:'same-origin',headers:{'content-type':'application/json'}},opt));
@@ -1747,7 +1829,7 @@ async function bootstrapAccount(){
     const r=await api('/auth/verify',{method:'POST',body:JSON.stringify({token:tok})});
     toast(t(r.ok?'loginDone':'loginInvalid'));}
   const me=await api('/me');
-  if(me.ok&&me.json&&me.json.user){ACCOUNT=me.json.user;await loadProgress();await loadCourse();await loadSubs();}
+  if(me.ok&&me.json&&me.json.user){ACCOUNT=me.json.user;await loadProgress();await loadCourse();await loadSubs();await claimPlacement();}
   render();
 }
 

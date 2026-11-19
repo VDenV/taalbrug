@@ -7,6 +7,7 @@ import type { Db } from './db.js';
 import type { Mailer } from './mailer.js';
 import { sanitizeProgress } from './progress.js';
 import { publishedOnly, validateCourse, type Course } from './course.js';
+import { answer as placementAnswer, cryptoRng, initState, present, type Result, type State } from './placement.js';
 
 const TOKEN_TTL_MS = 15 * 60 * 1000;
 const SESSION_TTL_MS = 30 * 24 * 60 * 60 * 1000;
@@ -245,6 +246,91 @@ export function buildApp(deps: { config: Config; db: Db; mailer: Mailer }): Fast
     );
     if (!rows[0]) return reply.code(404).send({ error: 'not_found' });
     return { ok: true };
+  });
+
+  // ---- тест уровня (адаптивный) ----
+  // Вопросы и ответы хранятся на сервере: клиент получает по одному вопросу и не видит верных ответов.
+  const starts = new Map<string, number[]>();
+  const startAllowed = (ip: string) => {
+    const now = Date.now();
+    const recent = (starts.get(ip) ?? []).filter((t) => now - t < 3600_000);
+    if (recent.length >= 30) return false;
+    recent.push(now);
+    starts.set(ip, recent);
+    return true;
+  };
+  type PRow = { state: State; step: number; status: 'active' | 'done'; result: Result | null };
+  const loadPlacement = async (token: unknown) => {
+    if (typeof token !== 'string' || !token || token.length > 128) return null;
+    const rows = await db.query<PRow>('SELECT state, step, status, result FROM placement_sessions WHERE id_hash = $1', [sha256(token)]);
+    return rows[0] ?? null;
+  };
+  const progressView = (st: State, step: number) => ({ n: step + 1, max: MAX_Q, question: present(st) });
+  const MAX_Q = 14;
+
+  app.post('/api/placement/start', async (req, reply) => {
+    if (!startAllowed(req.ip)) return reply.code(429).send({ error: 'too_many_requests' });
+    const user = await userFromRequest(db, req);
+    const token = newSecret();
+    const state = initState(cryptoRng);
+    await db.query('INSERT INTO placement_sessions(id_hash, user_id, state) VALUES ($1, $2, $3::jsonb)', [
+      sha256(token),
+      user?.id ?? null,
+      JSON.stringify(state),
+    ]);
+    return { token, ...progressView(state, 0) };
+  });
+
+  // Продолжить после перезагрузки страницы.
+  app.post('/api/placement/resume', async (req, reply) => {
+    const row = await loadPlacement((req.body as { token?: unknown } | null)?.token);
+    if (!row) return reply.code(404).send({ error: 'not_found' });
+    if (row.status === 'done') return { done: true, result: row.result };
+    return { done: false, ...progressView(row.state, row.step) };
+  });
+
+  app.post('/api/placement/answer', async (req, reply) => {
+    const b = (req.body ?? {}) as { token?: unknown; n?: unknown; choice?: unknown };
+    const row = await loadPlacement(b.token);
+    if (!row) return reply.code(404).send({ error: 'not_found' });
+    if (row.status === 'done') return reply.code(409).send({ error: 'already_done', result: row.result });
+    const q = present(row.state);
+    const choice = b.choice === null ? null : b.choice;
+    if (b.n !== row.step + 1) return reply.code(409).send({ error: 'out_of_sync', n: row.step + 1 });
+    if (choice !== null && (!Number.isInteger(choice) || (choice as number) < 0 || (choice as number) >= (q?.options.length ?? 0))) {
+      return reply.code(400).send({ error: 'invalid_choice' });
+    }
+    const out = placementAnswer(row.state, choice as number | null, cryptoRng);
+    const done = out.done;
+    const upd = await db.query(
+      `UPDATE placement_sessions SET state = $1::jsonb, step = step + 1, status = $2, result = $3::jsonb, updated_at = now()
+        WHERE id_hash = $4 AND step = $5 RETURNING step`,
+      [JSON.stringify(row.state), done ? 'done' : 'active', done ? JSON.stringify(out.result) : null, sha256(String(b.token)), row.step],
+    );
+    if (!upd[0]) return reply.code(409).send({ error: 'out_of_sync', n: row.step + 1 });
+    return out.done ? { done: true, result: out.result } : { done: false, n: row.step + 2, max: MAX_Q, question: out.question };
+  });
+
+  // Привязать завершённый тест к вошедшему пользователю.
+  app.post('/api/placement/claim', async (req, reply) => {
+    const user = await userFromRequest(db, req);
+    if (!user) return reply.code(401).send({ error: 'unauthorized' });
+    const token = (req.body as { token?: unknown } | null)?.token;
+    const row = await loadPlacement(token);
+    if (!row || row.status !== 'done') return reply.code(404).send({ error: 'not_found' });
+    await db.query('UPDATE placement_sessions SET user_id = $1 WHERE id_hash = $2 AND user_id IS NULL', [user.id, sha256(String(token))]);
+    return { result: row.result };
+  });
+
+  app.get('/api/me/placement', async (req, reply) => {
+    const user = await userFromRequest(db, req);
+    if (!user) return reply.code(401).send({ error: 'unauthorized' });
+    const rows = await db.query<{ result: Result; updated_at: string }>(
+      `SELECT result, updated_at FROM placement_sessions
+        WHERE user_id = $1 AND status = 'done' ORDER BY updated_at DESC LIMIT 1`,
+      [user.id],
+    );
+    return rows[0] ? { result: rows[0].result, at: rows[0].updated_at } : { result: null, at: null };
   });
 
   return app;
