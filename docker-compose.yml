@@ -1,0 +1,30 @@
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: taalbrug
+      POSTGRES_USER: taalbrug
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?задайте POSTGRES_PASSWORD в .env}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U taalbrug"]
+      interval: 5s
+      retries: 10
+
+  api:
+    build: ./backend
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgres://taalbrug:${POSTGRES_PASSWORD}@db:5432/taalbrug
+      BASE_URL: ${BASE_URL:-https://taalbrug.snapko.nl}
+      ADMIN_EMAILS: ${ADMIN_EMAILS:-}
+    ports:
+      - "127.0.0.1:3000:3000"   # наружу только через nginx
+
+volumes:
+  pgdata:
