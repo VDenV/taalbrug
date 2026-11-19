@@ -694,7 +694,7 @@ function seed(){return {
 let S;
 try{S=JSON.parse(localStorage.getItem(KEY)||'null');}catch(e){S=null}
 if(!S||!S.groups)S=seed();
-const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}syncSoon();};
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}syncSoon();syncCourseSoon();};
 const t=k=>T[S.lang][k];
 const L=v=>v&&typeof v==='object'?v[S.lang]:v;
 const rev=g=>g.type==='private'?165*g.members.length:g.type==='employer'?2300:250*g.members.length;
@@ -1103,7 +1103,7 @@ function appShell(inner){
    <aside class="side">
     <button class="brand" data-go="home" aria-label="Taalbrug website"><span class="mk">${ICO.logo}</span><b>Taalbrug</b></button>
     <div><span class="label" style="display:block;margin:0 6px 8px">${esc(t('viewAs'))}</span>
-     <div class="viewas" role="group" aria-label="${esc(t('viewAs'))}">${['learner','teacher','client','admin'].map(r=>`<button data-go="${ROLE_HOME[r]}" aria-pressed="${role===r}">${ICO[r]}<span>${esc(t('vaShort')[r])}</span></button>`).join('')}</div></div>
+     <div class="viewas" role="group" aria-label="${esc(t('viewAs'))}">${allowedRoles().map(r=>`<button data-go="${ROLE_HOME[r]}" aria-pressed="${role===r}">${ICO[r]}<span>${esc(t('vaShort')[r])}</span></button>`).join('')}</div></div>
     <nav class="nav" aria-label="Menu">${items.map(([k,ic,lab,cnt])=>`<button ${k.startsWith('lesson:')?`data-act="open" data-id="${k.split(':')[1]}"`:`data-go="${k}"`} ${cur===k?'aria-current="page"':''}>${ic}<span>${esc(lab)}</span>${cnt?`<span class="pill p-brand cnt num">${cnt}</span>`:''}</button>`).join('')}</nav>
     <div class="side-foot">
       <div class="me"><span class="av ${avc(who[0])}">${esc(ini(who[0]))}</span><div style="min-width:0"><b>${esc(who[0])}</b><small>${esc(who[1])}</small></div></div>
@@ -1423,7 +1423,8 @@ const VIEWS={home:vHome,signup:vSignup,learner:vLearn,lesson:vLesson,teacher:vTe
 let overlay='';
 function render(){
   document.documentElement.lang=S.lang==='uk'?'uk':'nl';
-  const v=VIEWS[S.view]?S.view:'home';
+  let v=VIEWS[S.view]?S.view:'home';
+  if(ACCOUNT&&v!=='home'&&v!=='signup'&&!allowedRoles().includes(ROLE_OF[v]||'learner')){v=S.view=ROLE_HOME[allowedRoles()[0]];}
   document.getElementById('app').innerHTML=(v==='home'||v==='signup'?VIEWS[v]():appShell(VIEWS[v]()))+overlay;
 }
 let toastTimer;
@@ -1630,6 +1631,37 @@ Object.assign(T.uk,{login:'Увійти',logout:'Вийти',loginT:'Вхід д
   email:'Електронна пошта',loginSend:'Надіслати посилання',loginSentT:'Перевірте пошту',loginSentB:'Ми надіслали посилання на',loginSentN:'Посилання діє 15 хвилин і лише один раз.',
   loginBad:'Перевірте адресу пошти.',loginFail:'Не вдалося надіслати. Спробуйте пізніше.',loginDone:'Ви увійшли.',loginInvalid:'Посилання застаріло або вже використане. Запросіть нове.',loggedOut:'Ви вийшли.',synced:'Ваш прогрес зберігається в обліковому записі.'});
 
+Object.assign(T.nl,{courseConflict:'Een collega heeft de cursus gewijzigd. Je ziet nu de nieuwste versie; je laatste wijziging is niet opgeslagen.',courseNoRight:'Je hebt geen rechten om de cursus te wijzigen.',courseSaveFail:'De cursus kon niet worden opgeslagen op de server.'});
+Object.assign(T.uk,{courseConflict:'Колега вже змінив курс. Зараз показано найновішу версію, ваші останні зміни не збережено.',courseNoRight:'У вас немає прав змінювати курс.',courseSaveFail:'Не вдалося зберегти курс на сервері.'});
+const ROLES_FOR={learner:['learner'],teacher:['learner','teacher'],client:['client'],admin:['learner','teacher','client','admin']};
+const allowedRoles=()=>ACCOUNT?(ROLES_FOR[ACCOUNT.role]||['learner']):['learner','teacher','client','admin'];
+const isStaff=()=>!!ACCOUNT&&(ACCOUNT.role==='teacher'||ACCOUNT.role==='admin');
+let courseVer=0,courseTimer=0,courseSnap='',courseReady=false;
+function syncCourseSoon(){
+  if(!isStaff()||!courseReady||!S.course||JSON.stringify(S.course)===courseSnap)return;
+  clearTimeout(courseTimer);
+  courseTimer=setTimeout(async()=>{
+    const body=JSON.stringify(S.course);if(body===courseSnap)return;
+    try{const r=await api('/course',{method:'PUT',body:JSON.stringify({course:S.course,baseVersion:courseVer})});
+      if(r.ok){courseVer=r.json.version;courseSnap=body;}
+      else if(r.status===409){await loadCourse();render();toast(t('courseConflict'));}
+      else if(r.status===403){toast(t('courseNoRight'));}
+      else{toast(t('courseSaveFail'));}
+    }catch(e){}
+  },1500);
+}
+async function loadCourse(){
+  courseReady=false;
+  const r=await api('/course');
+  if(r.ok&&r.json){
+    courseVer=r.json.version;
+    if(r.json.course){S.course=r.json.course;courseSnap=JSON.stringify(S.course);try{ensureLearn()}catch(e){}
+      try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+    else{courseSnap='';} /* сервер пуст: преподаватель загрузит текущий курс при первой правке */
+    courseReady=true;
+    if(!r.json.course&&isStaff())syncCourseSoon();
+  }
+}
 const SYNC_KEYS=['done','scores','known','fc','ex','cur','week','streak'];
 let ACCOUNT=null,API_UP=false,loginState='form',loginEmail='',syncTimer=0,syncReady=false;
 const api=async(path,opt)=>{const r=await fetch('/api'+path,Object.assign({credentials:'same-origin',headers:{'content-type':'application/json'}},opt));
@@ -1661,7 +1693,7 @@ async function loadProgress(){
   if(r.ok&&r.json&&!r.json.data)syncSoon(); /* first login: upload what was done locally */
 }
 async function logout(){try{await api('/auth/logout',{method:'POST',body:'{}'})}catch(e){}
-  ACCOUNT=null;syncReady=false;overlay='';render();toast(t('loggedOut'));}
+  ACCOUNT=null;syncReady=false;courseReady=false;overlay='';render();toast(t('loggedOut'));}
 document.addEventListener('submit',async e=>{
   if(e.target.id!=='login-form')return;e.preventDefault();
   const email=String(new FormData(e.target).get('email')||'').trim();loginEmail=email;
@@ -1679,7 +1711,7 @@ async function bootstrapAccount(){
     const r=await api('/auth/verify',{method:'POST',body:JSON.stringify({token:tok})});
     toast(t(r.ok?'loginDone':'loginInvalid'));}
   const me=await api('/me');
-  if(me.ok&&me.json&&me.json.user){ACCOUNT=me.json.user;await loadProgress();}
+  if(me.ok&&me.json&&me.json.user){ACCOUNT=me.json.user;await loadProgress();await loadCourse();}
   render();
 }
 

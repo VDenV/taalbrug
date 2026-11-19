@@ -6,6 +6,7 @@ import type { Config } from './config.js';
 import type { Db } from './db.js';
 import type { Mailer } from './mailer.js';
 import { sanitizeProgress } from './progress.js';
+import { publishedOnly, validateCourse, type Course } from './course.js';
 
 const TOKEN_TTL_MS = 15 * 60 * 1000;
 const SESSION_TTL_MS = 30 * 24 * 60 * 60 * 1000;
@@ -53,12 +54,13 @@ export function buildApp(deps: { config: Config; db: Db; mailer: Mailer }): Fast
     const email = String((req.body as { email?: unknown } | null)?.email ?? '').trim().toLowerCase();
     if (!EMAIL_RE.test(email) || email.length > 254) return reply.code(400).send({ error: 'invalid_email' });
 
-    const role = config.adminEmails.includes(email) ? 'admin' : 'learner';
+    // Роли из окружения: admin важнее teacher; для остальных роль не трогаем (её меняет администратор).
+    const envRole = config.adminEmails.includes(email) ? 'admin' : config.teacherEmails.includes(email) ? 'teacher' : null;
     const [user] = await db.query<{ id: string }>(
-      `INSERT INTO users(email, role) VALUES ($1, $2)
-       ON CONFLICT (email) DO UPDATE SET email = EXCLUDED.email
+      `INSERT INTO users(email, role) VALUES ($1, COALESCE($2, 'learner'))
+       ON CONFLICT (email) DO UPDATE SET role = COALESCE($2, users.role)
        RETURNING id::text AS id`,
-      [email, role],
+      [email, envRole],
     );
 
     const [{ n }] = await db.query<{ n: number }>(
@@ -141,6 +143,45 @@ export function buildApp(deps: { config: Config; db: Db; mailer: Mailer }): Fast
       [user.id, JSON.stringify(data)],
     );
     return { ok: true };
+  });
+
+  const STAFF = new Set(['teacher', 'admin']);
+
+  app.get('/api/course', async (req, reply) => {
+    const user = await userFromRequest(db, req);
+    if (!user) return reply.code(401).send({ error: 'unauthorized' });
+    const rows = await db.query<{ data: Course; version: number }>('SELECT data, version FROM course WHERE id = 1');
+    if (!rows[0]) return { course: null, version: 0 };
+    const course = STAFF.has(user.role) ? rows[0].data : publishedOnly(rows[0].data);
+    return { course, version: rows[0].version };
+  });
+
+  // Сохранение курса. baseVersion защищает от затирания чужих правок: при расхождении 409.
+  app.put('/api/course', async (req, reply) => {
+    const user = await userFromRequest(db, req);
+    if (!user) return reply.code(401).send({ error: 'unauthorized' });
+    if (!STAFF.has(user.role)) return reply.code(403).send({ error: 'forbidden' });
+    const body = (req.body ?? {}) as { course?: unknown; baseVersion?: unknown };
+    const course = validateCourse(body.course);
+    if (!course || !Number.isInteger(body.baseVersion)) return reply.code(400).send({ error: 'invalid_course' });
+
+    const json = JSON.stringify(course);
+    const rows = body.baseVersion === 0
+      ? await db.query<{ version: number }>(
+          `INSERT INTO course(id, data, updated_by) VALUES (1, $1::jsonb, $2)
+           ON CONFLICT (id) DO NOTHING RETURNING version`,
+          [json, user.id],
+        )
+      : await db.query<{ version: number }>(
+          `UPDATE course SET data = $1::jsonb, version = version + 1, updated_by = $2, updated_at = now()
+            WHERE id = 1 AND version = $3 RETURNING version`,
+          [json, user.id, body.baseVersion],
+        );
+    if (!rows[0]) {
+      const cur = await db.query<{ version: number }>('SELECT version FROM course WHERE id = 1');
+      return reply.code(409).send({ error: 'version_conflict', version: cur[0]?.version ?? 0 });
+    }
+    return { ok: true, version: rows[0].version };
   });
 
   return app;

@@ -11,6 +11,8 @@
   хранение в ЕС, шифрованный диск, регулярные бэкапы, минимум данных, удаление по запросу.
 
 ## Роли и права
+Роли teacher/admin выдаются через `TEACHER_EMAILS` / `ADMIN_EMAILS` в окружении сервера (при входе). Роль, выданную вручную в базе, вход не понижает.
+
 | Роль | Видит и делает |
 |---|---|
 | learner | свой прогресс, опубликованные уроки, сдаёт письменные работы |
@@ -28,7 +30,8 @@
 - `groups` (id, name, type, client_id, teacher_id, capacity, lesson_no)
 - `memberships` (group_id, user_id, intake_level, current_level, attendance, online_hours)
 - `waitlist` (id, name, email, level, time_pref, pay_pref, created_at)
-- `modules` / `lessons` / `exercises` (двуязычные поля nl/uk, `published`, порядок)
+- `course` (id=1, data JSONB, version, updated_by): курс целиком одним документом, у уроков `status` draft/live
+  (нет статуса = live). Запись с `baseVersion`, при расхождении 409. Ученикам отдаются только опубликованные уроки.
 - `progress` (user_id, data JSONB, updated_at): на этапе 2 весь учебный прогресс одним документом
   (`done`, `scores`, `known`, `fc`, `ex`, `cur`, `week`, `streak`; белый список, проверка форм, лимит 512 КБ).
   Позже, если понадобятся отчёты по урокам, разнесём в отдельные таблицы.
@@ -38,7 +41,7 @@
 ## API (первая версия)
 - `POST /api/auth/request` (email), `GET /api/auth/verify?token=`, `POST /api/auth/logout`, `GET /api/me`
 - `GET/PUT /api/me/progress`
-- `GET /api/lessons`, `POST/PUT/DELETE /api/lessons/:id` (teacher/admin)
+- `GET /api/course`, `PUT /api/course` (teacher/admin)
 - `GET /api/groups`, `PATCH /api/groups/:id/attendance`
 - `GET/POST /api/submissions`, `PATCH /api/submissions/:id` (оценка)
 - `GET/POST /api/waitlist`, `POST /api/waitlist/:id/place`
@@ -46,7 +49,7 @@
 - `GET /api/reports/:clientId` (агрегаты)
 
 ## Этапы
-(этапы 1 и 2 сделаны: вход по ссылке; прогресс на сервере; фронтенд с окном входа и синхронизацией)
+(этапы 1, 2 и конструктор уроков из этапа 3 сделаны; письменные работы ещё нет: вход по ссылке; прогресс на сервере; фронтенд с окном входа и синхронизацией)
 1. Каркас: Fastify + Postgres + миграции, вход по ссылке, `/api/me`, docker-compose, выкладка.
 2. Прогресс учеников (`progress`, `known_words`, `flashcards`) вместо `localStorage`.
 3. Конструктор уроков и письменные работы (teacher).
