@@ -35,7 +35,8 @@
 - `progress` (user_id, data JSONB, updated_at): на этапе 2 весь учебный прогресс одним документом
   (`done`, `scores`, `known`, `fc`, `ex`, `cur`, `week`, `streak`; белый список, проверка форм, лимит 512 КБ).
   Позже, если понадобятся отчёты по урокам, разнесём в отдельные таблицы.
-- `submissions` (id, user_id, lesson_id, text, grade, feedback, graded_by)
+- `submissions` (id, user_id, lesson_id, item_idx, text, status new|done, grade 0..2, feedback, graded_by): одна работа на (ученик, урок, упражнение).
+  Если курс уже на сервере, работа должна относиться к упражнению типа `write` в опубликованном уроке.
 - `invoices` (id, client_id, description_nl/uk, amount, paid)
 
 ## API (первая версия)
@@ -43,13 +44,13 @@
 - `GET/PUT /api/me/progress`
 - `GET /api/course`, `PUT /api/course` (teacher/admin)
 - `GET /api/groups`, `PATCH /api/groups/:id/attendance`
-- `GET/POST /api/submissions`, `PATCH /api/submissions/:id` (оценка)
+- `GET/POST /api/submissions` (ученик видит свои, teacher/admin все), `PATCH /api/submissions/:id` (оценка, teacher/admin)
 - `GET/POST /api/waitlist`, `POST /api/waitlist/:id/place`
 - `GET /api/invoices`, `PATCH /api/invoices/:id`
 - `GET /api/reports/:clientId` (агрегаты)
 
 ## Этапы
-(этапы 1, 2 и конструктор уроков из этапа 3 сделаны; письменные работы ещё нет: вход по ссылке; прогресс на сервере; фронтенд с окном входа и синхронизацией)
+(этапы 1, 2 и конструктор уроков из этапа 3 сделаны; письменные работы сделаны: вход по ссылке; прогресс на сервере; фронтенд с окном входа и синхронизацией)
 1. Каркас: Fastify + Postgres + миграции, вход по ссылке, `/api/me`, docker-compose, выкладка.
 2. Прогресс учеников (`progress`, `known_words`, `flashcards`) вместо `localStorage`.
 3. Конструктор уроков и письменные работы (teacher).

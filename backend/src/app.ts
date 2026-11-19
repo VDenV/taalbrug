@@ -184,5 +184,68 @@ export function buildApp(deps: { config: Config; db: Db; mailer: Mailer }): Fast
     return { ok: true, version: rows[0].version };
   });
 
+  // ---- письменные работы ----
+  const SUB_COLS = `s.id::text AS id, s.user_id::text AS "userId", s.lesson_id AS "lessonId", s.item_idx AS "itemIdx",
+    s.text, s.status, s.grade, s.feedback, s.created_at AS "createdAt",
+    COALESCE(NULLIF(u.name, ''), split_part(u.email, '@', 1)) AS who`;
+
+  app.get('/api/submissions', async (req, reply) => {
+    const user = await userFromRequest(db, req);
+    if (!user) return reply.code(401).send({ error: 'unauthorized' });
+    const own = !STAFF.has(user.role);
+    const rows = await db.query(
+      `SELECT ${SUB_COLS} FROM submissions s JOIN users u ON u.id = s.user_id
+        ${own ? 'WHERE s.user_id = $1' : ''} ORDER BY s.created_at DESC LIMIT 500`,
+      own ? [user.id] : [],
+    );
+    return { submissions: rows };
+  });
+
+  app.post('/api/submissions', async (req, reply) => {
+    const user = await userFromRequest(db, req);
+    if (!user) return reply.code(401).send({ error: 'unauthorized' });
+    const b = (req.body ?? {}) as { lessonId?: unknown; itemIdx?: unknown; text?: unknown };
+    const text = typeof b.text === 'string' ? b.text.trim() : '';
+    if (typeof b.lessonId !== 'string' || !b.lessonId || b.lessonId.length > 64 ||
+        !Number.isInteger(b.itemIdx) || (b.itemIdx as number) < 0 || !text || text.length > 5000) {
+      return reply.code(400).send({ error: 'invalid_submission' });
+    }
+    // Если курс уже на сервере, работа должна относиться к упражнению типа write в опубликованном уроке.
+    const cr = await db.query<{ data: Course }>('SELECT data FROM course WHERE id = 1');
+    if (cr[0]) {
+      const lesson = cr[0].data.flatMap((m) => m.lessons).find((l) => l.id === b.lessonId);
+      const item = (lesson?.items as { type?: string }[] | undefined)?.[b.itemIdx as number];
+      if (!lesson || lesson.status === 'draft' || item?.type !== 'write') {
+        return reply.code(400).send({ error: 'invalid_submission' });
+      }
+    }
+    const rows = await db.query<{ id: string }>(
+      `INSERT INTO submissions(user_id, lesson_id, item_idx, text) VALUES ($1, $2, $3, $4)
+       ON CONFLICT (user_id, lesson_id, item_idx) DO NOTHING RETURNING id::text AS id`,
+      [user.id, b.lessonId, b.itemIdx, text],
+    );
+    if (!rows[0]) return reply.code(409).send({ error: 'already_submitted' });
+    return { ok: true, id: rows[0].id };
+  });
+
+  app.patch('/api/submissions/:id', async (req, reply) => {
+    const user = await userFromRequest(db, req);
+    if (!user) return reply.code(401).send({ error: 'unauthorized' });
+    if (!STAFF.has(user.role)) return reply.code(403).send({ error: 'forbidden' });
+    const { id } = req.params as { id: string };
+    const b = (req.body ?? {}) as { grade?: unknown; feedback?: unknown };
+    const feedback = typeof b.feedback === 'string' ? b.feedback.trim() : '';
+    if (!/^\d+$/.test(id) || !Number.isInteger(b.grade) || (b.grade as number) < 0 || (b.grade as number) > 2 || feedback.length > 2000) {
+      return reply.code(400).send({ error: 'invalid_grade' });
+    }
+    const rows = await db.query(
+      `UPDATE submissions SET status = 'done', grade = $1, feedback = $2, graded_by = $3, graded_at = now()
+        WHERE id = $4 RETURNING id`,
+      [b.grade, feedback, user.id, id],
+    );
+    if (!rows[0]) return reply.code(404).send({ error: 'not_found' });
+    return { ok: true };
+  });
+
   return app;
 }

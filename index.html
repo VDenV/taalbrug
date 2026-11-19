@@ -550,6 +550,7 @@ details summary{cursor:pointer;font-weight:700}
 
 (function(){
 const KEY='taalbrug-demo-v4';
+let ACCOUNT=null; /* вошедший пользователь; null = демо-режим */
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const eur=n=>'€'+Math.round(n).toLocaleString('nl-NL');
 
@@ -848,11 +849,11 @@ const DEFAULT_COURSE=[
 ];
 function ensureLearn(){
 if(!S.course)S.course=JSON.parse(JSON.stringify(DEFAULT_COURSE));
-if(!S.subs)S.subs=[
+if(!S.subs)S.subs=ACCOUNT?[]:[
   {id:'s1',lid:'1.5',who:'Olena K.',text:'Ik heet Olena. Ik kom uit Oekraïne. Ik woon nu in Utrecht. Ik werk in magazijn. Ik heb twee kinderen.',status:'done',grade:0,fb:'Goed geschreven! Let op: „Ik werk in een magazijn” – met „een”.'},
   {id:'s2',lid:'1.5',who:'Andrii M.',text:'Ik heet Andrii. Ik kom uit Charkiv. Ik woon in Amersfoort sinds 2023. Ik werk als chauffeur bij een bakkerij.',status:'new'},
   {id:'s3',lid:'1.5',who:'Tomasz W.',text:'Ik ben Tomasz. Ik kom uit Polen. Ik wonen in Utrecht met mijn vrouw. Ik werk in de bouw.',status:'new'}];
-if(!S.ex['1.5'])S.ex['1.5']={items:{0:{v:{text:S.subs[0].text,sent:true,sub:'s1'}}},submitted:false};
+if(!ACCOUNT&&!S.ex['1.5'])S.ex['1.5']={items:{0:{v:{text:S.subs[0].text,sent:true,sub:'s1'}}},submitted:false};
 if(!S.b)S.b={lid:'2.4',item:3,delArm:false};
 }
 ensureLearn();
@@ -1193,7 +1194,7 @@ function vLearn(){
   const tot=totalLive();const doneN=ALLV().filter(x=>S.done[x.l.id]).length, nx=nextOpen();
   const wk=S.week, max=Math.max(30,...wk), today=wk[6];
   const unknown=reviewDeck().length;const pct=tot?Math.round(doneN/tot*100):0;
-  const fbNew=S.subs.find(s=>s.who==='Olena K.'&&s.status==='done');
+  const fbNew=S.subs.find(s=>(ACCOUNT?s.mine:s.who==='Olena K.')&&s.status==='done');
   let k=0;
   const path=C().map((m,mi)=>{const open=unlocked(mi);const ls=liveLessons(m);const tst=testOf(m);const sc=tst?S.scores[tst.id]:null;const dn=ls.filter(l=>S.done[l.id]).length;
     return `<div class="unit u${open?Math.min(mi,2):3}"><div class="l"><small>${esc(m.lvl)} · ${mi+1}</small><h3>${esc(L(m.title))}</h3></div>${open?`<span class="score num">${dn}/${ls.length}${sc!=null?` · ${sc}%`:''}</span>`:`<span class="score">${TI.lock} ${esc(m.soon?t('soon'):'70%')}</span>`}</div>
@@ -1557,7 +1558,8 @@ document.addEventListener('click',e=>{
   else if(act==='wsend'){const it=itemAt(a.dataset.l,+a.dataset.i);const s=stAt(a.dataset.l,+a.dataset.i);const txt=((s.v||{}).text||'').trim();
     const n=txt?txt.split(/\s+/).length:0;if(n<(it.min||1)){toast(t('minWords')+' '+it.min+' '+t('wordsN'));return;}
     const id='s'+Date.now();s.v={text:txt,sent:true,sub:id};
-    if(!String(a.dataset.l).startsWith('pv-'))S.subs.push({id,lid:a.dataset.l,who:'Olena K.',text:txt,status:'new'});}
+    if(!String(a.dataset.l).startsWith('pv-')){S.subs.push({id,lid:a.dataset.l,who:ACCOUNT?meName():'Olena K.',text:txt,status:'new',mine:true});
+      if(ACCOUNT)sendSubmission(id,a.dataset.l,+a.dataset.i,txt);}}
   else if(act==='submit-test'){const l=findL(a.dataset.l);const e2=exS(l.id);
     if(!l.items.every((it,i)=>answered(it,(e2.items[i]||{}).v))){toast(t('answerAll'));return;}
     const okN=l.items.filter((it,i)=>isOk(it,e2.items[i].v)).length;const pct=Math.round(okN/l.items.length*100);
@@ -1580,7 +1582,7 @@ document.addEventListener('click',e=>{
   else if(act==='bdell'){if(!S.b.delArm){S.b.delArm=true;}else{for(const m of C()){const i=m.lessons.findIndex(x=>x.id===S.b.lid);if(i>=0){m.lessons.splice(i,1);break;}}const first=C().find(m=>m.lessons.length);S.b={lid:first?first.lessons[0].id:'',item:0,delArm:false};}}
   /* review */
   else if(act==='rgrade'){const s=S.subs.find(x=>x.id===a.dataset.id);if(s)s.grade=+a.dataset.g;}
-  else if(act==='rsend'){const s=S.subs.find(x=>x.id===a.dataset.id);if(s){s.status='done';if(s.grade==null)s.grade=0;toast(t('sent'));}}
+  else if(act==='rsend'){const s=S.subs.find(x=>x.id===a.dataset.id);if(s){s.status='done';if(s.grade==null)s.grade=0;toast(t('sent'));if(ACCOUNT)gradeSubmission(s);}}
   else if(act==='absent'){S.absent=!S.absent;}
   else if(act==='hw'){const i=+a.dataset.i;S.hw[i]=!S.hw[i];}
   else if(act==='tgroup'){S.teacherGroup=a.dataset.id;}
@@ -1662,8 +1664,42 @@ async function loadCourse(){
     if(!r.json.course&&isStaff())syncCourseSoon();
   }
 }
+Object.assign(T.nl,{subFail:'Inleveren is niet gelukt. Probeer het opnieuw.',gradeFail:'Feedback versturen is niet gelukt. Probeer het opnieuw.'});
+Object.assign(T.uk,{subFail:'Не вдалося здати роботу. Спробуйте ще раз.',gradeFail:'Не вдалося надіслати відгук. Спробуйте ще раз.'});
+const meName=()=>ACCOUNT?(ACCOUNT.name||String(ACCOUNT.email).split('@')[0]):'';
+let subSig='';
+async function loadSubs(){
+  const r=await api('/submissions');if(!r.ok||!r.json)return false;
+  const local=new Map(S.subs.map(x=>[x.id,x]));
+  const list=r.json.submissions.map(x=>{const old=local.get(x.id);
+    const o={id:x.id,lid:x.lessonId,who:x.who,text:x.text,status:x.status,grade:x.grade==null?undefined:x.grade,fb:x.feedback||undefined,mine:String(x.userId)===String(ACCOUNT.id),idx:x.itemIdx};
+    if(old&&x.status==='new'){if(old.grade!=null)o.grade=old.grade;if(old.fb)o.fb=old.fb;} /* не затираем черновик отзыва преподавателя */
+    return o;});
+  const sig=JSON.stringify(list.map(x=>[x.id,x.status,x.grade,x.fb]));
+  const changed=sig!==subSig;subSig=sig;S.subs=list;
+  /* состояние «сдано» у ученика берём из его работ на сервере; демо-запись s1 убираем */
+  const ids=new Set(list.map(x=>x.id));
+  for(const lid in S.ex){const its=(S.ex[lid]||{}).items||{};for(const i in its){const v=its[i]&&its[i].v;if(v&&v.sub==='s1'&&!ids.has('s1'))delete its[i];}}
+  for(const x of list)if(x.mine){const idx=x.idx;const e2=exS(x.lid);const st=(e2.items[idx]=e2.items[idx]||{});
+    if(!st.v||!st.v.sent||st.v.sub!==x.id)st.v={text:x.text,sent:true,sub:x.id};}
+  return changed;
+}
+async function sendSubmission(tmpId,lid,idx,text){
+  try{const r=await api('/submissions',{method:'POST',body:JSON.stringify({lessonId:lid,itemIdx:idx,text})});
+    if(r.ok&&r.json&&r.json.id){const sub=S.subs.find(x=>x.id===tmpId);if(sub){sub.id=r.json.id;sub.idx=idx;}
+      const st=((S.ex[lid]||{}).items||{})[idx];if(st&&st.v&&st.v.sub===tmpId)st.v.sub=r.json.id;save();render();return;}
+    if(r.status===409){await loadSubs();render();return;}
+  }catch(e){}
+  S.subs=S.subs.filter(x=>x.id!==tmpId);const st=((S.ex[lid]||{}).items||{})[idx];if(st&&st.v&&st.v.sub===tmpId)st.v={text};
+  save();render();toast(t('subFail'));
+}
+async function gradeSubmission(s){
+  try{const r=await api('/submissions/'+encodeURIComponent(s.id),{method:'PATCH',body:JSON.stringify({grade:s.grade,feedback:s.fb||''})});if(r.ok)return;}catch(e){}
+  s.status='new';save();render();toast(t('gradeFail'));
+}
+setInterval(async()=>{if(!ACCOUNT||document.hidden||overlay)return;try{if(await loadSubs())render();}catch(e){}},30000);
 const SYNC_KEYS=['done','scores','known','fc','ex','cur','week','streak'];
-let ACCOUNT=null,API_UP=false,loginState='form',loginEmail='',syncTimer=0,syncReady=false;
+let API_UP=false,loginState='form',loginEmail='',syncTimer=0,syncReady=false;
 const api=async(path,opt)=>{const r=await fetch('/api'+path,Object.assign({credentials:'same-origin',headers:{'content-type':'application/json'}},opt));
   let j=null;try{j=await r.json()}catch(e){}return {ok:r.ok,status:r.status,json:j};};
 function accountBlock(){
@@ -1693,7 +1729,7 @@ async function loadProgress(){
   if(r.ok&&r.json&&!r.json.data)syncSoon(); /* first login: upload what was done locally */
 }
 async function logout(){try{await api('/auth/logout',{method:'POST',body:'{}'})}catch(e){}
-  ACCOUNT=null;syncReady=false;courseReady=false;overlay='';render();toast(t('loggedOut'));}
+  ACCOUNT=null;syncReady=false;courseReady=false;overlay='';S.subs=null;subSig='';try{ensureLearn()}catch(e){}render();toast(t('loggedOut'));}
 document.addEventListener('submit',async e=>{
   if(e.target.id!=='login-form')return;e.preventDefault();
   const email=String(new FormData(e.target).get('email')||'').trim();loginEmail=email;
@@ -1711,7 +1747,7 @@ async function bootstrapAccount(){
     const r=await api('/auth/verify',{method:'POST',body:JSON.stringify({token:tok})});
     toast(t(r.ok?'loginDone':'loginInvalid'));}
   const me=await api('/me');
-  if(me.ok&&me.json&&me.json.user){ACCOUNT=me.json.user;await loadProgress();await loadCourse();}
+  if(me.ok&&me.json&&me.json.user){ACCOUNT=me.json.user;await loadProgress();await loadCourse();await loadSubs();}
   render();
 }
 
