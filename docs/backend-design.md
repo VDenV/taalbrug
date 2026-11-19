@@ -29,7 +29,9 @@
 - `memberships` (group_id, user_id, intake_level, current_level, attendance, online_hours)
 - `waitlist` (id, name, email, level, time_pref, pay_pref, created_at)
 - `modules` / `lessons` / `exercises` (двуязычные поля nl/uk, `published`, порядок)
-- `progress` (user_id, lesson_id, done, score), `known_words` (user_id, word), `flashcards` (user_id, card, box)
+- `progress` (user_id, data JSONB, updated_at): на этапе 2 весь учебный прогресс одним документом
+  (`done`, `scores`, `known`, `fc`, `ex`, `cur`, `week`, `streak`; белый список, проверка форм, лимит 512 КБ).
+  Позже, если понадобятся отчёты по урокам, разнесём в отдельные таблицы.
 - `submissions` (id, user_id, lesson_id, text, grade, feedback, graded_by)
 - `invoices` (id, client_id, description_nl/uk, amount, paid)
 
@@ -44,6 +46,7 @@
 - `GET /api/reports/:clientId` (агрегаты)
 
 ## Этапы
+(этапы 1 и 2 сделаны: вход по ссылке; прогресс на сервере; фронтенд с окном входа и синхронизацией)
 1. Каркас: Fastify + Postgres + миграции, вход по ссылке, `/api/me`, docker-compose, выкладка.
 2. Прогресс учеников (`progress`, `known_words`, `flashcards`) вместо `localStorage`.
 3. Конструктор уроков и письменные работы (teacher).

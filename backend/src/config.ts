@@ -4,6 +4,7 @@ export interface Config {
   databaseUrl: string | null; // null = встроенный PGlite (только dev/test)
   adminEmails: string[];
   cookieSecure: boolean;
+  staticFile: string | null; // dev: отдавать index.html на /
 }
 
 export function loadConfig(env: NodeJS.ProcessEnv = process.env): Config {
@@ -14,5 +15,6 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): Config {
     databaseUrl: env.DATABASE_URL ?? null,
     adminEmails: (env.ADMIN_EMAILS ?? '').split(',').map((s) => s.trim().toLowerCase()).filter(Boolean),
     cookieSecure: baseUrl.startsWith('https://'),
+    staticFile: env.STATIC_FILE ?? null,
   };
 }

@@ -1,9 +1,11 @@
 import Fastify, { type FastifyInstance, type FastifyRequest } from 'fastify';
 import cookie from '@fastify/cookie';
 import { createHash, randomBytes } from 'node:crypto';
+import { readFile } from 'node:fs/promises';
 import type { Config } from './config.js';
 import type { Db } from './db.js';
 import type { Mailer } from './mailer.js';
+import { sanitizeProgress } from './progress.js';
 
 const TOKEN_TTL_MS = 15 * 60 * 1000;
 const SESSION_TTL_MS = 30 * 24 * 60 * 60 * 1000;
@@ -36,8 +38,13 @@ export async function userFromRequest(db: Db, req: FastifyRequest): Promise<Sess
 
 export function buildApp(deps: { config: Config; db: Db; mailer: Mailer }): FastifyInstance {
   const { config, db, mailer } = deps;
-  const app = Fastify({ logger: false, trustProxy: true });
+  const app = Fastify({ logger: false, trustProxy: true, bodyLimit: 512 * 1024 });
   app.register(cookie);
+
+  if (config.staticFile) {
+    const file = config.staticFile;
+    app.get('/', async (_req, reply) => reply.type('text/html; charset=utf-8').send(await readFile(file)));
+  }
 
   app.get('/api/health', async () => ({ ok: true }));
 
@@ -111,6 +118,29 @@ export function buildApp(deps: { config: Config; db: Db; mailer: Mailer }): Fast
     const user = await userFromRequest(db, req);
     if (!user) return reply.code(401).send({ error: 'unauthorized' });
     return { user };
+  });
+
+  app.get('/api/me/progress', async (req, reply) => {
+    const user = await userFromRequest(db, req);
+    if (!user) return reply.code(401).send({ error: 'unauthorized' });
+    const rows = await db.query<{ data: Record<string, unknown>; updated_at: string }>(
+      'SELECT data, updated_at FROM progress WHERE user_id = $1',
+      [user.id],
+    );
+    return rows[0] ? { data: rows[0].data, updatedAt: rows[0].updated_at } : { data: null, updatedAt: null };
+  });
+
+  app.put('/api/me/progress', async (req, reply) => {
+    const user = await userFromRequest(db, req);
+    if (!user) return reply.code(401).send({ error: 'unauthorized' });
+    const data = sanitizeProgress((req.body as { data?: unknown } | null)?.data);
+    if (!data) return reply.code(400).send({ error: 'invalid_progress' });
+    await db.query(
+      `INSERT INTO progress(user_id, data) VALUES ($1, $2::jsonb)
+       ON CONFLICT (user_id) DO UPDATE SET data = EXCLUDED.data, updated_at = now()`,
+      [user.id, JSON.stringify(data)],
+    );
+    return { ok: true };
   });
 
   return app;

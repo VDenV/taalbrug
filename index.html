@@ -694,7 +694,7 @@ function seed(){return {
 let S;
 try{S=JSON.parse(localStorage.getItem(KEY)||'null');}catch(e){S=null}
 if(!S||!S.groups)S=seed();
-const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}syncSoon();};
 const t=k=>T[S.lang][k];
 const L=v=>v&&typeof v==='object'?v[S.lang]:v;
 const rev=g=>g.type==='private'?165*g.members.length:g.type==='employer'?2300:250*g.members.length;
@@ -1108,6 +1108,7 @@ function appShell(inner){
     <div class="side-foot">
       <div class="me"><span class="av ${avc(who[0])}">${esc(ini(who[0]))}</span><div style="min-width:0"><b>${esc(who[0])}</b><small>${esc(who[1])}</small></div></div>
       <div style="display:flex;gap:8px;align-items:center;justify-content:space-between;flex-wrap:wrap">${langToggle()}<span class="demo">${esc(t('demo'))}</span></div>
+      ${accountBlock()}
       <button class="btn btn-quiet btn-sm" data-act="reset" style="justify-content:flex-start">${esc(t('reset'))}</button>
     </div>
    </aside>
@@ -1586,10 +1587,12 @@ document.addEventListener('click',e=>{
   else if(act==='save-att'){toast(t('saved'));}
   else if(act==='period'){S.clientPeriod=+a.dataset.p;}
   else if(act==='report'){overlay=`<div class="overlay" data-act="close-ov"><div class="sheet" role="dialog" aria-modal="true" aria-label="${esc(a.dataset.name)}"><span class="eyebrow">${esc(t('repBody'))}</span><h2>${esc(a.dataset.name)}</h2><ul style="margin:0;padding-left:20px;display:flex;flex-direction:column;gap:8px">${t('repLines').map(x=>`<li>${esc(x)}</li>`).join('')}</ul><p class="muted" style="font-size:.88rem">${esc(t('demo'))}</p><div><button class="btn btn-primary" data-act="close-ov">${esc(t('close'))}</button></div></div></div>`;}
-  else if(act==='close-ov'){if(e.target.closest('.sheet')&&!e.target.closest('button'))return;overlay='';}
+  else if(act==='close-ov'){if(e.target.closest('.sheet')&&!e.target.closest('button[data-act]'))return;overlay='';}
   else if(act==='place'){const w=S.waitlist.find(x=>x.id===a.dataset.id);const sel=document.getElementById('sel-'+w.id);const g=S.groups.find(x=>x.id===sel.value);
     if(w&&g&&g.members.length<g.cap){g.members.push({id:'n'+Date.now(),name:w.name,intake:w.level,now:w.level,att:100,in:true});S.waitlist=S.waitlist.filter(x=>x!==w);toast(w.name+' '+t('placed')+' '+g.name);}}
   else if(act==='pay'){const i=S.invoices.find(x=>x.id===a.dataset.id);if(i)i.paid=true;}
+  else if(act==='login-open'){loginState='form';overlay=loginSheet();}
+  else if(act==='logout'){logout();return;}
   else if(act==='signup-again'){S.signup=null;}
   else if(act==='reset'){const lang=S.lang;S=seed();ensureLearn();S.lang=lang;S.view='home';save();render();toast(t('resetDone'));window.scrollTo(0,0);return;}
   save();render();
@@ -1619,8 +1622,70 @@ document.addEventListener('submit',e=>{
   S.signup={done:true,name};save();render();window.scrollTo(0,0);
 });
 
+/* ---------- account + progress sync (needs the /api backend; otherwise demo mode) ---------- */
+Object.assign(T.nl,{login:'Inloggen',logout:'Uitloggen',loginT:'Inloggen bij Taalbrug',loginLead:'Vul je e-mailadres in. Je krijgt een link om in te loggen, een wachtwoord is niet nodig.',
+  email:'E-mailadres',loginSend:'Stuur link',loginSentT:'Controleer je e-mail',loginSentB:'We hebben een link gestuurd naar',loginSentN:'De link werkt 15 minuten en maar één keer.',
+  loginBad:'Controleer het e-mailadres.',loginFail:'Versturen is niet gelukt. Probeer het later opnieuw.',loginDone:'Je bent ingelogd.',loginInvalid:'Deze link is verlopen of al gebruikt. Vraag een nieuwe aan.',loggedOut:'Je bent uitgelogd.',synced:'Je voortgang wordt bewaard in je account.'});
+Object.assign(T.uk,{login:'Увійти',logout:'Вийти',loginT:'Вхід до Taalbrug',loginLead:'Введіть свою електронну пошту. Ми надішлемо посилання для входу, пароль не потрібен.',
+  email:'Електронна пошта',loginSend:'Надіслати посилання',loginSentT:'Перевірте пошту',loginSentB:'Ми надіслали посилання на',loginSentN:'Посилання діє 15 хвилин і лише один раз.',
+  loginBad:'Перевірте адресу пошти.',loginFail:'Не вдалося надіслати. Спробуйте пізніше.',loginDone:'Ви увійшли.',loginInvalid:'Посилання застаріло або вже використане. Запросіть нове.',loggedOut:'Ви вийшли.',synced:'Ваш прогрес зберігається в обліковому записі.'});
+
+const SYNC_KEYS=['done','scores','known','fc','ex','cur','week','streak'];
+let ACCOUNT=null,API_UP=false,loginState='form',loginEmail='',syncTimer=0,syncReady=false;
+const api=async(path,opt)=>{const r=await fetch('/api'+path,Object.assign({credentials:'same-origin',headers:{'content-type':'application/json'}},opt));
+  let j=null;try{j=await r.json()}catch(e){}return {ok:r.ok,status:r.status,json:j};};
+function accountBlock(){
+  if(!API_UP)return '';
+  if(ACCOUNT)return `<div class="muted" style="font-size:.82rem;overflow-wrap:anywhere">${esc(ACCOUNT.email)}</div><button class="btn btn-quiet btn-sm" data-act="logout" style="justify-content:flex-start">${esc(t('logout'))}</button>`;
+  return `<button class="btn btn-primary btn-sm" data-act="login-open" style="justify-content:center">${esc(t('login'))}</button>`;
+}
+function loginSheet(msg){
+  const inner=loginState==='sent'
+    ?`<h2>${esc(t('loginSentT'))}</h2><p>${esc(t('loginSentB'))} <b>${esc(loginEmail)}</b>.</p><p class="muted">${esc(t('loginSentN'))}</p><div><button class="btn btn-primary" data-act="close-ov">${esc(t('close'))}</button></div>`
+    :`<h2>${esc(t('loginT'))}</h2><p class="muted">${esc(t('loginLead'))}</p>
+      <form id="login-form" novalidate style="display:flex;flex-direction:column;gap:14px"><div class="field"><label for="login-email">${esc(t('email'))}</label>
+      <input id="login-email" name="email" type="email" autocomplete="email" inputmode="email" required value="${esc(loginEmail)}"></div>
+      ${msg?`<p class="err" role="alert">${esc(msg)}</p>`:''}
+      <div style="display:flex;gap:10px"><button class="btn btn-primary" type="submit">${esc(t('loginSend'))}</button><button class="btn btn-quiet" type="button" data-act="close-ov">${esc(t('close'))}</button></div></form>`;
+  return `<div class="overlay" data-act="close-ov"><div class="sheet" role="dialog" aria-modal="true" aria-label="${esc(t('loginT'))}">${inner}</div></div>`;
+}
+function syncSoon(){
+  if(!ACCOUNT||!syncReady)return;clearTimeout(syncTimer);
+  syncTimer=setTimeout(()=>{const data={};for(const k of SYNC_KEYS)if(S[k]!==undefined)data[k]=S[k];
+    api('/me/progress',{method:'PUT',body:JSON.stringify({data})}).catch(()=>{});},1200);
+}
+async function loadProgress(){
+  const r=await api('/me/progress');syncReady=false;
+  if(r.ok&&r.json&&r.json.data){Object.assign(S,r.json.data);try{ensureLearn()}catch(e){}try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+  syncReady=true;
+  if(r.ok&&r.json&&!r.json.data)syncSoon(); /* first login: upload what was done locally */
+}
+async function logout(){try{await api('/auth/logout',{method:'POST',body:'{}'})}catch(e){}
+  ACCOUNT=null;syncReady=false;overlay='';render();toast(t('loggedOut'));}
+document.addEventListener('submit',async e=>{
+  if(e.target.id!=='login-form')return;e.preventDefault();
+  const email=String(new FormData(e.target).get('email')||'').trim();loginEmail=email;
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){overlay=loginSheet(t('loginBad'));render();return;}
+  try{const r=await api('/auth/request',{method:'POST',body:JSON.stringify({email})});
+    if(r.ok){loginState='sent';overlay=loginSheet();}else overlay=loginSheet(t(r.status===400?'loginBad':'loginFail'));}
+  catch(err){overlay=loginSheet(t('loginFail'));}
+  render();
+});
+async function bootstrapAccount(){
+  try{const hp=await api('/health');API_UP=hp.ok&&!!(hp.json&&hp.json.ok);}catch(e){API_UP=false;}
+  if(!API_UP)return;
+  const u=new URL(location.href),tok=u.searchParams.get('login');
+  if(tok){u.searchParams.delete('login');try{history.replaceState(null,'',u.pathname+u.search+u.hash)}catch(e){}
+    const r=await api('/auth/verify',{method:'POST',body:JSON.stringify({token:tok})});
+    toast(t(r.ok?'loginDone':'loginInvalid'));}
+  const me=await api('/me');
+  if(me.ok&&me.json&&me.json.user){ACCOUNT=me.json.user;await loadProgress();}
+  render();
+}
+
 const h=(location.hash||'').slice(1);if(VIEWS[h])S.view=h;
 render();
+bootstrapAccount();
 
 })();
 </script>
